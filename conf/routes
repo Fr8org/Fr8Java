@@ -1,0 +1,13 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET /configure        controllers.Application.configure()
+GET /activate         controllers.Application.activate()
+GET /execute          controllers.Application.execute()
+GET /discover         controllers.Application.discover()
+
+POST /configure        controllers.Application.configurePost()
+POST /activate         controllers.Application.activatePost()
+POST /execute          controllers.Application.executePost()
+POST /discover         controllers.Application.discoverPost()
