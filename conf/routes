@@ -2,12 +2,12 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET /configure        controllers.Application.configure()
-GET /activate         controllers.Application.activate()
-GET /execute          controllers.Application.execute()
-GET /discover         controllers.Application.discover()
+GET /terminals/configure        controllers.Application.configure()
+GET /terminals/activate         controllers.Application.activate()
+GET /terminals/execute          controllers.Application.execute()
+GET /terminals/discover         controllers.Application.discover()
 
-POST /configure        controllers.Application.configurePost()
-POST /activate         controllers.Application.activatePost()
-POST /execute          controllers.Application.executePost()
-POST /discover         controllers.Application.discoverPost()
+POST /terminals/configure        controllers.Application.configurePost()
+POST /terminals/activate         controllers.Application.activatePost()
+POST /terminals/execute          controllers.Application.executePost()
+POST /terminals/discover         controllers.Application.discoverPost()
