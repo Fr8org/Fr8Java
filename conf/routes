@@ -5,7 +5,7 @@
 GET /terminals/configure        controllers.Application.configure()
 GET /terminals/activate         controllers.Application.activate()
 GET /terminals/execute          controllers.Application.execute()
-GET /terminals/discover         controllers.Application.discover()
+GET /terminals/discover         controllers.GItHubTerminalController.discover()
 
 POST /terminals/configure        controllers.Application.configurePost()
 POST /terminals/activate         controllers.Application.activatePost()
