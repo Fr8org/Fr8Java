@@ -19,6 +19,11 @@ public class Fr8DataDTO {
   public Fr8DataDTO() {
   }
 
+  public Fr8DataDTO(ActivityDTO activityDTO, String containerId) {
+    this.activityDTO = activityDTO;
+    this.containerId = UUID.fromString(containerId);
+  }
+
   public Fr8DataDTO(ActivityDTO activityDTO, UUID containerId, String explicitData) {
     this.activityDTO = activityDTO;
     this.containerId = containerId;

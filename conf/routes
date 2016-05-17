@@ -2,12 +2,20 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET /terminals/configure        controllers.Application.configure()
-GET /terminals/activate         controllers.Application.activate()
-GET /terminals/execute          controllers.Application.execute()
-GET /terminals/discover         controllers.GItHubTerminalController.discover()
+GET         /terminals/configure                controllers.Application.configure()
+GET         /terminals/activate                 controllers.Application.activate()
+GET         /terminals/execute                  controllers.Application.execute()
+GET         /terminals/discover                 controllers.GitHubTerminalController.discover()
 
-POST /terminals/configure        controllers.Application.configurePost()
-POST /terminals/activate         controllers.Application.activatePost()
-POST /terminals/execute          controllers.Application.executePost()
-POST /terminals/discover         controllers.Application.discoverPost()
+POST        /terminals/configure                controllers.Application.configurePost()
+POST        /terminals/activate                 controllers.Application.activatePost()
+POST        /terminals/execute                  controllers.Application.executePost()
+POST        /terminals/discover                 controllers.Application.discoverPost()
+POST        /terminals/activities/:activity     controllers.GitHubTerminalController.activities(activity: String)
+POST        /terminals/authenticate             controllers.GitHubTerminalController.authenticate()
+
+POST        /authentication/internal            controllers.GitHubTerminalController.authenticateInternal()
+POST        /authentication/initial_url         controllers.GitHubTerminalController.initialUrl()
+POST        /authentication/token               controllers.GitHubTerminalController.authenticateToken()
+
+POST        /activities/configure               controllers.GitHubTerminalController.configureActivities()

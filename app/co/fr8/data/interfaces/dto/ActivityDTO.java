@@ -1,23 +1,50 @@
 package co.fr8.data.interfaces.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.UUID;
 
 /**
  * TODO: Implement
  */
 public class ActivityDTO {
+
+  @JsonProperty("Label")
   private String label;
+
   private ActivityTemplateDTO activityTemplate;
+
+  @JsonProperty("RootPlanNodeId")
   private UUID rootPlanNodeId;
+
+  @JsonProperty("ParentPlanNodeId")
   private UUID parentPlanNodeId;
+
+  @JsonProperty("CurrentView")
   private String currentView;
+
+  @JsonProperty("Ordering")
   private int ordering;
+
+  @JsonProperty("Id")
   private UUID id;
+
+  @JsonProperty("CrateStorage")
   private CrateStorageDTO crateStorage;
+
+  @JsonProperty("ChildrenActivities")
   private ActivityDTO[] childActivities;
+
+  @JsonProperty("AuthToken")
   private AuthorizationTokenDTO authToken;
+
+  @JsonProperty("Fr8AccountId")
   private String fr8AccountId;
+
   private String documentation;
+
+  @JsonProperty("Name")
+  private String name;
 
   public ActivityDTO() {
   }
@@ -135,6 +162,15 @@ public class ActivityDTO {
   public void setDocumentation(String documentation) {
     this.documentation = documentation;
   }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
   /*
   public string Label { get; set; }
 

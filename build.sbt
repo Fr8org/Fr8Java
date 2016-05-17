@@ -12,6 +12,7 @@ libraryDependencies ++= Seq(
   "com.fasterxml.jackson.core" % "jackson-core" % "2.7.3",
   "org.apache.httpcomponents" % "httpasyncclient" % "4.1.1",
   "org.apache.commons" % "commons-lang3" % "3.4",
+  "com.jcabi" % "jcabi-github" % "0.27",
   javaJdbc,
   cache,
   javaWs

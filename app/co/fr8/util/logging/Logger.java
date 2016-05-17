@@ -3,11 +3,34 @@ package co.fr8.util.logging;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by Charles Pretzer on 4/19/2016.
+ * TODO: Implement
  */
 public class Logger {
 
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger("application");
+
+  public static boolean isDebugEnabled() {
+    return logger.isDebugEnabled();
+  }
+
+  public static void debug(String message) {
+    if (logger.isDebugEnabled())
+      logger.debug(message);
+  }
+
+  public static void debug(String message, Object... args) {
+    if (logger.isDebugEnabled())
+      logger.debug(message, args);
+  }
+
+  public static void debug(String message, Throwable exception) {
+    if (logger.isDebugEnabled())
+      logger.debug(message, exception);
+  }
+
+  public static boolean isTraceEnabled() {
+    return logger.isTraceEnabled();
+  }
 
   public static void trace(String message) {
     if (logger.isTraceEnabled())
@@ -22,6 +45,10 @@ public class Logger {
   public static void trace(String message, Throwable exception) {
     if (logger.isTraceEnabled())
       logger.trace(message, exception);
+  }
+
+  public static boolean isWarnEnabled() {
+    return logger.isWarnEnabled();
   }
 
   public static void warn(String message) {
@@ -39,6 +66,10 @@ public class Logger {
       logger.warn(message, exception);
   }
 
+  public static boolean isErrorEnabled() {
+    return logger.isErrorEnabled();
+  }
+
   public static void error(String message) {
     if (logger.isErrorEnabled())
       logger.error(message);
@@ -47,6 +78,10 @@ public class Logger {
   public static void error(String message, Throwable exception) {
     if (logger.isErrorEnabled())
       logger.error(message, exception);
+  }
+
+  public static boolean isInfoEnabled() {
+    return logger.isInfoEnabled();
   }
 
   public static void info(String message) {

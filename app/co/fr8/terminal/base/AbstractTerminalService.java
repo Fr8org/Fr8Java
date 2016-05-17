@@ -2,13 +2,27 @@ package co.fr8.terminal.base;
 
 import co.fr8.data.interfaces.dto.*;
 import co.fr8.data.interfaces.manifests.StandardFr8TerminalCM;
+import co.fr8.play.ApplicationConstants;
 import co.fr8.terminal.infrastructure.BaseTerminalEvent;
 import co.fr8.util.DateUtils;
 import co.fr8.util.logging.Logger;
+import controllers.Application;
+import github.Authentication;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.xerces.impl.dv.util.Base64;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * TODO: Implement
@@ -20,6 +34,7 @@ abstract public class AbstractTerminalService {
   private final BaseTerminalEvent baseTerminalEvent;
   private Map<String, TerminalActivityFactory> activityRegistrations = new HashMap<>();
   private boolean integrationTestMode;
+  private Authentication authentication = new Authentication();
 
   public boolean isIntegrationTestMode() {
     return integrationTestMode;
@@ -34,7 +49,74 @@ abstract public class AbstractTerminalService {
     this(event, false);
   }
 
+  public String generateHMACHeader(String currentUserId) {
+    String headerString = StringUtils.EMPTY;
+    String endpoint = ApplicationConstants.TERMINAL_HOST;
+    String userId = currentUserId;
+    String terminalSecret = ApplicationConstants.TERMINAL_SECRET;
+    String terminalId = ApplicationConstants.TERMINAL_ID;
+    String now = String.valueOf(Calendar.getInstance().getTimeInMillis());
+    String nonce = UUID.randomUUID().toString();
+
+    try {
+
+      String url = URLEncoder.encode(endpoint.toLowerCase(), StandardCharsets.UTF_8.name());
+      //Formulate the keys used in plain format as a concatenated string.
+      String authenticationKeyString = terminalId + url + now + nonce + base64String(StringUtils.EMPTY) + userId;
+
+
+      byte[] secretKeyBase64ByteArray =
+          terminalSecret.getBytes(StandardCharsets.US_ASCII);//Convert.FromBase64String(terminalSecret);
+
+
+      Mac sha512Hmac = Mac.getInstance("HmacSHA512");
+
+      SecretKeySpec secretkey = new SecretKeySpec(secretKeyBase64ByteArray, "HmacSHA512");
+
+      sha512Hmac.init(secretkey);
+
+      byte[] mac_data = sha512Hmac.doFinal(authenticationKeyString.getBytes(StandardCharsets.UTF_8));
+
+      headerString = Base64.encode(mac_data);
+
+    }catch(NoSuchAlgorithmException | InvalidKeyException | UnsupportedEncodingException e){
+      Logger.error("Exception generating sha512HMAC", e);
+    }
+
+    Logger.debug("Returning headerString: " + headerString);
+
+    return "hmac " + headerString;
+  }
+
+  public String base64String(String rawString) {
+    byte[] content;
+    if (StringUtils.isNotBlank(rawString)) {
+      content = rawString.getBytes();
+    } else {
+      content = new byte[] { };
+    }
+
+    try {
+      MessageDigest md5 = MessageDigest.getInstance("MD5");
+      md5.update(content, 0, content.length);
+
+      Logger.debug("Conerted content to md5: " + content);
+
+    } catch (NoSuchAlgorithmException e) {
+      Logger.error("Unable to create MD5 hash", e);
+    }
+
+    Logger.debug("Returning base 64 hash: " + content);
+
+    return Base64.encode(content);
+
+  }
+
   abstract public StandardFr8TerminalCM discover();
+
+  abstract public ExternalAuthUrlDTO generateExternalAuthUrl();
+
+  abstract public AuthorizationTokenDTO authenticateToken(ExternalAuthDTO externalAuthDTO);
 /*
   /// <summary>
   /// Reports Terminal Error incident
@@ -132,7 +214,7 @@ abstract public class AbstractTerminalService {
   }
 
   protected void logWhenRequestReceived(String actionPath,String terminalName, String activityId) {
-    Logger.info("[" + terminalName + "] received /" + actionPath + " call  at " +
+    Logger.info("[" + terminalName + "] received /" + actionPath + " call at " +
         DateUtils.getCurrentShortDate() + " for ActivityID " + activityId + ", " + terminalName);
   }
 
@@ -166,12 +248,15 @@ abstract public class AbstractTerminalService {
     String curAssemblyName = curTerminal + ".Actions." + activityTemplateName + "_v" + curActivityDTO.getActivityTemplate().getVersion();
 
     /* Resolve the class by name*/
-    Class calledType;
-    TerminalActivityFactory factory = activityRegistrations.get(curTerminal);
+//    Class calledType;
+    TerminalActivityFactory factory = activityRegistrations.get(activityTemplateName);
 
     TerminalActivity terminalActivity = null;
     if (factory != null) {
       terminalActivity = factory.getTerminalActivity();
+    } else {
+      // TODO: Fix this
+      activityRegistrations.put(activityTemplateName, null);
     }
 
     if (terminalActivity == null) {
@@ -206,14 +291,17 @@ abstract public class AbstractTerminalService {
       logWhenRequestReceived(curActionPath.toLowerCase(), curActivityDTO.getActivityTemplate().getTerminal().getName(), curActivityDTO.getId().toString());
 
       curActionPath = curActionPath.toLowerCase();
+      Logger.debug("Checking curActionPath " + curActionPath + " as enum: " + ActionPathEnum.getByLowerValue(curActionPath));
       switch (ActionPathEnum.getByLowerValue(curActionPath)) {
         case CONFIGURE: {
-
-          ActivityDTO resultActionDTO = terminalActivity.configure(curActivityDTO, curAuthTokenDTO);
+          Logger.debug("In configure statement");
+          ActivityDTO resultActivityDTO = terminalActivity.configure(curActivityDTO, curAuthTokenDTO);
 
           logWhenRequestReceived(curActionPath, curActivityDTO.getActivityTemplate().getTerminal().getName(), curActivityDTO.getId().toString());
 
-          return resultActionDTO;
+          Logger.debug("Returning ActivityDTO from configure: " + resultActivityDTO);
+
+          return resultActivityDTO;
         }
         case RUN:
         case EXECUTE_CHILD_ACTIVITIES: {
@@ -301,6 +389,7 @@ abstract public class AbstractTerminalService {
 //          return resultDCN;
         }
         default:
+          Logger.debug("Switch statement fell through to default");
 //          response = (Task<ActivityDO>) curMethodInfo.Invoke(curObject, new Object[]{curActivityDO});
 //
 //          var result = await response.ContinueWith(x = > Mapper.Map < ActivityDTO > (x.Result));
@@ -310,6 +399,7 @@ abstract public class AbstractTerminalService {
 
 
     } catch (Exception e) {
+      Logger.error("There was an exception processing the request", e);
 //      JsonSerializerSettings settings = new JsonSerializerSettings
 //      {
 //        PreserveReferencesHandling = PreserveReferencesHandling.Objects
@@ -322,6 +412,9 @@ abstract public class AbstractTerminalService {
 //
 //      throw;
     }
+
+    Logger.debug("HandleFr8Request returning end value");
+
     return "placeholder for handlefr8Request method";
   }
 

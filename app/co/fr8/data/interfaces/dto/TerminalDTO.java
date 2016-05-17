@@ -5,15 +5,17 @@ package co.fr8.data.interfaces.dto;
  */
 public class TerminalDTO {
 
-  private final String name;
-  private final String label;
-  private final String version;
+  private String name;
+  private String label;
+  private String version;
   private int terminalStatus;
-  private final String endpoint;
-  private final String description;
+  private String endpoint;
+  private String description;
+  private int authenticationType;
 
-  // TODO: Should this be enum type?
-  private final int authenticationType;
+  public TerminalDTO() {
+
+  }
 
   public TerminalDTO(String name, String label, String version, String endpoint,
                      String description, int authenticationType) {

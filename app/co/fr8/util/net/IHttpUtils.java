@@ -10,4 +10,5 @@ public interface IHttpUtils {
   public String post();
 
   public String get();
+
 }

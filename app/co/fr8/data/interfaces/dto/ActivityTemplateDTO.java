@@ -11,16 +11,16 @@ import java.util.UUID;
 public class ActivityTemplateDTO {
 
   private UUID id;
-  private final String name;
-  private final String label;
-  private final String version;
-  private final WebServiceDTO webService;
+  private String name;
+  private String label;
+  private String version;
+  private WebServiceDTO webService;
   private TerminalDTO terminal;
   private String tags;
-  private final ActivityCategoryEnum category;
-  private final ActivityTypeEnum type;
+  private ActivityCategoryEnum category;
+  private ActivityTypeEnum type;
   private int minPaneWidth;
-  private final boolean needsAuthentication;
+  private boolean needsAuthentication;
 
 //  Version = "1",
 //  Name = "Process_Personal_Report",
@@ -31,6 +31,8 @@ public class ActivityTemplateDTO {
 //  MinPaneWidth = 380,
 //  WebService = webService,
 
+  public ActivityTemplateDTO() {
+  }
 
   public ActivityTemplateDTO(String name, String label, String version, WebServiceDTO webService,
                              TerminalDTO terminal, ActivityCategoryEnum category,
@@ -100,6 +102,34 @@ public class ActivityTemplateDTO {
 
   public void setMinPaneWidth(int minPaneWidth) {
     this.minPaneWidth = minPaneWidth;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setLabel(String label) {
+    this.label = label;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
+  public void setWebService(WebServiceDTO webService) {
+    this.webService = webService;
+  }
+
+  public void setCategory(String category) {
+    this.category = ActivityCategoryEnum.findByFriendlyName(category);
+  }
+
+  public void setType(String type) {
+    this.type = ActivityTypeEnum.findByFriendlyName(type);
+  }
+
+  public void setNeedsAuthentication(boolean needsAuthentication) {
+    this.needsAuthentication = needsAuthentication;
   }
 
   public boolean isNeedsAuthentication() {

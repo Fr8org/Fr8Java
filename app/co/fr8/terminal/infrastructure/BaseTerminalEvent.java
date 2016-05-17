@@ -27,7 +27,7 @@ abstract public class BaseTerminalEvent {
 
   private String eventWebServerUrl = StringUtils.EMPTY;
   private boolean eventsDisabled = false;
-  private static final IHttpUtils httpUtils = new HttpUtils();
+  private static final HttpUtils httpUtils = new HttpUtils();
 
   public BaseTerminalEvent() {
     //Missing CoreWebServerUrl most likely means that terminal is running in an integration test environment.
@@ -63,9 +63,12 @@ abstract public class BaseTerminalEvent {
     loggingDataCM.setActivity("system startup");
 
 //    Crate loggingDataCrate = loggingDataCrateFactory.crate(loggingDataCM);
-    //TODO inpect this
     //I am not sure what to supply for parameters eventName and palletId, so i passed terminalName and eventType
-    return httpUtils.post();
+
+    // TODO: make this work
+//    return httpUtils.post();
+    return "sendEventOrIncidentReportPlaceholder";
+
 //        new Uri(eventWebServerUrl, UriKind.Absolute),
 //        crateManager.toDto(eventReportCrateFactory.Create(eventType, terminalName, loggingDataCrate)));
   }
@@ -85,9 +88,10 @@ abstract public class BaseTerminalEvent {
     loggingDataCM.setActivity("system startup");
 
     Crate loggingDataCrate = loggingDataCrateFactory.create(loggingDataCM);
-    //TODO inpect this
-    //I am not sure what to supply for parameters eventName and palletId, so i passed terminalName and eventType
-    return httpUtils.post();
+    // TODO: make this work
+//    return httpUtils.post();
+    return "sendEventReportPlaceholder";
+
 //    new Uri(eventWebServerUrl, UriKind.Absolute),
 //        crateManager.toDto(eventReportCrateFactory.Create("Terminal Event", terminalName, loggingDataCrate)));
   }
@@ -100,8 +104,7 @@ abstract public class BaseTerminalEvent {
   /// <param name="exceptionName">Name of the occured exception</param>
   /// <param name="fr8UserId">Id of the current user. It should be obtained from AuthorizationToken</param>
   /// <returns>Response from the fr8 Event Controller</returns>
-  public String sendTerminalErrorIncident(String terminalName, String exceptionMessage, String exceptionName, String fr8UserId)
-  {
+  public String sendTerminalErrorIncident(String terminalName, String exceptionMessage, String exceptionName, String fr8UserId) {
     if (eventsDisabled) return StringUtils.EMPTY;
 
     //prepare the REST client to make the POST to fr8's Event Controller
@@ -120,8 +123,10 @@ abstract public class BaseTerminalEvent {
 
     Crate loggingDataCrate = loggingDataCrateFactory.create(loggingDataCM);
 
-    //return the response from the fr8's Event Controller
-    return httpUtils.post();
+    // TODO: make this work
+//    return httpUtils.post();
+    return "sendTerminalErrorIncidentPlaceholder";
+
 //    new Uri(eventWebServerUrl, UriKind.Absolute),
 //        crateManager.toDto(eventReportCrateFactory.Create("Terminal Incident", terminalName, loggingDataCrate)));
   }
@@ -131,7 +136,7 @@ abstract public class BaseTerminalEvent {
   /// </summary>
   /// <returns>The protected access specifier is only for Unit Test purpose.
   /// In all other scenarios it should be teated as private</returns>
-  protected IHttpUtils prepareRestClient() {
+  protected HttpUtils prepareRestClient() {
     // TODO: ObjectFactory is dependency injection
 //    return ObjectFactory.GetInstance<IRestfulServiceClient>();
     return httpUtils;
@@ -153,8 +158,9 @@ abstract public class BaseTerminalEvent {
       try {
         URI url = new URI(fr8EventUrl);
 
-        //TODO are we expecting a timeout??
-        httpUtils.post(/*url, eventReportCrateDTO*/);
+        // TODO: make this work
+//            httpUtils.post(/*url, eventReportCrateDTO*/);
+
       } catch (URISyntaxException e) {
         Logger.error("Unable to send request to " + fr8EventUrl, e);
         //Timeout

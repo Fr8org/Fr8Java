@@ -1,19 +1,51 @@
 package co.fr8.data.interfaces.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * DataTransactionObject for Authorization Token
  */
 public class AuthorizationTokenDTO {
 
+  @JsonProperty("Id")
   private String id;
+
+  @JsonProperty("Token")
   private String token;
+
+  @JsonProperty("ExternalAccountId")
   private String externalAccountId;
+
+  @JsonProperty("ExternalAccountName")
+  private String externalAccountName;
+
+  @JsonProperty("ExternalDomainId")
   private String externalDomainId;
+
+  @JsonProperty("ExternalDomainName")
+  private String externalDomainName;
+
+  @JsonProperty("UserId")
   private String userId;
+
+  @JsonProperty("ExternalStateToken")
   private String externalStateToken;
+
+  @JsonProperty("AdditionalAttributes")
   private String additionalAttributes;
+
+  @JsonProperty("Error")
   private String error;
+
+  @JsonProperty("AuthCompletedNotificationRequired")
   private boolean authCompleteNotificationRequired;
+
+  @JsonProperty("TerminalID")
+  private String terminalId;
+
+  public AuthorizationTokenDTO() {
+
+  }
 
   public AuthorizationTokenDTO(String id, String token, String externalAccountId,
                                String externalDomainId, String userId, String externalStateToken,
@@ -99,6 +131,30 @@ public class AuthorizationTokenDTO {
 
   public void setAuthCompleteNotificationRequired(boolean authCompleteNotificationRequired) {
     this.authCompleteNotificationRequired = authCompleteNotificationRequired;
+  }
+
+  public String getExternalAccountName() {
+    return externalAccountName;
+  }
+
+  public void setExternalAccountName(String externalAccountName) {
+    this.externalAccountName = externalAccountName;
+  }
+
+  public String getExternalDomainName() {
+    return externalDomainName;
+  }
+
+  public void setExternalDomainName(String externalDomainName) {
+    this.externalDomainName = externalDomainName;
+  }
+
+  public String getTerminalId() {
+    return terminalId;
+  }
+
+  public void setTerminalId(String terminalId) {
+    this.terminalId = terminalId;
   }
 
   /*
