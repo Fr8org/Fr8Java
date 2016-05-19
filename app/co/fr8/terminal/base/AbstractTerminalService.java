@@ -260,7 +260,7 @@ abstract public class AbstractTerminalService {
     }
 
     if (terminalActivity == null) {
-      // TODO: log an error and return
+      Logger.error("No terminalActivity found for " + activityTemplateName);
     }
 
 

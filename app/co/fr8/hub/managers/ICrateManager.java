@@ -26,10 +26,9 @@ public interface ICrateManager {
    * ORIGINAL:
         IUpdatableCrateStorage UpdateStorage(Expression<Func<CrateStorageDTO>> storageAccessExpression);
         IUpdatableCrateStorage UpdateStorage(Expression<Func<string>> storageAccessExpression);
-   * NEW:
-        IUpdatableCrateStorage UpdateStorage(Consumer<CrateStorageDTO> storageAccessExpression);
-        IUpdatableCrateStorage UpdateStorage(Consumer<String> storageAccessExpression);
    */
+  IUpdatableCrateStorage updateStorage(CrateStorageDTO storageAccessExpression);
+  IUpdatableCrateStorage updateStorage(String storageAccessExpression);
 
   boolean isEmptyStorage(CrateStorageDTO storageDto);
   String emptyStorageAsStr();
@@ -37,6 +36,9 @@ public interface ICrateManager {
   void addLogMessage(String label, List<LogItemDTO> logItemList, ContainerDO containerDO);
   Crate createAuthenticationCrate(String label, AuthenticationMode mode, boolean revocation);
 
+  ICrateStorage getStorage(ActivityDTO activityDTO);
+  IUpdatableCrateStorage getUpdatableStorage(ActivityDTO activity);
+  IUpdatableCrateStorage getUpdatableStorage(PayloadDTO payload);
   Crate<ManifestDescriptionCM> createManifestDescriptionCrate(String label, String name, String id, AvailabilityTypeEnum availability);
   Crate<FieldDescriptionsCM> createDesignTimeFieldsCrate(String label, FieldDTO... fields);
   Crate<FieldDescriptionsCM> createDesignTimeFieldsCrate(String label, List<FieldDTO> fields);

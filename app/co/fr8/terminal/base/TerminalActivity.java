@@ -11,7 +11,9 @@ import co.fr8.hub.managers.CrateManager;
 import co.fr8.hub.managers.ICrateManager;
 import co.fr8.hub.managers.IUpdatableCrateStorage;
 import co.fr8.terminal.exception.TerminalConfigurationException;
+import co.fr8.terminal.infrastructure.DefaultHubCommunicator;
 import co.fr8.terminal.infrastructure.IHubCommunicator;
+import co.fr8.terminal.infrastructure.ValidationManager;
 import co.fr8.terminal.infrastructure.states.ConfigurationRequestType;
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,32 +26,31 @@ import java.util.stream.Stream;
  */
 abstract public class TerminalActivity {
 
-  protected ICrateManager crateManager; // { get; private set; }
+  private final boolean authRequired;
+  private final ICrateManager crateManager; // { get; private set; }
   private static String RUNTIME_AVAILABLE_CRATES_LABEL = "Runtime Available Crates";
   protected static final String CONFIGURATION_CONTROLS_LABEL = "Configuration_Controls";
-  public String currentFr8UserId; // { get; set; }
-  public String currentFr8UserEmail; // { get; set; }
+  private String currentFr8UserId; // { get; set; }
+  private String currentFr8UserEmail; // { get; set; }
   protected String activityName; // { get; set; }
 
   private List<ActivityTemplateDTO> activityTemplateCache = null;
 
-  public IHubCommunicator hubCommunicator;// { get; set; }
+  private final IHubCommunicator hubCommunicator;// { get; set; }
 
   public static final Set<MT> excludedManifestTypes =
       Stream.of(MT.StandardConfigurationControls, MT.StandardEventSubscription).collect(Collectors.toCollection(HashSet::new));
-//  {
-//    ManifestDiscovery.Default.GetManifestType<StandardConfigurationControlsCM>(),
-//      ManifestDiscovery.Default.GetManifestType<EventSubscriptionCM>()
-//  };
 
-  public TerminalActivity() {
-    this("unknown");
-  }
 
-  public TerminalActivity(String activityName) {
-//    CrateManager = ObjectFactory.GetInstance<ICrateManager>();
-//    HubCommunicator = ObjectFactory.GetInstance<IHubCommunicator>();
+  public TerminalActivity(String activityName, boolean authRequired) {
+
+    // TODO: Review IoC needs
+    crateManager = new CrateManager();
+    hubCommunicator = new DefaultHubCommunicator();
+
+    this.authRequired = authRequired;
     this.activityName = activityName;
+    registerConfigurationControls();
   }
 
   public void setCurrentUser(String userId, String userEmail) {
@@ -61,24 +62,26 @@ abstract public class TerminalActivity {
     return hubCommunicator;
   }
 
-  public void setHubCommunicator(IHubCommunicator hubCommunicator) {
-    this.hubCommunicator = hubCommunicator;
-  }
-
-  abstract protected ConfigurationRequestType configurationEvaluationResult(ActivityDTO activityDTO);
+  protected abstract void initialize(CrateSignaller crateSignaller);
+  protected abstract void configure(CrateSignaller crateSignaller, ValidationManager validationManager);
+  protected abstract ConfigurationRequestType configurationEvaluationResult(ActivityDTO activityDTO);
+  protected abstract void registerConfigurationControls();
+  protected abstract void runChildActivities();
+  protected abstract void runCurrentActivity();
+  protected abstract void activate();
+  protected abstract void deactivate();
+/*
 
   /// <summary>
   /// Creates a suspend request for hub execution
   /// </summary>
   /// <param name="payload"></param>
   /// <returns></returns>
-/*
-  protected PayloadDTO SuspendHubExecution(PayloadDTO payload)
-  {
-    using (var crateStorage = CrateManager.GetUpdatableStorage(payload))
-    {
-      var operationalState = GetOperationalStateCrate(crateStorage);
-      operationalState.CurrentActivityResponse = ActivityResponseDTO.Create(ActivityResponse.RequestSuspend);
+  protected PayloadDTO suspendHubExecution(PayloadDTO payload) {
+    crateManager.getUpdatableStorage();
+    using (var crateStorage = CrateManager.GetUpdatableStorage(payload)) {
+      var operationalState = getOperationalState(crateStorage);
+      operationalState.setCurrentActivityResponse(ActivityResponseDTO.create(ActivityResponse.RequestSuspend));
     }
 
     return payload;

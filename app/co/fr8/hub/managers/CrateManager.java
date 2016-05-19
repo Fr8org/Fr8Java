@@ -1,11 +1,14 @@
 package co.fr8.hub.managers;
 
 import co.fr8.data.crates.Crate;
+import co.fr8.data.crates.CrateStorage;
 import co.fr8.data.crates.ICrateStorage;
 import co.fr8.data.entities.ContainerDO;
 import co.fr8.data.interfaces.dto.*;
 import co.fr8.data.interfaces.manifests.*;
 import co.fr8.data.states.AvailabilityTypeEnum;
+import co.fr8.util.json.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -153,4 +156,101 @@ public class CrateManager implements ICrateManager {
   public <T extends Class> T getContentType(String crate) {
     return null;
   }
+
+  @Override
+  public IUpdatableCrateStorage updateStorage(CrateStorageDTO storageAccessExpression) {
+    return null;
+  }
+
+  @Override
+  public IUpdatableCrateStorage updateStorage(String storageAccessExpression) {
+    return null;
+  }
+
+  public IUpdatableCrateStorage getUpdatableStorage(ActivityDTO activity) {
+    if (activity == null) throw new IllegalArgumentException("action");
+    return updateStorage(activity.getCrateStorage());
+  }
+
+  public IUpdatableCrateStorage getUpdatableStorage(PayloadDTO payload) {
+    if (payload == null) throw new IllegalArgumentException("payload");
+    return updateStorage(payload.getCrateStorage());
+  }
+
+  public ICrateStorage getStorage(String crateStorageRaw) {
+    if (StringUtils.isBlank(crateStorageRaw)) {
+      return new CrateStorage();
+    }
+
+    return fromDto(JsonUtils.writeStringToCrateStorageDTO(crateStorageRaw));
+  }
+
+  public ICrateStorage getStorage(ActivityDTO activity) {
+    return fromDto(activity.getCrateStorage());
+  }
+
+  public ICrateStorage getStorage(PayloadDTO payload) {
+    return fromDto(payload.getCrateStorage());
+  }
+
+  public boolean isStorageEmpty(ActivityDTO activity) {
+    return isEmptyStorage(activity.getCrateStorage());
+  }
+
+  /// <summary>
+  /// Lets you update activity UI control values without need to unpack and repack control crates
+  /// </summary>
+  public ActivityDTO updateControls(ActivityDTO activity, StandardConfigurationControlsCM action) {
+    return updateControls(activity, action);
+  }
+
+  private Object updateControls(Object activity, StandardConfigurationControlsCM action) {
+    if (activity == null) {
+      throw new IllegalArgumentException("The activity object is null");
+    }
+    if (action == null) {
+      throw new IllegalArgumentException("The action object is null");
+    }
+    ICrateManager crateManager = new CrateManager();
+
+    ActivityDTO activityDto = null;
+    if (activity instanceof ActivityDTO) {
+      activityDto = (ActivityDTO) activity;
+      IUpdatableCrateStorage storage = crateManager.getUpdatableStorage(activityDto);
+
+        Crate controlsCrate = storage.getFirstCrate();
+
+        StandardConfigurationControlsCM activityUi = action.cloneProperties(controlsCrate.getContent());
+//        action(activityUi);
+        storage.replaceByLabel(Crate.fromContent(controlsCrate.getLabel(),
+            new StandardConfigurationControlsCM(activityUi.getControls()), controlsCrate.getAvailability()));
+
+    }
+    return activityDto;
+  }
+
+  /// <summary>
+  /// Returns a copy of AcvitityUI for the given activity
+  /// </summary>
+  public static StandardConfigurationControlsCM getReadonlyActivityUi(ActivityDTO activity) {
+    return getReadonlyActivityUi(activity);
+  }
+
+  private static StandardConfigurationControlsCM getReadonlyActivityUi(Object activity) {
+    if (activity == null) {
+      throw new IllegalArgumentException("Object activity is null");
+    }
+    ICrateManager crateManager = new CrateManager();
+
+    ActivityDTO activityDto = null;
+
+    if (activity instanceof ActivityDTO) {
+      activityDto = (ActivityDTO) activity;
+      ICrateStorage storage = crateManager.getStorage(activityDto);
+      return new StandardConfigurationControlsCM().cloneProperties(storage.getFirstCrateOrDefault().getContent());
+    }
+
+    return null;
+  }
+
 }

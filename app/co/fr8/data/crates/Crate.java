@@ -18,6 +18,7 @@ public class Crate<T extends Manifest> {
   public final String id;
   public String label;
   public AvailabilityTypeEnum availability;
+  public T content;
 
   public Crate(CrateManifestType crateManifestType) {
     this.crateManifestType = crateManifestType;
@@ -74,6 +75,23 @@ public class Crate<T extends Manifest> {
     this.rawContent = content;
     this.label = label;
   }
+
+  public Crate(CrateManifestType crateManifestType, UUID id,
+               AvailabilityTypeEnum availability, String label, Object content) {
+    this.id = id.toString();
+    this.availability = availability;
+    this.crateManifestType = crateManifestType;
+    this.label = label;
+    this.knownContent = content;
+  }
+//
+//  public static Crate<T> fromContent(String label, T content) {
+//    return fromContent(label, content, AvailabilityTypeEnum.NotSet);
+//  }
+
+//  public static Crate<T> fromContent(String label, T content, AvailabilityTypeEnum availability) {
+//    return new Crate(fromContentUnsafe(label, content, availability));
+//  }
 
   public static Crate fromContent(String label, Manifest content) {
     return new Crate(getManifest(content), label, content, AvailabilityTypeEnum.NotSet);
@@ -175,5 +193,9 @@ public class Crate<T extends Manifest> {
 
   public JsonNode getRawContent() {
     return rawContent;
+  }
+
+  public T getContent() {
+    return content;
   }
 }

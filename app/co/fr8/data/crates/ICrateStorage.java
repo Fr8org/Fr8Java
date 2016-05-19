@@ -1,8 +1,8 @@
 package co.fr8.data.crates;
 
 /**
- * Interface for the ICrateStorage
+ * TODO: Implement
  */
 abstract public class ICrateStorage implements Iterable<Crate> {
-
+  abstract public Crate getFirstCrateOrDefault();
 }

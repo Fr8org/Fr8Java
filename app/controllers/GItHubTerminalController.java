@@ -96,21 +96,26 @@ public class GitHubTerminalController extends Controller {
 
     if (jsonBody == null) {
       Logger.error("There is no activityDTO in the form: " + form);
-      return badRequest(createErrorResponse("Unable to extract activity DTO"));
+      return ok(createErrorResponse("Unable to extract activity DTO"));
     }
 
     ActivityDTO activityDTO = JsonUtils.writeStringToActivityDTO(jsonBody.get("ActivityDTO").toString());
 
     if (activityDTO == null) {
       Logger.error("Unable to extract ActivityDTO");
-      return badRequest(createErrorResponse( "Unable to parse form data to ActivityDTO"));
+      return ok(createErrorResponse( "Unable to parse form data to ActivityDTO"));
     }
 
-    ActivityDTO resultDTO =
-        (ActivityDTO) gitHubTerminal.handleFr8Request(TERMINAL_NAME, "configure",
+    Object resultDTO = gitHubTerminal.handleFr8Request(TERMINAL_NAME, "configure",
             new Fr8DataDTO(activityDTO, containerId));
 
-    return ok(JsonUtils.writeObjectAsString(resultDTO));
+    Logger.debug("handleFr8Request returned: " + resultDTO);
+
+    if (resultDTO instanceof ActivityDTO) {
+      return ok(JsonUtils.writeObjectAsString(resultDTO));
+    }
+
+    return ok(createErrorResponse("Unable to generate ActivityDTO"));
   }
 
   private void debugForm(DynamicForm form) {

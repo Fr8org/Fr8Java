@@ -1,6 +1,7 @@
 package co.fr8.util.json;
 
 import co.fr8.data.interfaces.dto.ActivityDTO;
+import co.fr8.data.interfaces.dto.CrateStorageDTO;
 import co.fr8.data.interfaces.manifests.Manifest;
 import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -59,5 +60,19 @@ public class JsonUtils {
       Logger.error("Exception parsing activityDTO from " + dtoString, e);
     }
     return null;
+  }
+
+  public static <T> T writeStringToObject(String rawString, Class<T> theClass) {
+    try {
+      return objectMapper.readValue(rawString, theClass);
+    } catch (IOException e) {
+      Logger.error("Exception while converting string " + rawString + " to class " + theClass.getName());
+    }
+
+    return null;
+  }
+
+  public static CrateStorageDTO writeStringToCrateStorageDTO(String dtoString) {
+    return writeStringToObject(dtoString, CrateStorageDTO.class);
   }
 }
