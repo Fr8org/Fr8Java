@@ -64,21 +64,20 @@ public class GitHubTerminalController extends Controller {
     // TODO: Make constants
     String requestQueryString = form.get("RequestQueryString");
 
-    AuthorizationTokenDTO response;
     if (StringUtils.isBlank(requestQueryString)) {
       Logger.warn("No RequestQueryString sent in /authenticate/token request");
 
-      response = new AuthorizationTokenDTO();
+      AuthorizationTokenDTO response; response = new AuthorizationTokenDTO();
       response.setError("An error occurred while trying to authorize, please try again later.");
 
       return badRequest(JsonUtils.writeObjectAsString(response));
     }
 
+    // TODO: Make constants
     String fr8UserId = form.get("Fr8UserId");
     response().setHeader("Authorization", gitHubTerminal.generateHMACHeader(fr8UserId));
 
     return ok(JsonUtils.writeObjectAsString(gitHubTerminal.authenticateToken(
-        // TODO: Make constants
         new ExternalAuthDTO(requestQueryString, fr8UserId))));
   }
 

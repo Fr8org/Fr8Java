@@ -32,7 +32,7 @@ abstract public class AbstractTerminalService {
 
   private static final String TEST_SUFFIX = "_TEST";
   private final BaseTerminalEvent baseTerminalEvent;
-  private Map<String, TerminalActivityFactory> activityRegistrations = new HashMap<>();
+  private Map<String, TerminalActivity> activityRegistrations = new HashMap<>();
   private boolean integrationTestMode;
   private Authentication authentication = new Authentication();
 
@@ -47,6 +47,7 @@ abstract public class AbstractTerminalService {
 
   public AbstractTerminalService(BaseTerminalEvent event) {
     this(event, false);
+    registerActivities();
   }
 
   public String generateHMACHeader(String currentUserId) {
@@ -100,7 +101,7 @@ abstract public class AbstractTerminalService {
       MessageDigest md5 = MessageDigest.getInstance("MD5");
       md5.update(content, 0, content.length);
 
-      Logger.debug("Conerted content to md5: " + content);
+      Logger.debug("Converted content to md5: " + content);
 
     } catch (NoSuchAlgorithmException e) {
       Logger.error("Unable to create MD5 hash", e);
@@ -112,11 +113,11 @@ abstract public class AbstractTerminalService {
 
   }
 
-  abstract public StandardFr8TerminalCM discover();
+  public abstract StandardFr8TerminalCM discover();
+  public abstract ExternalAuthUrlDTO generateExternalAuthUrl();
+  public abstract AuthorizationTokenDTO authenticateToken(ExternalAuthDTO externalAuthDTO);
+  public abstract void registerActivities();
 
-  abstract public ExternalAuthUrlDTO generateExternalAuthUrl();
-
-  abstract public AuthorizationTokenDTO authenticateToken(ExternalAuthDTO externalAuthDTO);
 /*
   /// <summary>
   /// Reports Terminal Error incident
@@ -245,22 +246,23 @@ abstract public class AbstractTerminalService {
           .substring(0, activityTemplateName.length() - TEST_SUFFIX.length());
     }
 
-    String curAssemblyName = curTerminal + ".Actions." + activityTemplateName + "_v" + curActivityDTO.getActivityTemplate().getVersion();
+//    String curAssemblyName = curTerminal + ".Actions." + activityTemplateName + "_v" + curActivityDTO.getActivityTemplate().getVersion();
 
     /* Resolve the class by name*/
 //    Class calledType;
-    TerminalActivityFactory factory = activityRegistrations.get(activityTemplateName);
-
-    TerminalActivity terminalActivity = null;
-    if (factory != null) {
-      terminalActivity = factory.getTerminalActivity();
-    } else {
-      // TODO: Fix this
-      activityRegistrations.put(activityTemplateName, null);
-    }
+//    TerminalActivityFactory factory = activityRegistrations.get(activityTemplateName);
+    Logger.debug("Looking for activity template with name: " + activityTemplateName);
+    TerminalActivity terminalActivity = activityRegistrations.get(activityTemplateName);
+//    if (factory != null) {
+//      terminalActivity = factory.getTerminalActivity();
+//    } else {
+//      // TODO: Fix this
+//      activityRegistrations.put(activityTemplateName, null);
+//    }
 
     if (terminalActivity == null) {
       Logger.error("No terminalActivity found for " + activityTemplateName);
+      return "Invalid request: no terminal activity found for " + activityTemplateName;
     }
 
 
@@ -446,6 +448,11 @@ abstract public class AbstractTerminalService {
 //        baseTerminalEvent.SendEventReport(
 //            terminalName,
 //            String.Format("{0} completed processing this Container at {1}.", terminalName, DateTime.Now.ToString("G"))));
+  }
+
+  protected void registerActivity(TerminalActivity activity) {
+    // TODO: Handle the case where a terminal already exists
+    activityRegistrations.put(activity.getActivityName(), activity);
   }
 /*
   public HttpResponseMessage GetActivityDocumentation(String helpPath)

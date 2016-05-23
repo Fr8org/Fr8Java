@@ -32,7 +32,7 @@ abstract public class TerminalActivity {
   protected static final String CONFIGURATION_CONTROLS_LABEL = "Configuration_Controls";
   private String currentFr8UserId; // { get; set; }
   private String currentFr8UserEmail; // { get; set; }
-  protected String activityName; // { get; set; }
+  private final String activityName; // { get; set; }
 
   private List<ActivityTemplateDTO> activityTemplateCache = null;
 
@@ -70,100 +70,105 @@ abstract public class TerminalActivity {
   protected abstract void runCurrentActivity();
   protected abstract void activate();
   protected abstract void deactivate();
-/*
 
-  /// <summary>
-  /// Creates a suspend request for hub execution
-  /// </summary>
-  /// <param name="payload"></param>
-  /// <returns></returns>
-  protected PayloadDTO suspendHubExecution(PayloadDTO payload) {
-    crateManager.getUpdatableStorage();
-    using (var crateStorage = CrateManager.GetUpdatableStorage(payload)) {
-      var operationalState = getOperationalState(crateStorage);
-      operationalState.setCurrentActivityResponse(ActivityResponseDTO.create(ActivityResponse.RequestSuspend));
-    }
-
-    return payload;
+  public String getActivityName() {
+    return activityName;
   }
 
-  /// <summary>
-  /// Creates a terminate request for hub execution
-  /// TODO: we could include a reason message with this request
-  /// after that we could stop throwing exceptions on actions
-  /// </summary>
-  /// <param name="payload"></param>
-  /// <returns></returns>
-  protected PayloadDTO TerminateHubExecution(PayloadDTO payload, String message = null)
-  {
-    using (var crateStorage = CrateManager.GetUpdatableStorage(payload))
+  /*
+
+    /// <summary>
+    /// Creates a suspend request for hub execution
+    /// </summary>
+    /// <param name="payload"></param>
+    /// <returns></returns>
+    protected PayloadDTO suspendHubExecution(PayloadDTO payload) {
+      crateManager.getUpdatableStorage();
+      using (var crateStorage = CrateManager.GetUpdatableStorage(payload)) {
+        var operationalState = getOperationalState(crateStorage);
+        operationalState.setCurrentActivityResponse(ActivityResponseDTO.create(ActivityResponse.RequestSuspend));
+      }
+
+      return payload;
+    }
+
+    /// <summary>
+    /// Creates a terminate request for hub execution
+    /// TODO: we could include a reason message with this request
+    /// after that we could stop throwing exceptions on actions
+    /// </summary>
+    /// <param name="payload"></param>
+    /// <returns></returns>
+    protected PayloadDTO TerminateHubExecution(PayloadDTO payload, String message = null)
     {
-      var operationalState = GetOperationalStateCrate(crateStorage);
-      operationalState.CurrentActivityResponse = ActivityResponseDTO.Create(ActivityResponse.RequestTerminate);
-      operationalState.CurrentActivityResponse.AddResponseMessageDTO(new ResponseMessageDTO { Message = message });
+      using (var crateStorage = CrateManager.GetUpdatableStorage(payload))
+      {
+        var operationalState = GetOperationalStateCrate(crateStorage);
+        operationalState.CurrentActivityResponse = ActivityResponseDTO.Create(ActivityResponse.RequestTerminate);
+        operationalState.CurrentActivityResponse.AddResponseMessageDTO(new ResponseMessageDTO { Message = message });
+      }
+
+      return payload;
     }
 
-    return payload;
-  }
-
-  protected PayloadDTO LaunchPlan(PayloadDTO payload, Guid targetPlanId)
-  {
-    using (var crateStorage = CrateManager.GetUpdatableStorage(payload))
+    protected PayloadDTO LaunchPlan(PayloadDTO payload, Guid targetPlanId)
     {
-      var operationalState = GetOperationalStateCrate(crateStorage);
-      operationalState.CurrentActivityResponse = ActivityResponseDTO.Create(ActivityResponse.LaunchAdditionalPlan);
-      operationalState.CurrentActivityResponse.AddResponseMessageDTO(new ResponseMessageDTO { Details = targetPlanId });
+      using (var crateStorage = CrateManager.GetUpdatableStorage(payload))
+      {
+        var operationalState = GetOperationalStateCrate(crateStorage);
+        operationalState.CurrentActivityResponse = ActivityResponseDTO.Create(ActivityResponse.LaunchAdditionalPlan);
+        operationalState.CurrentActivityResponse.AddResponseMessageDTO(new ResponseMessageDTO { Details = targetPlanId });
+      }
+
+      return payload;
     }
 
-    return payload;
-  }
-
-  protected PayloadDTO JumpToSubplan(PayloadDTO payload, Guid targetSubplanId)
-  {
-    using (var crateStorage = CrateManager.GetUpdatableStorage(payload))
+    protected PayloadDTO JumpToSubplan(PayloadDTO payload, Guid targetSubplanId)
     {
-      var operationalState = GetOperationalStateCrate(crateStorage);
-      operationalState.CurrentActivityResponse = ActivityResponseDTO.Create(ActivityResponse.JumpToSubplan);
-      operationalState.CurrentActivityResponse.AddResponseMessageDTO(new ResponseMessageDTO { Details = targetSubplanId });
+      using (var crateStorage = CrateManager.GetUpdatableStorage(payload))
+      {
+        var operationalState = GetOperationalStateCrate(crateStorage);
+        operationalState.CurrentActivityResponse = ActivityResponseDTO.Create(ActivityResponse.JumpToSubplan);
+        operationalState.CurrentActivityResponse.AddResponseMessageDTO(new ResponseMessageDTO { Details = targetSubplanId });
+      }
+
+      return payload;
     }
 
-    return payload;
-  }
-
-  /// <summary>
-  /// Jumps to an activity that resides in same subplan as current activity
-  /// </summary>
-  /// <param name="payload"></param>
-  /// <returns></returns>
-  protected PayloadDTO JumpToActivity(PayloadDTO payload, Guid targetActivityId)
-  {
-    using (var crateStorage = CrateManager.GetUpdatableStorage(payload))
+    /// <summary>
+    /// Jumps to an activity that resides in same subplan as current activity
+    /// </summary>
+    /// <param name="payload"></param>
+    /// <returns></returns>
+    protected PayloadDTO JumpToActivity(PayloadDTO payload, Guid targetActivityId)
     {
-      var operationalState = GetOperationalStateCrate(crateStorage);
-      operationalState.CurrentActivityResponse = ActivityResponseDTO.Create(ActivityResponse.JumpToActivity);
-      operationalState.CurrentActivityResponse.AddResponseMessageDTO(new ResponseMessageDTO { Details = targetActivityId });
+      using (var crateStorage = CrateManager.GetUpdatableStorage(payload))
+      {
+        var operationalState = GetOperationalStateCrate(crateStorage);
+        operationalState.CurrentActivityResponse = ActivityResponseDTO.Create(ActivityResponse.JumpToActivity);
+        operationalState.CurrentActivityResponse.AddResponseMessageDTO(new ResponseMessageDTO { Details = targetActivityId });
+      }
+
+      return payload;
     }
 
-    return payload;
-  }
-
-  /// <summary>
-  /// Jumps to an activity that resides in same subplan as current activity
-  /// </summary>
-  /// <param name="payload"></param>
-  /// <returns></returns>
-  protected PayloadDTO LaunchAdditionalPlan(PayloadDTO payload, Guid targetSubplanId)
-  {
-    using (var crateStorage = CrateManager.GetUpdatableStorage(payload))
+    /// <summary>
+    /// Jumps to an activity that resides in same subplan as current activity
+    /// </summary>
+    /// <param name="payload"></param>
+    /// <returns></returns>
+    protected PayloadDTO LaunchAdditionalPlan(PayloadDTO payload, Guid targetSubplanId)
     {
-      var operationalState = GetOperationalStateCrate(crateStorage);
-      operationalState.CurrentActivityResponse = ActivityResponseDTO.Create(ActivityResponse.LaunchAdditionalPlan);
-      operationalState.CurrentActivityResponse.AddResponseMessageDTO(new ResponseMessageDTO { Details = targetSubplanId });
-    }
+      using (var crateStorage = CrateManager.GetUpdatableStorage(payload))
+      {
+        var operationalState = GetOperationalStateCrate(crateStorage);
+        operationalState.CurrentActivityResponse = ActivityResponseDTO.Create(ActivityResponse.LaunchAdditionalPlan);
+        operationalState.CurrentActivityResponse.AddResponseMessageDTO(new ResponseMessageDTO { Details = targetSubplanId });
+      }
 
-    return payload;
-  }
-*/
+      return payload;
+    }
+  */
   /// <summary>
   /// returns success to hub
   /// </summary>

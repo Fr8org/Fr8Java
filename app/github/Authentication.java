@@ -65,6 +65,7 @@ public class Authentication {
       String accessToken = responseMap.get("access_token");
       authTokenDTO.setExternalStateToken(state);
 //      authTokenDTO.setUserId(externalAuthDTO.getFr8UserId());
+//      authTokenDTO.setTerminalId("0");
       authTokenDTO.setExternalAccountId(getCurrentGitHubUserId(accessToken));
       if (StringUtils.isNotBlank(accessToken)) {
         authTokenDTO.setToken(accessToken);

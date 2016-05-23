@@ -1,7 +1,6 @@
 package co.fr8.data.interfaces.manifests;
 
 import co.fr8.data.constants.MT;
-import co.fr8.data.crates.CrateManifestType;
 import co.fr8.data.interfaces.dto.ControlDefinitionDTO;
 
 import java.util.ArrayList;

@@ -40,8 +40,11 @@ public class AuthorizationTokenDTO {
   @JsonProperty("AuthCompletedNotificationRequired")
   private boolean authCompleteNotificationRequired;
 
+  /**
+   * @deprecated property no longer in use and replaced by id
+   */
   @JsonProperty("TerminalID")
-  private String terminalId;
+  private int terminalId = 0;
 
   public AuthorizationTokenDTO() {
 
@@ -149,11 +152,11 @@ public class AuthorizationTokenDTO {
     this.externalDomainName = externalDomainName;
   }
 
-  public String getTerminalId() {
+  public int getTerminalId() {
     return terminalId;
   }
 
-  public void setTerminalId(String terminalId) {
+  public void setTerminalId(int terminalId) {
     this.terminalId = terminalId;
   }
 

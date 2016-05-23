@@ -5,10 +5,12 @@ import co.fr8.data.interfaces.manifests.StandardFr8TerminalCM;
 import co.fr8.data.states.ActivityCategoryEnum;
 import co.fr8.data.states.AuthenticationTypeEnum;
 import co.fr8.terminal.base.AbstractTerminalService;
+import github.activities.ListRepositoriesActivity;
 import play.Logger;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
 import static co.fr8.play.ApplicationConstants.*;
@@ -40,12 +42,8 @@ public class GitHubTerminal extends AbstractTerminalService {
         "Subscribe to GitHub Repository", "1", webServiceDTO, terminalDTO, ActivityCategoryEnum.MONITORS,
         true, 380);
 
-    ActivityTemplateDTO pullActivity = new ActivityTemplateDTO("GitHub Pull",
-        "Pull from GitHub Repository", "1", webServiceDTO, terminalDTO, ActivityCategoryEnum.FORWARDERS,
-        true, 380);
-
     StandardFr8TerminalCM ret = new StandardFr8TerminalCM(terminalDTO,
-       Arrays.asList(subscribeActivity, pullActivity));
+       Collections.singletonList(subscribeActivity));
 
     Logger.debug("Created new StandardFr8TerminalCM " + ret);
 
@@ -62,5 +60,10 @@ public class GitHubTerminal extends AbstractTerminalService {
   public AuthorizationTokenDTO authenticateToken(ExternalAuthDTO externalAuthDTO) {
 
     return authentication.authenticate(externalAuthDTO);
+  }
+
+  @Override
+  public void registerActivities() {
+    registerActivity(new ListRepositoriesActivity());
   }
 }
