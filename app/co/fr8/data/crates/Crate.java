@@ -15,10 +15,10 @@ public class Crate<T extends Manifest> {
   private final CrateManifestType crateManifestType;
   protected Object knownContent;
   private JsonNode rawContent;
-  public final String id;
-  public String label;
-  public AvailabilityTypeEnum availability;
-  public T content;
+  private final String id;
+  private String label;
+  private AvailabilityTypeEnum availability;
+  private T content;
 
   public Crate(CrateManifestType crateManifestType) {
     this.crateManifestType = crateManifestType;

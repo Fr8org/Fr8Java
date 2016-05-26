@@ -232,6 +232,7 @@ public class CrateManager implements ICrateManager {
   /// <summary>
   /// Returns a copy of AcvitityUI for the given activity
   /// </summary>
+/*
   public static StandardConfigurationControlsCM getReadonlyActivityUi(ActivityDTO activity) {
     return getReadonlyActivityUi(activity);
   }
@@ -252,5 +253,6 @@ public class CrateManager implements ICrateManager {
 
     return null;
   }
+*/
 
 }

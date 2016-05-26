@@ -15,7 +15,7 @@ public class ManifestDiscovery {
   // Declarations
   /**********************************************************************************/
 
-  public static final ManifestDiscovery _internalDiscovery = new ManifestDiscovery();
+  public static final ManifestDiscovery instance = new ManifestDiscovery();
 
   /**********************************************************************************/
 

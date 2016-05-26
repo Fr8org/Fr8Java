@@ -56,7 +56,7 @@ public class CrateStorageSerializer implements ICrateStorageSerializer {
       }
 
       /* TODO: determine the correct return type */
-      Object clrType = ManifestDiscovery._internalDiscovery.tryResolveType(type);
+      Object clrType = ManifestDiscovery.instance.tryResolveType(type);
 
       if (clrType != null) {
         CrateManifestSerializerAnnotation manifestAttr =

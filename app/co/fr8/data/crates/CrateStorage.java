@@ -11,7 +11,7 @@ import java.util.function.Predicate;
  */
 public class CrateStorage extends ICrateStorage {
 
-  private Map<String, Crate> crateMap;
+
 
   public CrateStorage() {
     crateMap = new HashMap<>();
@@ -106,7 +106,7 @@ public class CrateStorage extends ICrateStorage {
   }
 
   @Override
-  public Crate getFirstCrateOrDefault() {
+  public String findField(String key) {
     return null;
   }
 
