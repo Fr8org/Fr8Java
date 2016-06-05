@@ -12,3 +12,5 @@ POST        /authentication/initial_url         controllers.GitHubTerminalContro
 POST        /authentication/token               controllers.GitHubTerminalController.authenticateToken()
 
 POST        /activities/configure               controllers.GitHubTerminalController.configureActivities()
+
+GET         /test/testInitialConfigure          controllers.TestController.configTest()

@@ -22,15 +22,6 @@ public class ActivityTemplateDTO {
   private int minPaneWidth;
   private boolean needsAuthentication;
 
-//  Version = "1",
-//  Name = "Process_Personal_Report",
-//  Label = "Process Personal Report",
-//  Category = ActivityCategory.Forwarders,
-//  Terminal = terminal,
-//  NeedsAuthentication = true,
-//  MinPaneWidth = 380,
-//  WebService = webService,
-
   public ActivityTemplateDTO() {
   }
 
@@ -136,38 +127,20 @@ public class ActivityTemplateDTO {
     return needsAuthentication;
   }
 
-  /*
-  //[JsonProperty("id")]
-  public Guid Id { get; set; }
-
-  [JsonProperty("name")]
-  public string Name { get; set; }
-
-  [JsonProperty("label")]
-  public string Label { get; set; }
-
-  [JsonProperty("version")]
-  public string Version { get; set; }
-
-  [JsonProperty("webService")]
-  public WebServiceDTO WebService { get; set; }
-
-  [JsonProperty("terminal")]
-  public TerminalDTO Terminal { get; set; }
-
-  [JsonProperty("tags")]
-  public string Tags { get; set; }
-
-  [JsonConverter(typeof(StringEnumConverter))]
-  public ActivityCategory Category { get; set; }
-
-  [JsonConverter(typeof(StringEnumConverter))]
-  public ActivityType Type { get; set; }
-
-  [JsonProperty("minPaneWidth")]
-  public int MinPaneWidth { get; set; }
-
-  public bool NeedsAuthentication { get; set; }
-*/
-
+  @Override
+  public String toString() {
+    return "ActivityTemplateDTO{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", label='" + label + '\'' +
+        ", version='" + version + '\'' +
+        ", webService=" + webService +
+        ", terminal=" + terminal +
+        ", tags='" + tags + '\'' +
+        ", category=" + category +
+        ", type=" + type +
+        ", minPaneWidth=" + minPaneWidth +
+        ", needsAuthentication=" + needsAuthentication +
+        '}';
+  }
 }

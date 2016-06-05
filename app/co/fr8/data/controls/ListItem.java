@@ -6,9 +6,19 @@ package co.fr8.data.controls;
  */
 public class ListItem {
 
-  private boolean selected;
+  private boolean selected = false;
   private String key;
   private String value;
+
+  public ListItem(boolean selected, String key, String value) {
+    this.selected = selected;
+    this.key = key;
+    this.value = value;
+  }
+
+  public ListItem(String key, String value) {
+    this(false, key, value);
+  }
 
   public boolean isSelected() {
     return selected;

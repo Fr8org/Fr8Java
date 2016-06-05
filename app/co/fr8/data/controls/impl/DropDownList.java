@@ -29,6 +29,11 @@ public class DropDownList extends ControlDefinitionDTO {
     super(ControlTypeEnum.DROPDOWN_LIST);
   }
 
+  public DropDownList(String label) {
+    super(ControlTypeEnum.DROPDOWN_LIST);
+    this.setLabel(label);
+  }
+
   public DropDownList(ControlTypeEnum type) {
     super(type);
   }

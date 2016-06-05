@@ -5,7 +5,7 @@ package co.fr8.terminal;
  */
 public class TerminalConstants {
 
-  public static String CONFIGURATION_VALUES_CRATE_LABEL = "Configuration Values";
-
+  public static final String CONFIGURATION_VALUES_CRATE_LABEL = "Configuration Values";
+  public static final String HMAC_SHA_512 = "HmacSHA512";
 
 }

@@ -2,7 +2,7 @@ package co.fr8.data.controls.impl;
 
 import co.fr8.data.controls.ControlTypeEnum;
 import co.fr8.data.crates.Crate;
-import co.fr8.data.crates.ICrateStorage;
+import co.fr8.data.crates.AbstractCrateStorage;
 import co.fr8.data.interfaces.dto.ControlDefinitionDTO;
 import co.fr8.data.interfaces.dto.CrateDescriptionDTO;
 import co.fr8.util.CollectionUtils;
@@ -33,11 +33,11 @@ public class CrateChooser extends ControlDefinitionDTO {
         crateDescriptions.stream().filter(CrateChooser::isSelected).findAny().isPresent();
   }
 
-  public boolean canGetValue(ICrateStorage crateStorage) {
+  public boolean canGetValue(AbstractCrateStorage crateStorage) {
     return crateStorage != null;
   }
 
-  public Crate getValue(ICrateStorage crateStorage) {
+  public Crate getValue(AbstractCrateStorage crateStorage) {
     if (CollectionUtils.isEmpty(crateDescriptions))
       return null;
 

@@ -1,8 +1,8 @@
 package co.fr8.hub.managers;
 
+import co.fr8.data.crates.AbstractCrateStorage;
 import co.fr8.data.crates.Crate;
 import co.fr8.data.crates.CrateStorage;
-import co.fr8.data.crates.ICrateStorage;
 import co.fr8.data.entities.ContainerDO;
 import co.fr8.data.interfaces.dto.*;
 import co.fr8.data.interfaces.manifests.*;
@@ -18,17 +18,22 @@ import java.util.List;
 public class CrateManager implements ICrateManager {
 
   @Override
+  public AbstractCrateStorage updateStorage(AbstractCrateStorage storageAccessExpression) {
+    return null;
+  }
+
+  @Override
   public CrateDTO toDto(Crate crate) {
     return null;
   }
 
   @Override
-  public CrateStorageDTO toDto(ICrateStorage storage) {
+  public CrateStorageDTO toDto(AbstractCrateStorage storage) {
     return null;
   }
 
   @Override
-  public ICrateStorage fromDto(CrateStorageDTO storageDto) {
+  public AbstractCrateStorage fromDto(CrateStorageDTO storageDto) {
     return null;
   }
 
@@ -48,7 +53,7 @@ public class CrateManager implements ICrateManager {
   }
 
   @Override
-  public String crateStorageAsStr(ICrateStorage storage) {
+  public String crateStorageAsStr(AbstractCrateStorage storage) {
     return null;
   }
 
@@ -128,12 +133,12 @@ public class CrateManager implements ICrateManager {
   }
 
   @Override
-  public <T extends Manifest> T getByManifest(PayloadDTO payloadDTO) {
+  public <T extends Manifest> T getByManifest(ContainerExecutionContext containerExecutionContext) {
     return null;
   }
 
   @Override
-  public OperationalStateCM getOperationalState(PayloadDTO payloadDTO) {
+  public OperationalStateCM getOperationalState(ContainerExecutionContext containerExecutionContext) {
     return null;
   }
 
@@ -158,26 +163,26 @@ public class CrateManager implements ICrateManager {
   }
 
   @Override
-  public IUpdatableCrateStorage updateStorage(CrateStorageDTO storageAccessExpression) {
+  public AbstractCrateStorage updateStorage(CrateStorageDTO storageAccessExpression) {
     return null;
   }
 
   @Override
-  public IUpdatableCrateStorage updateStorage(String storageAccessExpression) {
+  public AbstractCrateStorage updateStorage(String storageAccessExpression) {
     return null;
   }
 
-  public IUpdatableCrateStorage getUpdatableStorage(ActivityDTO activity) {
+  public AbstractCrateStorage getUpdatableStorage(ActivityDTO activity) {
     if (activity == null) throw new IllegalArgumentException("action");
     return updateStorage(activity.getCrateStorage());
   }
 
-  public IUpdatableCrateStorage getUpdatableStorage(PayloadDTO payload) {
+  public AbstractCrateStorage getUpdatableStorage(PayloadDTO payload) {
     if (payload == null) throw new IllegalArgumentException("payload");
     return updateStorage(payload.getCrateStorage());
   }
 
-  public ICrateStorage getStorage(String crateStorageRaw) {
+  public AbstractCrateStorage getStorage(String crateStorageRaw) {
     if (StringUtils.isBlank(crateStorageRaw)) {
       return new CrateStorage();
     }
@@ -185,11 +190,11 @@ public class CrateManager implements ICrateManager {
     return fromDto(JsonUtils.writeStringToCrateStorageDTO(crateStorageRaw));
   }
 
-  public ICrateStorage getStorage(ActivityDTO activity) {
+  public AbstractCrateStorage getStorage(ActivityDTO activity) {
     return fromDto(activity.getCrateStorage());
   }
 
-  public ICrateStorage getStorage(PayloadDTO payload) {
+  public AbstractCrateStorage getStorage(PayloadDTO payload) {
     return fromDto(payload.getCrateStorage());
   }
 
@@ -213,10 +218,10 @@ public class CrateManager implements ICrateManager {
     }
     ICrateManager crateManager = new CrateManager();
 
-    ActivityDTO activityDto = null;
+    ActivityDTO activityPayload = null;
     if (activity instanceof ActivityDTO) {
-      activityDto = (ActivityDTO) activity;
-      IUpdatableCrateStorage storage = crateManager.getUpdatableStorage(activityDto);
+      activityPayload = (ActivityDTO) activity;
+      IUpdatableCrateStorage storage = crateManager.getUpdatableStorage(activityPayload);
 
         Crate controlsCrate = storage.getFirstCrate();
 
@@ -226,14 +231,14 @@ public class CrateManager implements ICrateManager {
             new StandardConfigurationControlsCM(activityUi.getControls()), controlsCrate.getAvailability()));
 
     }
-    return activityDto;
+    return activityPayload;
   }
 
   /// <summary>
-  /// Returns a copy of AcvitityUI for the given activity
+  /// Returns a copy of AbstractActivityUI for the given activity
   /// </summary>
 /*
-  public static StandardConfigurationControlsCM getReadonlyActivityUi(ActivityDTO activity) {
+  public static StandardConfigurationControlsCM getReadonlyActivityUi(ActivityPayload activity) {
     return getReadonlyActivityUi(activity);
   }
 
@@ -243,11 +248,11 @@ public class CrateManager implements ICrateManager {
     }
     ICrateManager crateManager = new CrateManager();
 
-    ActivityDTO activityDto = null;
+    ActivityPayload activityDto = null;
 
-    if (activity instanceof ActivityDTO) {
-      activityDto = (ActivityDTO) activity;
-      ICrateStorage storage = crateManager.getStorage(activityDto);
+    if (activity instanceof ActivityPayload) {
+      activityDto = (ActivityPayload) activity;
+      AbstractCrateStorage storage = crateManager.getStorage(activityDto);
       return new StandardConfigurationControlsCM().cloneProperties(storage.getFirstCrateOrDefault().getContent());
     }
 

@@ -58,4 +58,17 @@ public class TerminalDTO {
   public int getAuthenticationType() {
     return authenticationType;
   }
+
+  @Override
+  public String toString() {
+    return "TerminalDTO{" +
+        "name='" + name + '\'' +
+        ", label='" + label + '\'' +
+        ", version='" + version + '\'' +
+        ", terminalStatus=" + terminalStatus +
+        ", endpoint='" + endpoint + '\'' +
+        ", description='" + description + '\'' +
+        ", authenticationType=" + authenticationType +
+        '}';
+  }
 }

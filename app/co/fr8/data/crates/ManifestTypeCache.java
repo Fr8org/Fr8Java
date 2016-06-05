@@ -21,7 +21,7 @@ public class ManifestTypeCache {
     nameMap = new HashMap<>();
 
     for (MT manifestType : MT.values()) {
-      nameMap.put(manifestType.getName(), manifestType.getId());
+      nameMap.put(manifestType.getFriendlyName(), manifestType.getId());
     }
   }
 
@@ -59,7 +59,7 @@ public class ManifestTypeCache {
 
         if (manifestType == null) {
           if (type.isAssignableFrom(Manifest.class) && !Modifier.isAbstract(type.getModifiers())) {
-            manifestType = new CrateManifestType(mtEnum.getName(), mtEnum.getId());
+            manifestType = new CrateManifestType(mtEnum.getFriendlyName(), mtEnum.getId());
           } else {
             manifestType = CrateManifestType.UNKNOWN;
           }
@@ -78,7 +78,7 @@ public class ManifestTypeCache {
    *                should be resolved
    * @return a CrateManifestType, if one exists
    */
-  public static CrateManifestType tryResolveManifest(Object content) {
+/*  public static CrateManifestType tryResolveManifest(Object content) {
     if (content == null) {
       return CrateManifestType.UNKNOWN;
     }
@@ -95,5 +95,10 @@ public class ManifestTypeCache {
     }
 
     return tryResolveManifest(content);
+  }*/
+
+  public static MT tryResolveManifest(Object content) {
+    // TODO: Fix this
+    return MT.UNKNOWN;
   }
 }

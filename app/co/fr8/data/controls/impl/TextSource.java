@@ -2,10 +2,8 @@ package co.fr8.data.controls.impl;
 
 import co.fr8.data.constants.MT;
 import co.fr8.data.controls.ControlTypeEnum;
-import co.fr8.data.crates.ICrateStorage;
-import co.fr8.data.crates.ManifestDiscovery;
+import co.fr8.data.crates.AbstractCrateStorage;
 import co.fr8.data.interfaces.dto.FieldSourceDTO;
-import co.fr8.data.interfaces.manifests.FieldDescriptionsCM;
 import co.fr8.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,11 +27,11 @@ public class TextSource extends DropDownList {
     this.initialLabel = initialLabel;
     this.upstreamSourceLabel = upstreamSourceLabel;
     this.setName(name);
-    // TODO: Make sure that the CrateManifestType.getName() method is correct here
-    this.setSource(new FieldSourceDTO(upstreamSourceLabel, MT.FieldDescription.getName()));
+    // TODO: Make sure that the CrateManifestType.getFriendlyName() method is correct here
+    this.setSource(new FieldSourceDTO(upstreamSourceLabel, MT.FieldDescription.getFriendlyName()));
   }
 
-  public String getValue(ICrateStorage payloadCrateStorage) {
+  public String getValue(AbstractCrateStorage payloadCrateStorage) {
     switch(valueSource.toLowerCase()) {
       case "specific":
         return textValue;
@@ -47,7 +45,7 @@ public class TextSource extends DropDownList {
     }
   }
 
-  public boolean canGetValue(ICrateStorage payloadCrateStorage) {
+  public boolean canGetValue(AbstractCrateStorage payloadCrateStorage) {
 //    if (hasSpecifiedValue())
 //      return true;
 

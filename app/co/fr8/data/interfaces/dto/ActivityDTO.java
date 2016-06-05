@@ -1,7 +1,13 @@
 package co.fr8.data.interfaces.dto;
 
+import co.fr8.data.crates.Crate;
+import co.fr8.data.crates.CrateStorage;
+import co.fr8.terminal.base.ActivityPayload;
+import co.fr8.util.CollectionUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.UUID;
 
 /**
@@ -10,41 +16,44 @@ import java.util.UUID;
 public class ActivityDTO {
 
   @JsonProperty("Label")
-  private String label;
+  protected String label;
 
-  private ActivityTemplateDTO activityTemplate;
+  protected ActivityTemplateDTO activityTemplate;
 
   @JsonProperty("RootPlanNodeId")
-  private UUID rootPlanNodeId;
+  protected UUID rootPlanNodeId;
 
   @JsonProperty("ParentPlanNodeId")
-  private UUID parentPlanNodeId;
+  protected UUID parentPlanNodeId;
 
   @JsonProperty("CurrentView")
-  private String currentView;
+  protected String currentView;
 
   @JsonProperty("Ordering")
-  private int ordering;
+  protected int ordering;
 
   @JsonProperty("Id")
-  private UUID id;
+  protected UUID id;
 
   @JsonProperty("CrateStorage")
-  private CrateStorageDTO crateStorage;
+  protected CrateStorageDTO crateStorage;
 
   @JsonProperty("ChildrenActivities")
-  private ActivityDTO[] childActivities;
+  protected ActivityDTO[] childActivities;
+
+  @JsonProperty("AuthTokenId")
+  protected UUID authTokenId;
 
   @JsonProperty("AuthToken")
-  private AuthorizationTokenDTO authToken;
+  protected AuthorizationTokenDTO authToken;
 
   @JsonProperty("Fr8AccountId")
-  private String fr8AccountId;
+  protected String fr8AccountId;
 
-  private String documentation;
+  protected String documentation;
 
   @JsonProperty("Name")
-  private String name;
+  protected String name;
 
   public ActivityDTO() {
   }
@@ -52,7 +61,8 @@ public class ActivityDTO {
   public ActivityDTO(String label, ActivityTemplateDTO activityTemplate, UUID rootPlanNodeId,
                      UUID parentPlanNodeId, String currentView, int ordering, UUID id,
                      CrateStorageDTO crateStorage, ActivityDTO[] childActivities,
-                     AuthorizationTokenDTO authToken, String fr8AccountId, String documentation) {
+                     AuthorizationTokenDTO authToken, String fr8AccountId, String documentation,
+                     UUID authTokenId) {
     this.label = label;
     this.activityTemplate = activityTemplate;
     this.rootPlanNodeId = rootPlanNodeId;
@@ -65,6 +75,43 @@ public class ActivityDTO {
     this.authToken = authToken;
     this.fr8AccountId = fr8AccountId;
     this.documentation = documentation;
+    this.authTokenId = authTokenId;
+  }
+
+  public ActivityDTO(ActivityPayload activityPayload) {
+    this.id = activityPayload.getId();
+    this.label = activityPayload.getLabel();
+    this.name = activityPayload.getName();
+
+    if (CollectionUtils.isNotEmpty(activityPayload.getChildrenActivities())) {
+//      this.childActivities = new ArrayList<>(activityPayload.getChildrenActivities().length);
+      childActivities = new ActivityDTO[activityPayload.getChildrenActivities().size()];
+      for (int i = 0; i < childActivities.length; i++) {
+        this.childActivities[i] = new ActivityDTO(activityPayload.getChildrenActivities().get(i));
+      }
+    }
+
+    this.activityTemplate = activityPayload.getActivityTemplate();
+
+    if (activityPayload.getCrateStorage() != null && activityPayload.getCrateStorage().getCount() > 0) {
+
+      this.crateStorage = new CrateStorageDTO();
+
+      CrateDTO[] crateDTOArray =
+          new CrateDTO[activityPayload.getCrateStorage().getCount()];
+
+      for (int i = 0; i < crateDTOArray.length; i++){
+        crateDTOArray[i] =
+            new CrateDTO(activityPayload.getCrateStorage().getCratesAsList().get(i));
+      }
+
+      this.crateStorage.setCrates(crateDTOArray);
+    }
+
+    this.rootPlanNodeId = activityPayload.getRootPlanNodeId();
+    this.parentPlanNodeId = activityPayload.getParentPlanNodeId();
+    this.ordering = activityPayload.getOrdering();
+
   }
 
   public String getLabel() {
@@ -171,34 +218,12 @@ public class ActivityDTO {
     this.name = name;
   }
 
-  /*
-  public string Label { get; set; }
+  public UUID getAuthTokenId() {
+    return authTokenId;
+  }
 
-  [JsonProperty("activityTemplate")]
-      [JsonConverter(typeof(ActivityTemplateActivityConverter))]
-  public ActivityTemplateDTO ActivityTemplate { get; set; }
+  public void setAuthTokenId(UUID authTokenId) {
+    this.authTokenId = authTokenId;
+  }
 
-  public Guid? RootPlanNodeId { get; set; }
-
-  public Guid? ParentPlanNodeId { get; set; }
-
-  public string CurrentView { get; set; }
-
-  public int Ordering { get; set; }
-
-  public Guid Id { get; set; }
-
-  public CrateStorageDTO CrateStorage { get; set; }
-
-  public ActivityDTO[] ChildrenActivities { get; set; }
-
-  public AuthorizationTokenDTO AuthToken { get; set; }
-
-
-  [JsonIgnore]
-  public string Fr8AccountId { get; set; }
-
-  [JsonProperty("documentation")]
-  public string Documentation { get; set; }
-  */
 }

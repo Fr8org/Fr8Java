@@ -7,6 +7,7 @@ import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -28,6 +29,20 @@ public class JsonUtils {
     return StringUtils.EMPTY;*/
   }
 
+  public static <T> T writeNodeAsObject(JsonNode node, Class<T> type) {
+    try {
+      return objectMapper.treeToValue(node, type);
+    } catch (JsonProcessingException e) {
+      Logger.error("Unable to map node " + node + " to " + type.getName());
+    }
+    return null;
+  }
+
+  public static String prettyPrintObjectString(Object object) {
+    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    return writeObjectAsString(object);
+  }
+
   public static String writeObjectAsString(Object object) {
     try {
       return objectMapper.writeValueAsString(object);
@@ -36,6 +51,16 @@ public class JsonUtils {
     }
 
     return StringUtils.EMPTY;
+  }
+
+  public static JsonNode writeObjectToJsonNode(Object object) {
+    try {
+      return objectMapper.valueToTree(object);
+    } catch (IllegalArgumentException e) {
+      Logger.error("Exception converting object to JsonNode: " + object, e);
+    }
+
+    return null;
   }
 
   public static JsonNode writeStringToObject(String jsonString) {
@@ -51,9 +76,9 @@ public class JsonUtils {
     try {
 //      JsonNode activityDTOAsJson = writeStringToObject(dtoString);
 
-      Logger.debug("Extracted ActivityDTO as JSON: " + dtoString);
+      Logger.debug("Extracted ActivityPayload as JSON: " + dtoString);
 
-//      ActivityDTO ret = new ActivityDTO();
+//      ActivityPayload ret = new ActivityPayload();
       return objectMapper.readValue(dtoString, ActivityDTO.class);
 //      return ret;
     } catch (IOException e) {

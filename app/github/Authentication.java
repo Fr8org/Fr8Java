@@ -1,7 +1,8 @@
 package github;
 
-import co.fr8.data.interfaces.dto.AuthorizationTokenDTO;
+import co.fr8.data.interfaces.dto.AuthorizationToken;
 import co.fr8.data.interfaces.dto.ExternalAuthDTO;
+import co.fr8.play.ApplicationConstants;
 import co.fr8.util.json.JsonUtils;
 import co.fr8.util.logging.Logger;
 import co.fr8.util.net.HttpUtils;
@@ -33,8 +34,8 @@ public class Authentication {
     this.gitRedirectUri = AUTH_PATH;
   }
 
-  public AuthorizationTokenDTO authenticate(ExternalAuthDTO externalAuthDTO) {
-    AuthorizationTokenDTO authTokenDTO = new AuthorizationTokenDTO();
+  public AuthorizationToken authenticate(ExternalAuthDTO externalAuthDTO) {
+    AuthorizationToken authTokenDTO = new AuthorizationToken();
 
     if (StringUtils.isBlank(AUTH_TOKEN_PATH)) {
       authTokenDTO.setError("Authorization token path is not configured, no request can be sent");
@@ -81,7 +82,7 @@ public class Authentication {
   private String getCurrentGitHubUserId(String accessToken) {
 
     String response =
-        HttpUtils.get("https://api.github.com/user?access_token=" + accessToken);
+        HttpUtils.get(ApplicationConstants.USER_URL + "?access_token=" + accessToken);
 
     JsonNode userResponse = JsonUtils.writeStringToObject(response);
 

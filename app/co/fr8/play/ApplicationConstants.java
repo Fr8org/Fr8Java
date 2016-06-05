@@ -25,6 +25,12 @@ public class ApplicationConstants {
   public static final String TERMINAL_SECRET =
       Play.application().configuration().getString("fr8.terminal.secret");
 
+  public static final String HUB_API_VERSION =
+      Play.application().configuration().getString("fr8.hub.apiVersion");
+
+  public static final String HUB_API_PATH =
+      CORE_WEBSERVER_URL + "/api/" + HUB_API_VERSION;
+
   public static final String AUTH_PATH =
       Play.application().configuration().getString("github.auth.path");
 
@@ -43,8 +49,20 @@ public class ApplicationConstants {
   public static final String AUTH_TOKEN_PATH =
       Play.application().configuration().getString("github.oauth.tokenUrl");
 
+  public static final String API_HOST =
+      Play.application().configuration().getString("github.api.host");
+
+  public static final String USER_URL =
+      Play.application().configuration().getString("github.api.userPath");
+
+  public static final String REPOS_URL =
+      Play.application().configuration().getString("github.api.reposPath");
+
   public static final String OAUTH_CODE_PARAM = "code";
 
   public static final String OAUTH_STATE_PARAM = "state";
+
+  public static final String LIST_REPOSITORIES_ACTIVITY_NAME =
+      Play.application().configuration().getString("github.terminals.subscribe.name");
 
 }

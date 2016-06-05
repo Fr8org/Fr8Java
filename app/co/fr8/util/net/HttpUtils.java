@@ -96,8 +96,10 @@ public class HttpUtils {
 
       if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
         // TODO: Implement
+        Logger.debug("Successful response");
       } else {
-
+        Logger.warn("Bad response: " + response.getStatusLine().getStatusCode()
+            + ": " + response.getStatusLine().getReasonPhrase());
       }
 
       HttpEntity responseEntity = response.getEntity();

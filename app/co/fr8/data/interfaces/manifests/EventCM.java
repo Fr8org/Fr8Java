@@ -1,9 +1,8 @@
 package co.fr8.data.interfaces.manifests;
 
 import co.fr8.data.constants.MT;
-import co.fr8.data.crates.CrateManifestSerializerAnnotation;
+import co.fr8.data.crates.AbstractCrateStorage;
 import co.fr8.data.crates.CrateStorage;
-import co.fr8.data.crates.ICrateStorage;
 
 /**
  * TODO: Implement
@@ -13,7 +12,7 @@ public class EventCM extends Manifest {
 
   private String eventName;
   private String palletId;
-  private ICrateStorage crateStorage;
+  private AbstractCrateStorage crateStorage;
 
   public EventCM() {
     super(MT.EventOrIncidentReport);
@@ -42,11 +41,11 @@ public class EventCM extends Manifest {
     this.palletId = palletId;
   }
 
-  public ICrateStorage getCrateStorage() {
+  public AbstractCrateStorage getCrateStorage() {
     return crateStorage;
   }
 
-  public void setCrateStorage(ICrateStorage crateStorage) {
+  public void setCrateStorage(AbstractCrateStorage crateStorage) {
     this.crateStorage = crateStorage;
   }
 }

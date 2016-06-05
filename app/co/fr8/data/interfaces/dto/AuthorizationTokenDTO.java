@@ -3,7 +3,7 @@ package co.fr8.data.interfaces.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * DataTransactionObject for Authorization Token
+ * TODO: Document
  */
 public class AuthorizationTokenDTO {
 
@@ -38,31 +38,13 @@ public class AuthorizationTokenDTO {
   private String error;
 
   @JsonProperty("AuthCompletedNotificationRequired")
-  private boolean authCompleteNotificationRequired;
+  private boolean authCompletedNotificationRequired;
 
   /**
    * @deprecated property no longer in use and replaced by id
    */
   @JsonProperty("TerminalID")
   private int terminalId = 0;
-
-  public AuthorizationTokenDTO() {
-
-  }
-
-  public AuthorizationTokenDTO(String id, String token, String externalAccountId,
-                               String externalDomainId, String userId, String externalStateToken,
-                               String additionalAttributes, String error, boolean authCompleteNotificationRequired) {
-    this.id = id;
-    this.token = token;
-    this.externalAccountId = externalAccountId;
-    this.externalDomainId = externalDomainId;
-    this.userId = userId;
-    this.externalStateToken = externalStateToken;
-    this.additionalAttributes = additionalAttributes;
-    this.error = error;
-    this.authCompleteNotificationRequired = authCompleteNotificationRequired;
-  }
 
   public String getId() {
     return id;
@@ -86,6 +68,14 @@ public class AuthorizationTokenDTO {
 
   public void setExternalAccountId(String externalAccountId) {
     this.externalAccountId = externalAccountId;
+  }
+
+  public String getExternalAccountName() {
+    return externalAccountName;
+  }
+
+  public void setExternalAccountName(String externalAccountName) {
+    this.externalAccountName = externalAccountName;
   }
 
   public String getExternalDomainId() {
@@ -128,28 +118,12 @@ public class AuthorizationTokenDTO {
     this.error = error;
   }
 
-  public boolean isAuthCompleteNotificationRequired() {
-    return authCompleteNotificationRequired;
+  public boolean isAuthCompletedNotificationRequired() {
+    return authCompletedNotificationRequired;
   }
 
-  public void setAuthCompleteNotificationRequired(boolean authCompleteNotificationRequired) {
-    this.authCompleteNotificationRequired = authCompleteNotificationRequired;
-  }
-
-  public String getExternalAccountName() {
-    return externalAccountName;
-  }
-
-  public void setExternalAccountName(String externalAccountName) {
-    this.externalAccountName = externalAccountName;
-  }
-
-  public String getExternalDomainName() {
-    return externalDomainName;
-  }
-
-  public void setExternalDomainName(String externalDomainName) {
-    this.externalDomainName = externalDomainName;
+  public void setAuthCompletedNotificationRequired(boolean authCompletedNotificationRequired) {
+    this.authCompletedNotificationRequired = authCompletedNotificationRequired;
   }
 
   public int getTerminalId() {
@@ -159,18 +133,4 @@ public class AuthorizationTokenDTO {
   public void setTerminalId(int terminalId) {
     this.terminalId = terminalId;
   }
-
-  /*
-  public string Id { get; set; }
-  public string Token { get; set; }
-  public string ExternalAccountId { get; set; }
-
-  public string ExternalDomainId { get; set; }
-  public string UserId { get; set; }
-  public string ExternalStateToken { get; set; }
-  public string AdditionalAttributes { get; set; }
-  public string Error { get; set; }
-  public bool AuthCompletedNotificationRequired { get; set; }
-*/
-
 }

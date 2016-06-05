@@ -2,7 +2,6 @@ package co.fr8.data.interfaces.manifests;
 
 import co.fr8.data.constants.MT;
 import co.fr8.data.crates.CrateManifestType;
-import co.fr8.data.crates.CrateManifestTypeAnnotation;
 import co.fr8.util.CollectionUtils;
 
 import java.lang.reflect.Field;
@@ -12,7 +11,6 @@ import java.util.Map;
 /**
  * Abstract class that represents the Manifest object
  */
-@CrateManifestTypeAnnotation(manifestType = MT.UNKNOWN)
 abstract public class Manifest {
 
     private static Map<Class, String[]> PkCache = new HashMap<>();
@@ -34,7 +32,7 @@ abstract public class Manifest {
      * @param manifestType the MT object used to resolve the CrateManifestType
      */
     protected Manifest(MT manifestType) {
-        this(manifestType.getId(), manifestType.getName());
+        this(manifestType.getId(), manifestType.getFriendlyName());
     }
 
     /**

@@ -61,4 +61,12 @@ public class StandardFr8TerminalCM extends Manifest {
   public void setActivities(List<ActivityTemplateDTO> activities) {
     this.activities = activities;
   }
+
+  @Override
+  public String toString() {
+    return "StandardFr8TerminalCM{" +
+        "definition=" + definition +
+        ", activities=" + activities +
+        '}';
+  }
 }

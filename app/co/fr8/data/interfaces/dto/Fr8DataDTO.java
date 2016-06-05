@@ -3,10 +3,10 @@ package co.fr8.data.interfaces.dto;
 import java.util.UUID;
 
 /**
- * Datat Transfer Object which represents Fr8Data
+ * Data Transfer Object which represents Fr8Data
  */
 public class Fr8DataDTO {
-  private ActivityDTO activityDTO;
+  private ActivityDTO activityPayload;
   private UUID containerId;
 
 
@@ -19,23 +19,23 @@ public class Fr8DataDTO {
   public Fr8DataDTO() {
   }
 
-  public Fr8DataDTO(ActivityDTO activityDTO, String containerId) {
-    this.activityDTO = activityDTO;
+  public Fr8DataDTO(ActivityDTO activityPayload, String containerId) {
+    this.activityPayload = activityPayload;
     this.containerId = UUID.fromString(containerId);
   }
 
-  public Fr8DataDTO(ActivityDTO activityDTO, UUID containerId, String explicitData) {
-    this.activityDTO = activityDTO;
+  public Fr8DataDTO(ActivityDTO activityPayload, UUID containerId, String explicitData) {
+    this.activityPayload = activityPayload;
     this.containerId = containerId;
     this.explicitData = explicitData;
   }
 
-  public ActivityDTO getActivityDTO() {
-    return activityDTO;
+  public ActivityDTO getActivityPayload() {
+    return activityPayload;
   }
 
-  public void setActivityDTO(ActivityDTO activityDTO) {
-    this.activityDTO = activityDTO;
+  public void setActivityPayload(ActivityDTO activityPayload) {
+    this.activityPayload = activityPayload;
   }
 
   public UUID getContainerId() {
@@ -52,5 +52,14 @@ public class Fr8DataDTO {
 
   public void setExplicitData(String explicitData) {
     this.explicitData = explicitData;
+  }
+
+  @Override
+  public String toString() {
+    return "Fr8DataDTO{" +
+        "activityPayload=" + activityPayload +
+        ", containerId=" + containerId +
+        ", explicitData='" + explicitData + '\'' +
+        '}';
   }
 }

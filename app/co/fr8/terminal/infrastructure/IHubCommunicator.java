@@ -1,6 +1,5 @@
 package co.fr8.terminal.infrastructure;
 
-import co.fr8.data.interfaces.dto.ActivityDTO;
 import co.fr8.data.interfaces.dto.PayloadDTO;
 
 import java.util.UUID;
@@ -12,7 +11,7 @@ public interface IHubCommunicator {
   /*Task*/ void configure(String terminalName);
 
 
-  PayloadDTO getPayload(ActivityDTO activityDO, UUID containerId, String userId);
+  PayloadDTO getPayload(UUID containerIdd);
 /*
   Task<UserDTO> GetCurrentUser(ActivityDO activityDO, Guid containerId, string userId);
   Task<FieldDescriptionsCM> GetDesignTimeFieldsByDirection(ActivityDO activityDO, CrateDirection direction, AvailabilityType availability, string userId);
@@ -28,11 +27,11 @@ public interface IHubCommunicator {
 
   Task<List<ActivityTemplateDTO>> GetActivityTemplates(string tag, string userId);
   Task<List<FieldValidationResult>> ValidateFields(List<FieldValidationDTO> fields, string userId);
-  Task<AuthorizationTokenDTO> GetAuthToken(string authTokenId, string curFr8UserId);
-  Task<ActivityDTO> ConfigureActivity(ActivityDTO activityDTO, string userId);
+  Task<AuthorizationToken> GetAuthToken(string authTokenId, string curFr8UserId);
+  Task<ActivityPayload> ConfigureActivity(ActivityPayload activityDTO, string userId);
   Task<ActivityDO> SaveActivity(ActivityDO activityDO, string userId);
   Task<ActivityDO> ConfigureActivity(ActivityDO activityDO, string userId);
-  Task<ActivityDTO> CreateAndConfigureActivity(Guid templateId, string userId, string label = null, int? order = null, Guid? parentNodeId = null, bool createPlan = false, Guid? authorizationTokenId = null);
+  Task<ActivityPayload> CreateAndConfigureActivity(Guid templateId, string userId, string label = null, int? order = null, Guid? parentNodeId = null, bool createPlan = false, Guid? authorizationTokenId = null);
   Task<PlanDTO> CreatePlan(PlanEmptyDTO planDTO, string userId);
   Task RunPlan(Guid planId, List<CrateDTO> payload, string userId);
   Task<PlanDO> ActivatePlan(PlanDO planDO, string userId);

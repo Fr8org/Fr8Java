@@ -2,6 +2,7 @@ package co.fr8.data.interfaces.manifests;
 
 import co.fr8.data.constants.MT;
 import co.fr8.data.interfaces.dto.ControlDefinitionDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,8 @@ import java.util.List;
  */
 public class StandardConfigurationControlsCM extends Manifest {
 
-  List<ControlDefinitionDTO> controls;
+  @JsonProperty("Controls")
+  protected List<ControlDefinitionDTO> controls;
 
   public StandardConfigurationControlsCM() {
     super(MT.StandardConfigurationControls);

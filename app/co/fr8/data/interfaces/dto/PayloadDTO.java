@@ -9,12 +9,23 @@ import java.util.UUID;
  */
 public class PayloadDTO {
 
+  private UUID containerId;
+
   @JsonProperty("container")
   private CrateStorageDTO crateStorage;
 
-  private final UUID containerId;
+  public PayloadDTO() {
+  }
 
   public PayloadDTO(UUID containerId) {
+    this.containerId = containerId;
+  }
+
+  public UUID getContainerId() {
+    return containerId;
+  }
+
+  public void setContainerId(UUID containerId) {
     this.containerId = containerId;
   }
 
@@ -24,9 +35,5 @@ public class PayloadDTO {
 
   public void setCrateStorage(CrateStorageDTO crateStorage) {
     this.crateStorage = crateStorage;
-  }
-
-  public UUID getContainerId() {
-    return containerId;
   }
 }

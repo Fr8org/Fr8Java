@@ -1,6 +1,8 @@
 package co.fr8.data.interfaces.dto;
 
+import co.fr8.data.crates.Crate;
 import co.fr8.data.states.AvailabilityTypeEnum;
+import co.fr8.util.json.JsonUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Date;
@@ -22,6 +24,18 @@ public class CrateDTO {
   private String parentCrateId;
   private Date createTime;
   private AvailabilityTypeEnum availability;
+
+  public CrateDTO(Crate crate) {
+//    this.manifestId = crate.getId();
+    this.manifestType = crate.getCrateManifestType().getFriendlyName();
+    this.label = crate.getLabel();
+    this.id = crate.getId();
+    this.contents = JsonUtils.writeObjectToJsonNode(crate.getContent());
+    // HERE IS YOUR PROBLEM
+//    this.contents = crate.getRawContent();
+    this.availability = crate.getAvailability();
+
+  }
 
   public String getManifestType() {
     return manifestType;

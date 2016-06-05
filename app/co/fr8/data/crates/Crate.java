@@ -1,5 +1,7 @@
 package co.fr8.data.crates;
 
+import co.fr8.data.constants.MT;
+import co.fr8.data.interfaces.dto.CrateDTO;
 import co.fr8.data.interfaces.manifests.Manifest;
 import co.fr8.data.states.AvailabilityTypeEnum;
 import co.fr8.util.logging.Logger;
@@ -12,55 +14,61 @@ import java.util.UUID;
  */
 public class Crate<T extends Manifest> {
 
-  private final CrateManifestType crateManifestType;
+  private MT crateManifestType;
   protected Object knownContent;
   private JsonNode rawContent;
-  private final String id;
+  private String id;
   private String label;
   private AvailabilityTypeEnum availability;
   private T content;
 
-  public Crate(CrateManifestType crateManifestType) {
+  public Crate(MT crateManifestType) {
     this.crateManifestType = crateManifestType;
     this.id = generateUUIDString();
   }
 
-  public Crate(CrateManifestType crateManifestType, String id) {
+  public Crate(MT crateManifestType, String id) {
     this.crateManifestType = crateManifestType;
     this.id = id;
   }
 
-  public Crate(CrateManifestType crateManifestType, JsonNode content) {
+  public Crate(MT crateManifestType, JsonNode content) {
     this.crateManifestType = crateManifestType;
     this.id = generateUUIDString();
   }
 
-  public Crate(CrateManifestType crateManifestType, String id, Object content) {
+  public Crate(MT crateManifestType, String id, Object content) {
     this.crateManifestType = crateManifestType;
     this.id = id;
     this.knownContent = content;
   }
 
-  public Crate(CrateManifestType crateManifestType, String id, JsonNode content) {
+  public Crate(MT crateManifestType, T content) {
+    this.crateManifestType = crateManifestType;
+    this.content = content;
+    this.id = generateUUIDString();
+  }
+
+  public Crate(MT crateManifestType, String id, JsonNode content) {
     this.crateManifestType = crateManifestType;
     this.id = id;
     this.rawContent = content;
   }
 
   public Crate(String label, JsonNode content) {
-    this.crateManifestType = CrateManifestType.UNKNOWN;
+    this.crateManifestType = MT.UNKNOWN;
     this.id = generateUUIDString();
     this.label = label;
     this.rawContent = content;
   }
 
-  public Crate(CrateManifestType crateManifestType, String id, AvailabilityTypeEnum availability) {
+  public Crate(MT crateManifestType, String id, AvailabilityTypeEnum availability) {
     this.crateManifestType = crateManifestType;
     this.id = id;
     this.availability = availability;
   }
 
-  public Crate(CrateManifestType crateManifestType, String label, Object content, AvailabilityTypeEnum availability) {
+  public Crate(MT crateManifestType, String label, Object content, AvailabilityTypeEnum availability) {
     this.crateManifestType = crateManifestType;
     this.id = generateUUIDString();
     this.availability = (availability == null) ? AvailabilityTypeEnum.NotSet : availability;
@@ -68,7 +76,7 @@ public class Crate<T extends Manifest> {
     this.label = label;
   }
 
-  public Crate(CrateManifestType crateManifestType, String label, JsonNode content, AvailabilityTypeEnum availability) {
+  public Crate(MT crateManifestType, String label, JsonNode content, AvailabilityTypeEnum availability) {
     this.crateManifestType = crateManifestType;
     this.id = generateUUIDString();
     this.availability = (availability == null) ? AvailabilityTypeEnum.NotSet : availability;
@@ -76,13 +84,23 @@ public class Crate<T extends Manifest> {
     this.label = label;
   }
 
-  public Crate(CrateManifestType crateManifestType, UUID id,
+  public Crate(MT crateManifestType, UUID id,
                AvailabilityTypeEnum availability, String label, Object content) {
     this.id = id.toString();
     this.availability = availability;
     this.crateManifestType = crateManifestType;
     this.label = label;
     this.knownContent = content;
+  }
+
+  public Crate(CrateDTO crateDTO) {
+    this.id = crateDTO.getId();
+    this.availability = crateDTO.getAvailability();
+    this.crateManifestType =
+        MT.findByFriendlyName(crateDTO.getManifestType());
+    this.label = crateDTO.getLabel();
+    this.rawContent = crateDTO.getContents();
+    this.knownContent = crateDTO.getContents();
   }
 //
 //  public static Crate<T> fromContent(String label, T content) {
@@ -109,11 +127,11 @@ public class Crate<T extends Manifest> {
     return new Crate(label, content);
   }
 
-  public static Crate fromJson(CrateManifestType manifestType, String id, JsonNode content) {
+  public static Crate fromJson(MT manifestType, String id, JsonNode content) {
     return new Crate(manifestType, id, content);
   }
 
-  public static Crate fromJson(CrateManifestType manifestType, JsonNode content) {
+  public static Crate fromJson(MT manifestType, JsonNode content) {
     return new Crate(manifestType, content);
   }
 
@@ -130,8 +148,8 @@ public class Crate<T extends Manifest> {
     rawContent = null;
   }
 
-  public boolean isOfType(Class<Manifest> type) {
-    CrateManifestType manifestType = ManifestTypeCache.tryResolveManifest(type);
+  public boolean isOfType(MT type) {
+    MT manifestType = ManifestTypeCache.tryResolveManifest(type);
 
     if(manifestType == null) {
       return false;
@@ -148,11 +166,11 @@ public class Crate<T extends Manifest> {
     return knownContent;
   }
 
-  private static CrateManifestType getManifest(Object content) {
-    CrateManifestType manifestType = ManifestTypeCache.tryResolveManifest(content);
+  private static MT getManifest(Object content) {
+    MT manifestType = ManifestTypeCache.tryResolveManifest(content);
     if (manifestType == null) {
-      Logger.error("Content does not have CrateManifestType annotation " + content);
-      throw new IllegalArgumentException("Content does not have CrateManifestType annotation");
+      Logger.error("Content does not have MT annotation " + content);
+      throw new IllegalArgumentException("Content does not have MT annotation");
     }
     return manifestType;
   }
@@ -162,16 +180,11 @@ public class Crate<T extends Manifest> {
     return uuid.toString();
   }
 
-  @Override
-  public String toString() {
-    return getLabel() + " [" + getId() + "]";
-  }
-
   public String getId() {
     return id;
   }
 
-  public CrateManifestType getCrateManifestType() {
+  public MT getCrateManifestType() {
     return crateManifestType;
   }
 
@@ -197,5 +210,18 @@ public class Crate<T extends Manifest> {
 
   public T getContent() {
     return content;
+  }
+
+  @Override
+  public String toString() {
+    return "Crate{" +
+        "crateManifestType=" + crateManifestType +
+        ", knownContent=" + knownContent +
+        ", rawContent=" + rawContent +
+        ", id='" + id + '\'' +
+        ", label='" + label + '\'' +
+        ", availability=" + availability +
+        ", content=" + content +
+        '}';
   }
 }

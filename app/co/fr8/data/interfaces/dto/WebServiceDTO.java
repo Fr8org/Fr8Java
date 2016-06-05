@@ -35,4 +35,13 @@ public class WebServiceDTO {
   public int getId() {
     return id;
   }
+
+  @Override
+  public String toString() {
+    return "WebServiceDTO{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", iconPath='" + iconPath + '\'' +
+        '}';
+  }
 }

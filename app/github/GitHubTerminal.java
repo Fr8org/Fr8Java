@@ -9,11 +9,12 @@ import github.activities.ListRepositoriesActivity;
 import play.Logger;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
 import static co.fr8.play.ApplicationConstants.*;
+import static github.util.GithubTerminalConstants.GITHUB_LIST_REPOS_TEMPLATE_DTO;
+import static github.util.GithubTerminalConstants.GITHUB_TERMINAL_DTO;
 
 /**
  * TODO: Implement
@@ -31,19 +32,8 @@ public class GitHubTerminal extends AbstractTerminalService {
 
     Logger.debug("Discover called host is: " + TERMINAL_HOST);
 
-    TerminalDTO terminalDTO = new TerminalDTO(TERMINAL_NAME, "GitHub", "1",
-        /* TODO: decouple this from play */TERMINAL_HOST, "GitHub Terminal which monitors commits to a repository",
-        AuthenticationTypeEnum.EXTERNAL.getCode());
-
-    WebServiceDTO webServiceDTO = new WebServiceDTO("GitHub",
-        "https://assets-cdn.github.com/favicon.ico");
-
-    ActivityTemplateDTO subscribeActivity = new ActivityTemplateDTO("GitHub Subscribe",
-        "Subscribe to GitHub Repository", "1", webServiceDTO, terminalDTO, ActivityCategoryEnum.MONITORS,
-        true, 380);
-
-    StandardFr8TerminalCM ret = new StandardFr8TerminalCM(terminalDTO,
-       Collections.singletonList(subscribeActivity));
+    StandardFr8TerminalCM ret = new StandardFr8TerminalCM(GITHUB_TERMINAL_DTO,
+       Collections.singletonList(GITHUB_LIST_REPOS_TEMPLATE_DTO));
 
     Logger.debug("Created new StandardFr8TerminalCM " + ret);
 
@@ -57,7 +47,7 @@ public class GitHubTerminal extends AbstractTerminalService {
   }
 
   @Override
-  public AuthorizationTokenDTO authenticateToken(ExternalAuthDTO externalAuthDTO) {
+  public AuthorizationToken authenticateToken(ExternalAuthDTO externalAuthDTO) {
 
     return authentication.authenticate(externalAuthDTO);
   }

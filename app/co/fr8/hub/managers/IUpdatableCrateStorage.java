@@ -1,14 +1,14 @@
 package co.fr8.hub.managers;
 
+import co.fr8.data.crates.AbstractCrateStorage;
 import co.fr8.data.crates.Crate;
-import co.fr8.data.crates.ICrateStorage;
 
 /**
  * TODO: Implement
  */
-public interface IUpdatableCrateStorage {
+public interface IUpdatableCrateStorage extends ICrateStorage {
 
-  void replace(ICrateStorage storage);
+  void replace(AbstractCrateStorage storage);
 
   void flush();
 
