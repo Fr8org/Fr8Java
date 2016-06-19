@@ -4,6 +4,8 @@ import co.fr8.data.crates.CrateManifestType;
 import co.fr8.data.states.AvailabilityTypeEnum;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.util.Map;
+
 /**
  * TODO: Implement
  */
@@ -19,7 +21,7 @@ public class FieldDTO {
   private CrateManifestType sourceCrateManifest;
   private String sourceCrateLabel;
   private String sourceActivityId;
-  private MappingChange.Map<String, JsonNode> data;
+  private Map<String, JsonNode> data;
 
   public FieldDTO() {
   }
@@ -110,11 +112,11 @@ public class FieldDTO {
     this.sourceActivityId = sourceActivityId;
   }
 
-  public MappingChange.Map<String, JsonNode> getData() {
+  public Map<String, JsonNode> getData() {
     return data;
   }
 
-  public void setData(MappingChange.Map<String, JsonNode> data) {
+  public void setData(Map<String, JsonNode> data) {
     this.data = data;
   }
 }
