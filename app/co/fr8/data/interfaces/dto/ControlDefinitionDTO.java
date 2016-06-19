@@ -5,6 +5,7 @@ import co.fr8.data.controls.ControlTypeEnum;
 import co.fr8.data.controls.AbstractControlDefinition;
 import co.fr8.util.CollectionUtils;
 import co.fr8.util.logging.Logger;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -25,9 +26,13 @@ abstract public class ControlDefinitionDTO extends AbstractControlDefinition {
   private boolean selected;
   private FieldSourceDTO source;
   private ActivityResponseDTO showDocumentation;
+
+  @JsonProperty("isHidden")
   private boolean hidden = false;
+
+  @JsonProperty("isCollapsed")
   private boolean collapsed= false;
-  private final ControlTypeEnum type;
+  private ControlTypeEnum type;
 
   public ControlDefinitionDTO(ControlTypeEnum type) {
     this.type = type;
@@ -115,7 +120,15 @@ abstract public class ControlDefinitionDTO extends AbstractControlDefinition {
   }
 
   public String getType() {
-    return type.getHubName();
+    return type.getFriendlyName();
+  }
+
+  public void setType(ControlTypeEnum controlTypeEnum) {
+    this.type = controlTypeEnum;
+  }
+
+  public void setType(String controlTypeString) {
+    this.type = ControlTypeEnum.findByFriendlyName(controlTypeString);
   }
 
 }

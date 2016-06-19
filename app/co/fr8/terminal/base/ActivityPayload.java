@@ -1,5 +1,6 @@
 package co.fr8.terminal.base;
 
+import co.fr8.data.crates.AbstractCrateStorage;
 import co.fr8.data.crates.Crate;
 import co.fr8.data.crates.CrateStorage;
 import co.fr8.data.interfaces.dto.ActivityDTO;
@@ -22,7 +23,7 @@ public class ActivityPayload {
   private String name;
   private List<ActivityPayload> childrenActivities;
   private ActivityTemplateDTO activityTemplate;
-  private ICrateStorage crateStorage;
+  private AbstractCrateStorage crateStorage;
   private UUID rootPlanNodeId;
   private UUID parentPlanNodeId;
   private int ordering;
@@ -101,7 +102,7 @@ public class ActivityPayload {
     this.activityTemplate = activityTemplate;
   }
 
-  public ICrateStorage getCrateStorage() {
+  public AbstractCrateStorage getCrateStorage() {
     // #HACKFIX
     if (crateStorage == null)
       crateStorage = new CrateStorage();
@@ -109,7 +110,7 @@ public class ActivityPayload {
     return crateStorage;
   }
 
-  public void setCrateStorage(ICrateStorage crateStorage) {
+  public void setCrateStorage(AbstractCrateStorage crateStorage) {
     this.crateStorage = crateStorage;
   }
 

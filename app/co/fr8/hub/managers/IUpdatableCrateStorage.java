@@ -9,12 +9,6 @@ import co.fr8.data.crates.Crate;
 public interface IUpdatableCrateStorage extends ICrateStorage {
 
   void replace(AbstractCrateStorage storage);
-
-  void flush();
-
-  void discardChanges();
-
-  Crate getFirstCrate();
   int replaceByLabel(Crate crate);
 
 }

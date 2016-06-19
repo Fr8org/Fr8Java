@@ -47,7 +47,7 @@ public class Authentication {
       String code = requestParamMap.get(OAUTH_CODE_PARAM);
       String state = requestParamMap.get(OAUTH_STATE_PARAM);
 
-      List<NameValuePair> nameValuePairList = new ArrayList<>();
+      List<NameValuePair> nameValuePairList = new ArrayList<>(5);
       nameValuePairList.add(new BasicNameValuePair(OAUTH_CODE_PARAM, code));
       nameValuePairList.add(new BasicNameValuePair(OAUTH_STATE_PARAM, state));
       nameValuePairList.add(new BasicNameValuePair("client_id", CLIENT_ID));

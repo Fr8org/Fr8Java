@@ -13,19 +13,17 @@ public class EventReportCrateFactory {
   public Crate create(String eventName, String palletId, Crate[] crates) {
     return create(eventName, palletId, Arrays.asList(crates));
   }
-  //
+
   public Crate create(String eventName, String palletId, List<Crate> crates) {
     EventCM eventCM = new EventCM(eventName, palletId);
 
     // TODO: fix this
-//    eventCM.getCrateStorage().addAlL(crates);
-    // CrateStorage.AddRange(crates);
+    eventCM.getCrateStorage().add(crates.toArray(new Crate[crates.size()]));
 
     return Crate.fromContent("Fr8 Terminal Event or Incident Report", eventCM);
   }
 
-  public Crate create(EventCM eventCm)
-  {
+  public Crate create(EventCM eventCm) {
     return Crate.fromContent("Fr8 Terminal Event or Incident Report", eventCm);
 //
 //            var eventDTOContent = JsonConvert.SerializeObject(eventDTO);

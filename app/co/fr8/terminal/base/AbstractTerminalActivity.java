@@ -9,7 +9,6 @@ import co.fr8.data.interfaces.manifests.OperationalStateCM;
 import co.fr8.data.interfaces.manifests.StandardAuthenticationCM;
 import co.fr8.data.interfaces.manifests.StandardConfigurationControlsCM;
 import co.fr8.hub.managers.ICrateStorage;
-import co.fr8.terminal.base.exception.AuthorizationTokenExpiredOrInvalidException;
 import co.fr8.terminal.base.exception.InvalidOperationException;
 import co.fr8.terminal.base.ui.AbstractActivityUI;
 import co.fr8.terminal.infrastructure.IHubCommunicator;
@@ -31,17 +30,8 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
   private OperationalStateCM operationalState;
   private ActivityContext activityContext;
   private ContainerExecutionContext containerExecutionContext;
-  private AbstractCrateStorage payload;
   private AuthenticationMode authenticationMode = AuthenticationMode.InternalMode;
-  protected AbstractCrateStorage currentActivityStorage;
-  protected ActivityDTO currentActivity;
-  protected AuthorizationToken authorizationToken;
-//  protected T configurationControls;
   protected T activityUI;
-  protected UpstreamQueryManager upstreamQueryManager;
-  protected UIBuilder uiBuilder;
-  protected int loopIndex;
-  protected boolean disableValidationOnFollowup;
 
   public AbstractTerminalActivity(ActivityTemplateDTO activityTemplate) {
     this.activityContext = new ActivityContext();
@@ -50,12 +40,13 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
   }
 
   private void initializeInternalState(ActivityContext activityContext,
-                                       ContainerExecutionContext containerExecutionContext) {
+                                       ContainerExecutionContext containerExecutionContext,
+                                       ActionNameEnum actionName) {
     this.activityContext = activityContext;
     this.containerExecutionContext = containerExecutionContext;
 
     if (containerExecutionContext != null) {
-      List<Crate> crates = payload.getCratesOfType(MT.OperationalStatus);
+      List<Crate> crates = getActivityPayload().getCrateStorage().getCratesOfType(MT.OperationalStatus);
 
       if (CollectionUtils.isEmpty(crates) || operationalState == null) {
         throw new IllegalArgumentException("Operational state crate is not found");
@@ -64,130 +55,118 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
       }
     }
 
-    initializeInternalState();
+    initializeActivityState(actionName);
   }
 
   /**
    * add an authentication crate to the storage for the activity
-   * @param revoke
+   *
+   * @param revoke specifies whether the authentication should be revoked
    */
   protected void addAuthenticationCrate(boolean revoke) {
     getStorage().remove(StandardAuthenticationCM.class);
     getStorage().add(Crate.fromContent("RequiresAuthentication",
         new StandardAuthenticationCM(getAuthenticationMode(), revoke)));
-
   }
 
+  /**
+   * Super method for the configure activity
+   * Subclasses must implement initialize() and followup();
+   *
+   * @param activityContext
+   */
   public void configure(ActivityContext activityContext) {
-    initializeInternalState(activityContext, null);
-    ConfigurationRequestType conType =
-        getConfigurationRequestType();
+    initializeInternalState(activityContext, null, ActionNameEnum.CONFIGURE);
+    ConfigurationRequestType conType = getConfigurationRequestType();
 
     Logger.debug("conType for request is: " + conType);
 
-    boolean afterConfigureFails = false;
-
-    try {
-      Logger.debug("checking authentication: " + checkAuthentication());
-      if (!checkAuthentication()) {
-        addAuthenticationCrate(false);
-        return;
-      }
-
-      Logger.debug("before configure: " + beforeConfigure(conType));
-      if (!beforeConfigure(conType)) {
-        return;
-      }
-
-      switch (conType) {
-        case INITIAL: {
-          Logger.debug("initial contype");
-          initialize();
-          break;
-        }
-        case FOLLOWUP: {
-          followUp();
-          break;
-        }
-        default:
-          throw new IllegalArgumentException("Unsupported configuration type " + conType);
-      }
-
-      try {
-        afterConfigure(conType, null);
-      } catch (Exception e) {
-        Logger.error("Exception during post configuration", e);
-        afterConfigureFails = true;
-        throw (e);
-      }
-    } catch (Exception e) {
-      if (isInvalidTokenException(e) || e instanceof AuthorizationTokenExpiredOrInvalidException) {
-        addAuthenticationCrate(true);
-      } else if (!afterConfigureFails) {
-        afterConfigure(conType, e);
-      }
+    Logger.debug("checking authentication: " + checkAuthentication());
+    if (!checkAuthentication()) {
+      addAuthenticationCrate(false);
+      return;
     }
+
+    Logger.debug("before configure: " + beforeConfigure(conType));
+    if (!beforeConfigure(conType)) {
+      return;
+    }
+
+    switch (conType) {
+      case INITIAL: {
+        initialize();
+        break;
+      }
+      case FOLLOWUP: {
+        followUp();
+        break;
+      }
+      default:
+        throw new IllegalArgumentException("Unsupported configuration type " + conType);
+    }
+
+    afterConfigure(conType, null);
+
   }
 
+  /**
+   *
+   * @param activityContext
+   */
   public void activate(ActivityContext activityContext) {
-    initializeInternalState(activityContext, null);
+    initializeInternalState(activityContext, null, ActionNameEnum.ACTIVATE);
     if (!beforeActivate()) {
       return;
     }
 
-    boolean afterActivateFails = false;
+    activate();
 
-    try {
-      activate();
-      try {
-        afterActivate(null);
-      } catch (Exception e) {
-        afterActivateFails = true;
-        throw(e);
-      }
-    } catch (Exception e) {
-      if (!afterActivateFails) {
-        afterActivate(e);
-      }
-    }
+    afterActivate();
   }
 
+  /**
+   *
+   * @param activityContext
+   */
   public void deactivate(ActivityContext activityContext) {
-    initializeInternalState(activityContext, null);
+    initializeInternalState(activityContext, null, ActionNameEnum.DEACTIVATE);
 
     if (!beforeDeactivate()) {
       return;
     }
 
-    boolean afterDeactivateFails = false;
-
-    try {
-      deactivate();
-      try {
-        afterDeactivate(null);
-      } catch (Exception e) {
-        afterDeactivateFails = true;
-        throw (e);
-      }
-    } catch (Exception e) {
-      if (!afterDeactivateFails)
-        afterDeactivate(e);
-    }
+    deactivate();
+    afterDeactivate();
   }
 
+  /**
+   *
+   * @param activityContext
+   * @param containerExecutionContext
+   */
   public void run(ActivityContext activityContext, ContainerExecutionContext containerExecutionContext) {
-    initializeInternalState(activityContext, containerExecutionContext);
-    run();
+    initializeInternalState(activityContext, containerExecutionContext, ActionNameEnum.RUN);
+
+    run(run());
   }
 
+  /**
+   *
+   * @param activityContext
+   * @param containerExecutionContext
+   */
   public void runChildActivities(ActivityContext activityContext, ContainerExecutionContext containerExecutionContext) {
-    initializeInternalState(activityContext, containerExecutionContext);
-    run();
+
+    initializeInternalState(activityContext, containerExecutionContext,
+        ActionNameEnum.EXECUTE_CHILD_ACTIVITIES);
+
+    run(runChildActivities());
   }
 
   private void run(ActivityFunctionalInterface runMode) {
     if (!checkAuthentication()) {
-      AuthorizationTokenDTO authToken = this.activityContext.getAuthorizationToken();
+      AuthorizationTokenDTO authToken =
+          this.activityContext.getAuthorizationToken();
       if (authToken == null || StringUtils.isBlank(authToken.getToken())) {
         errorInvalidToken("No AuthToken provided.");
       } else {
@@ -196,34 +175,20 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
       return;
     }
 
-    boolean afterRunFails = false;
+    operationalState.setCurrentActivityResponse(null);
 
-    try {
-      operationalState.setCurrentActivityResponse(null);
+    if (!beforeRun()) {
+      return;
+    }
 
-      if (beforeRun()) {
-        runMode.execute();
-        try {
-          afterRun(null);
-        } catch (Exception e) {
-          afterRunFails = true;
-          throw(e);
-        }
-      }
+    runMode.execute();
+    afterRun();
 
-      if (operationalState.getCurrentActivityErrorCode() == null) {
-        success(StringUtils.EMPTY);
-      }
-    } catch (Exception /* ActivityErrorException */ e) {
-      if (!afterRunFails)
-        afterRun(e);
-
-      if (isInvalidTokenException(e)) {
-        errorInvalidToken(e.getMessage());
-      } else {
-        // TODO: this method expects an error code type
-        error(e.getMessage(), null);
-      }
+    if (operationalState.getCurrentActivityErrorCode() == null) {
+      success(StringUtils.EMPTY);
+    } else {
+      error(operationalState.getCurrentActivityErrorMessage(),
+          operationalState.getCurrentActivityErrorCode());
     }
   }
 
@@ -278,8 +243,7 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
   /// Jumps to an activity that resides in same subplan as current activity
   /// </summary>
   /// <returns></returns>
-  protected void requestJumpToActivity(UUID targetActivityId)
-  {
+  protected void requestJumpToActivity(UUID targetActivityId) {
     setResponse(ActivityResponse.JUMP_TO_ACTIVITY, StringUtils.EMPTY, null);
     ResponseMessageDTO responseMessage = new ResponseMessageDTO();
     responseMessage.setDetails(targetActivityId);
@@ -292,8 +256,7 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
   /// Jumps to an activity that resides in same subplan as current activity
   /// </summary>
   /// <returns></returns>
-  protected void requestJumpToSubplan(UUID targetSubplanId)
-  {
+  protected void requestJumpToSubplan(UUID targetSubplanId) {
     setResponse(ActivityResponse.JUMP_TO_SUBPLAN, StringUtils.EMPTY, null);
     ResponseMessageDTO responseMessage = new ResponseMessageDTO();
     responseMessage.setDetails(targetSubplanId);
@@ -398,35 +361,35 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
         ActivityErrorCode.AUTH_TOKEN_NOT_PROVIDED_OR_INVALID, StringUtils.EMPTY, StringUtils.EMPTY);
   }
 
-  /**********************************************************************************/
-  /// <summary>
+  /**
   /// Returns authentication error to hub
   /// </summary>
   /// <returns></returns>
+  */
   protected void raiseInvalidTokenError(String instructionsToUser) {
     raiseError(instructionsToUser, ErrorType.Authentication,
         ActivityErrorCode.AUTH_TOKEN_NOT_PROVIDED_OR_INVALID, StringUtils.EMPTY,
         StringUtils.EMPTY);
   }
 
-  private ErrorDTO createErrorDTO() {
-    return new ErrorDTO();
+
+  protected SolutionPageDTO getDocumentation(String documentationType) {
+    SolutionPageDTO ret = new SolutionPageDTO();
+    ret.setName("No documentation found");
+    ret.setBody("Please override the getDocumentation in your subclass");
+
+    return ret;
   }
 
-  /**********************************************************************************/
-
-  abstract protected SolutionPageDTO getDocumentation(String documentationType);
-
-  /**********************************************************************************/
 
   public SolutionPageDTO getDocumentation(ActivityContext activityContext, String documentationType) {
-    initializeInternalState(activityContext, null);
+    initializeInternalState(activityContext, null, ActionNameEnum.DOCUMENTATION);
     return getDocumentation(documentationType);
   }
 
   protected AbstractCrateStorage getPayload() throws InvalidOperationException {
     checkRunTime("Payload storage is not available at the design time");
-    return payload;
+    return activityContext.getActivityPayload().getCrateStorage();
   }
 
   protected ContainerExecutionContext getContainerExecutionContext() throws InvalidOperationException {
@@ -441,10 +404,6 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
 
   protected ICrateStorage getStorage() {
 
-    /*
-    TODO: Figure out if the activitycontext is necessary
-    The following null check is a hackfix
-     */
 
     if (activityContext.getActivityPayload() == null)
       activityContext.setActivityPayload(new ActivityPayload("Default Payload"));
@@ -494,31 +453,61 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
   private Crate generateStandardConfigurationControlsCrate() {
     StandardConfigurationControlsCM controls =
         new StandardConfigurationControlsCM(activityUI.getControls());
-    Crate crate = new Crate<>(MT.StandardConfigurationControls, controls);
+    Crate crate = new Crate<>(MT.StandardConfigurationControls, "Configuration_Controls", controls);
 
     Logger.debug("generateStandardConfigurationControlsCrate returns: " + crate);
 
     return crate;
   }
 
+  protected ConfigurationRequestType getConfigurationRequestType() {
+
+    Logger.debug("getConfigurationRequestType: storage has " + getStorage().getCount());
+    return getStorage().getCount() <= 0 ?
+        ConfigurationRequestType.INITIAL : ConfigurationRequestType.FOLLOWUP;
+  }
+
+  abstract protected void initializeActivityState(ActionNameEnum actionName);
+
   abstract protected boolean checkAuthentication();
-  abstract protected ConfigurationRequestType getConfigurationRequestType();
+
+  /**
+   * Initialize abstract methods
+   */
   abstract public void initialize();
-  abstract public void followUp();
-  abstract public void run();
-  abstract public void runChildActivities();
-  abstract public void activate();
-  abstract public void deactivate();
-  abstract protected void afterRun(Exception e);
-  abstract protected boolean beforeRun();
-  abstract protected void afterDeactivate(Exception e);
-  abstract protected boolean beforeDeactivate();
-  abstract protected boolean afterActivate(Exception e);
-  abstract protected boolean beforeActivate();
 
   abstract protected boolean beforeConfigure(ConfigurationRequestType configurationRequestType);
-  abstract protected boolean isInvalidTokenException(Exception e);
-  abstract protected void initializeInternalState();
+
+  abstract public void followUp();
+
+  abstract public ActivityFunctionalInterface runChildActivities();
+
+  abstract public void deactivate();
+
+  /**
+   * Run abstract methods
+   **/
+  abstract protected boolean beforeRun();
+
+  abstract public ActivityFunctionalInterface run();
+
+  abstract protected void afterRun();
+
+  /**
+   * Deactivate abstract methods
+   **/
+  abstract protected void afterDeactivate();
+
+  abstract protected boolean beforeDeactivate();
+
+  /**
+   * Activate abstract methods
+   **/
+  abstract public void activate();
+
+  abstract protected boolean afterActivate();
+
+  abstract protected boolean beforeActivate();
 
   public interface ActivityFunctionalInterface {
     public void execute();

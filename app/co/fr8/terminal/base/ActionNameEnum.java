@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Enum representation for the
  */
-public enum ActionPathEnum {
+public enum ActionNameEnum {
   CONFIGURE("configure"),
   RUN("run"),
   EXECUTE_CHILD_ACTIVITIES("executechildactivities"),
@@ -16,10 +16,14 @@ public enum ActionPathEnum {
   DOCUMENTATION("documentation"),
   UNKNOWN(StringUtils.EMPTY);
 
-  private String lowerValue;
+  private final String lowerValue;
 
-  ActionPathEnum(String lowerValue) {
+  ActionNameEnum(String lowerValue) {
     this.lowerValue = lowerValue;
+  }
+
+  public String getLowerValue() {
+    return lowerValue;
   }
 
   /**
@@ -29,8 +33,8 @@ public enum ActionPathEnum {
    * @param lowerValue the String associated with the enum
    * @return an enum if one exists for the String, null otherwise
    */
-  public static ActionPathEnum getByLowerValue(String lowerValue) {
-    for(ActionPathEnum value : values()) {
+  public static ActionNameEnum getByLowerValue(String lowerValue) {
+    for(ActionNameEnum value : values()) {
       if (value.lowerValue.equals(lowerValue)) {
         return value;
       }

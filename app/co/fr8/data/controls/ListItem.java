@@ -10,6 +10,9 @@ public class ListItem {
   private String key;
   private String value;
 
+  public ListItem() {
+  }
+
   public ListItem(boolean selected, String key, String value) {
     this.selected = selected;
     this.key = key;
@@ -42,5 +45,14 @@ public class ListItem {
 
   public void setValue(String value) {
     this.value = value;
+  }
+
+  @Override
+  public String toString() {
+    return "ListItem{" +
+        "selected=" + selected +
+        ", key='" + key + '\'' +
+        ", value='" + value + '\'' +
+        '}';
   }
 }

@@ -1,5 +1,7 @@
 package co.fr8.util.net;
 
+import java.util.Map;
+
 /**
  * Interface for the HttpUtils class. This interface defines the methods
  * available to classes which send HTTP requests using a concrete
@@ -7,8 +9,8 @@ package co.fr8.util.net;
  */
 public interface IHttpUtils {
 
-  public String post();
+  String post(String url, Map<String, String> Params);
 
-  public String get();
+  String get(String url);
 
 }

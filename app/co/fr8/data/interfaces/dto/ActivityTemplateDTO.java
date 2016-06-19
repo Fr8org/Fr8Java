@@ -10,7 +10,7 @@ import java.util.UUID;
  */
 public class ActivityTemplateDTO {
 
-  private UUID id;
+  private final UUID id = UUID.randomUUID();
   private String name;
   private String label;
   private String version;
@@ -36,15 +36,11 @@ public class ActivityTemplateDTO {
     this.category = category;
     this.needsAuthentication = needsAuthentication;
     this.minPaneWidth = minPaneWidth;
-    type = ActivityTypeEnum.STANDARD;
+    this.type = ActivityTypeEnum.STANDARD;
   }
 
   public UUID getId() {
     return id;
-  }
-
-  public void setId(UUID id) {
-    this.id = id;
   }
 
   public String getName() {

@@ -4,6 +4,7 @@ import co.fr8.data.constants.MT;
 import co.fr8.data.interfaces.dto.CrateDTO;
 import co.fr8.data.interfaces.manifests.Manifest;
 import co.fr8.data.states.AvailabilityTypeEnum;
+import co.fr8.util.json.JsonUtils;
 import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -15,7 +16,7 @@ import java.util.UUID;
 public class Crate<T extends Manifest> {
 
   private MT crateManifestType;
-  protected Object knownContent;
+  private Object knownContent;
   private JsonNode rawContent;
   private String id;
   private String label;
@@ -47,6 +48,13 @@ public class Crate<T extends Manifest> {
     this.crateManifestType = crateManifestType;
     this.content = content;
     this.id = generateUUIDString();
+  }
+
+  public Crate(MT crateManifestType, String label, T content) {
+    this.crateManifestType = crateManifestType;
+    this.content = content;
+    this.id = generateUUIDString();
+    this.label = label;
   }
 
   public Crate(MT crateManifestType, String id, JsonNode content) {
@@ -95,7 +103,7 @@ public class Crate<T extends Manifest> {
 
   public Crate(CrateDTO crateDTO) {
     this.id = crateDTO.getId();
-    this.availability = crateDTO.getAvailability();
+    this.availability = AvailabilityTypeEnum.getByCode(crateDTO.getAvailability());
     this.crateManifestType =
         MT.findByFriendlyName(crateDTO.getManifestType());
     this.label = crateDTO.getLabel();
@@ -145,7 +153,7 @@ public class Crate<T extends Manifest> {
       throw new IllegalArgumentException("Content manifest is not compatible with crate manifest " + content);
     }
     knownContent = content;
-    rawContent = null;
+    rawContent = JsonUtils.writeObjectToJsonNode(content);
   }
 
   public boolean isOfType(MT type) {

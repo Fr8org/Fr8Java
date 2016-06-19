@@ -18,4 +18,13 @@ public enum AvailabilityTypeEnum {
     public int getCode() {
         return code;
     }
+
+    public static AvailabilityTypeEnum getByCode(int code) {
+        for (AvailabilityTypeEnum value : values()) {
+            if (code == value.getCode())
+                return value;
+        }
+
+        return null;
+    }
 }

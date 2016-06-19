@@ -4,17 +4,21 @@ import co.fr8.data.crates.Crate;
 import co.fr8.data.interfaces.manifests.Manifest;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * TODO: Document
  */
-public interface ICrateStorage extends Iterable<Crate> {
+public interface ICrateStorage {
 
   List<Crate> getCratesAsList();
+  Map<String, Crate> getCratesMap();
   int getCount();
   void add(Crate crate);
   void add(Crate[] crate);
   void clear();
-  <T extends Manifest> int remove(Class<T> manifest);
-  int replace(Crate original, Crate replacement);
+  Crate getFirstCrate();
+  void remove(String key);
+  <T extends Manifest> void remove(Class<T> manifestType);
+  String findField(String key);
 }

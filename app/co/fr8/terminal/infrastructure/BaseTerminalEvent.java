@@ -6,9 +6,7 @@ import co.fr8.data.crates.helpers.LoggingDataCrateFactory;
 import co.fr8.data.interfaces.dto.CrateDTO;
 import co.fr8.data.interfaces.manifests.LoggingDataCM;
 import co.fr8.hub.managers.ICrateManager;
-import co.fr8.networking.IRestfulServiceClient;
 import co.fr8.util.net.HttpUtils;
-import co.fr8.util.net.IHttpUtils;
 import org.apache.commons.lang3.StringUtils;
 import play.Logger;
 

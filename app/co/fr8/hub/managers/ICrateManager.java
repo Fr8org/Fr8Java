@@ -1,5 +1,6 @@
 package co.fr8.hub.managers;
 
+import co.fr8.data.constants.MT;
 import co.fr8.data.crates.AbstractCrateStorage;
 import co.fr8.data.crates.Crate;
 import co.fr8.data.entities.ContainerDO;
@@ -46,7 +47,7 @@ public interface ICrateManager {
   Crate<FieldDescriptionsCM> createDesignTimeFieldsCrate(String label, AvailabilityTypeEnum availability, FieldDTO... fields);
   Crate<StandardConfigurationControlsCM> createStandardConfigurationControlsCrate(String label, ControlDefinitionDTO... controls);
   Crate createStandardEventReportCrate(String label, EventReportCM eventReport);
-  Crate createStandardEventSubscriptionsCrate(String label, String manufacturer, String... subscriptions);
+
   Crate createStandardTableDataCrate(String label, boolean firstRowHeaders, TableRowDTO... table);
   Crate createPayloadDataCrate(String payloadDataObjectType, String crateLabel, StandardTableDataCM tableDataMS);
   Crate createOperationalStatusCrate(String label, OperationalStateCM eventReport);

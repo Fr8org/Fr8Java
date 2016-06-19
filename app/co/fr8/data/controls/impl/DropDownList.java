@@ -3,10 +3,14 @@ package co.fr8.data.controls.impl;
 import co.fr8.data.controls.ControlTypeEnum;
 import co.fr8.data.controls.ListItem;
 import co.fr8.data.interfaces.dto.ControlDefinitionDTO;
+import co.fr8.data.interfaces.dto.FieldDTO;
+import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Object implementation of the DropDownList control which provides serialization
@@ -16,9 +20,8 @@ public class DropDownList extends ControlDefinitionDTO {
 
   private List<ListItem> listItems = new ArrayList<>();
   private String selectedKey;
-
-  @JsonProperty("hasRefreshButton")
   private boolean hasRefreshButton = false;
+  private FieldDTO selectedItem;
 
   /**
    * Constructor for the DropDownList class
@@ -56,6 +59,20 @@ public class DropDownList extends ControlDefinitionDTO {
     });
   }
 
+  public ListItem findBySelected() {
+    if (StringUtils.isNotBlank(selectedKey)) {
+      Optional<ListItem> selected =
+          listItems.stream().filter(i -> i.getKey().equalsIgnoreCase(selectedKey)).findFirst();
+
+      if (selected.isPresent())
+        return selected.get();
+    }
+
+    Logger.debug("ListItem not found for " + selectedKey);
+
+    return null;
+  }
+
   public List<ListItem> getListItems() {
     return listItems;
   }
@@ -78,5 +95,13 @@ public class DropDownList extends ControlDefinitionDTO {
 
   public void setHasRefreshButton(boolean hasRefreshButton) {
     this.hasRefreshButton = hasRefreshButton;
+  }
+
+  public FieldDTO getSelectedItem() {
+    return selectedItem;
+  }
+
+  public void setSelectedItem(FieldDTO selectedItem) {
+    this.selectedItem = selectedItem;
   }
 }

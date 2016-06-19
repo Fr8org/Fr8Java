@@ -11,7 +11,7 @@ public enum ActivityResponse {
   REQUEST_TERMINATE("RequestTerminate", 3),
   REQUEST_SUSPEND("RequestSuspend", 4),
   SKIP_CHILDREN("SkipChildren", 5),
-  REPROCESS_CHILDREN("ReporcessChildren", 6),
+  REPROCESS_CHILDREN("ReprocessChildren", 6),
   EXECUTE_CLIENT_ACTIVITY("ExecuteClientActivity", 7),
   SHOW_DOCUMENTATION("ShowDocumentation", 8),
   JUMP_TO_ACTIVITY("JumpToActivity", 9),

@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * This class acts as an in-memory cache for CrateManifestType objects
  */
-public class ManifestTypeCache {
+class ManifestTypeCache {
 
   private static Map<Class, CrateManifestType> MANIFESTS_CACHE = new HashMap<>();
   private static Object GlobalTypeCacheLock = new Object();
@@ -98,7 +98,11 @@ public class ManifestTypeCache {
   }*/
 
   public static MT tryResolveManifest(Object content) {
-    // TODO: Fix this
-    return MT.UNKNOWN;
+
+    MT ret = null;
+    if (content instanceof Manifest)
+      ret = MT.findByFriendlyName(((Manifest)content).getCrateManifestType().getType());
+
+    return ret;
   }
 }

@@ -1,7 +1,6 @@
 package co.fr8.data.interfaces.dto;
 
 import co.fr8.data.crates.AbstractCrateStorage;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.UUID;
 

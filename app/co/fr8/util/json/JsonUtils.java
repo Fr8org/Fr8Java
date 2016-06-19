@@ -3,6 +3,7 @@ package co.fr8.util.json;
 import co.fr8.data.interfaces.dto.ActivityDTO;
 import co.fr8.data.interfaces.dto.CrateStorageDTO;
 import co.fr8.data.interfaces.manifests.Manifest;
+import co.fr8.play.ApplicationConstants;
 import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,6 +18,13 @@ import java.io.IOException;
  */
 public class JsonUtils {
   private static final ObjectMapper objectMapper = new ObjectMapper();
+
+  static {
+    objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+    if (ApplicationConstants.DEBUG_JSON)
+      objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+  }
 
   public static String writeManifestJsonString(Manifest manifest) {
     return writeObjectAsString(manifest);
@@ -33,14 +41,9 @@ public class JsonUtils {
     try {
       return objectMapper.treeToValue(node, type);
     } catch (JsonProcessingException e) {
-      Logger.error("Unable to map node " + node + " to " + type.getName());
+      Logger.error("Unable to map node " + node + " to " + type.getName(), e);
     }
     return null;
-  }
-
-  public static String prettyPrintObjectString(Object object) {
-    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    return writeObjectAsString(object);
   }
 
   public static String writeObjectAsString(Object object) {

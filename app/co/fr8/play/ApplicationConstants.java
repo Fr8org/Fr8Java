@@ -55,6 +55,9 @@ public class ApplicationConstants {
   public static final String USER_URL =
       Play.application().configuration().getString("github.api.userPath");
 
+  public static final String USER_REPOS_URL =
+      Play.application().configuration().getString("github.api.userReposPath");
+
   public static final String REPOS_URL =
       Play.application().configuration().getString("github.api.reposPath");
 
@@ -64,5 +67,8 @@ public class ApplicationConstants {
 
   public static final String LIST_REPOSITORIES_ACTIVITY_NAME =
       Play.application().configuration().getString("github.terminals.subscribe.name");
+
+  public static final boolean DEBUG_JSON =
+      Play.application().configuration().getBoolean("fr8.terminal.json.debug");
 
 }

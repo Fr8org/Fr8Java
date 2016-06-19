@@ -35,13 +35,22 @@ public enum ControlTypeEnum {
   EXTERNAL_OBJECT_CHOOSER("ExternalObjectChooser"),
   BUILD_MESSAGE_APPENDER("BuildMessageAppender");
 
-  private final String hubName;
+  private final String friendlyName;
 
-  ControlTypeEnum(String hubName) {
-    this.hubName = hubName;
+  ControlTypeEnum(String friendlyName) {
+    this.friendlyName = friendlyName;
   }
 
-  public String getHubName() {
-    return hubName;
+  public String getFriendlyName() {
+    return friendlyName;
+  }
+
+  public static ControlTypeEnum findByFriendlyName(String friendlyName) {
+    for (ControlTypeEnum value : values()) {
+      if (value.getFriendlyName().equalsIgnoreCase(friendlyName)) {
+        return value;
+      }
+    }
+    return null;
   }
 }

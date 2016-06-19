@@ -2,23 +2,25 @@ package co.fr8.util.net;
 
 import co.fr8.util.CollectionUtils;
 import co.fr8.util.logging.Logger;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.*;
+import org.apache.http.entity.AbstractHttpEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import javax.ws.rs.core.MediaType;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +33,12 @@ public class HttpUtils {
 
   private static CloseableHttpClient client = HttpClients.createDefault();
 
+  /**
+   *
+   * @param url
+   * @param params
+   * @return
+   */
   public static String post(String url, Map<String, String> params) {
     List<NameValuePair> nameValuePairs = null;
     if (CollectionUtils.isNotEmpty(params)) {
@@ -40,49 +48,24 @@ public class HttpUtils {
         nameValuePairs.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
       }
     }
-    return post(url, nameValuePairs);
+    return sendEntityRequest(url, HttpPost.METHOD_NAME, nameValuePairs);
   }
 
+  /**
+   *
+   * @param url
+   * @param params
+   * @return
+   */
   public static String post(String url, List<NameValuePair> params) {
-
-    try {
-      HttpPost postRequest = new HttpPost(url);
-      postRequest.setEntity(new UrlEncodedFormEntity(params));
-      CloseableHttpResponse response = client.execute(postRequest);
-
-       try {
-
-
-         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-
-         } else {
-
-         }
-
-         HttpEntity responseEntity = response.getEntity();
-//         byte[] responseBytes = new byte[];
-//         int readValue = responseEntity.getContent().read(responseBytes);
-         OutputStream ostream = new ByteArrayOutputStream();
-         responseEntity.writeTo(ostream);
-         ostream.close();
-
-         Logger.debug("Received response " + ostream);
-
-         EntityUtils.consume(responseEntity);
-         return ostream.toString();
-
-       } finally {
-         Logger.debug("Closing response");
-         response.close();
-       }
-
-    } catch (IOException e) {
-      Logger.error("Exception while processing post request to: " + url
-          + " with params " + params);
-      return null;
-    }
+    return sendEntityRequest(url, HttpPost.METHOD_NAME, params);
   }
 
+  /**
+   *
+   * @param url
+   * @return
+   */
   public static String get(String url) {
 
     if (StringUtils.isBlank(url)) {
@@ -115,6 +98,87 @@ public class HttpUtils {
       Logger.error("Exception while processing GET response", e);
       return StringUtils.EMPTY;
     }
+  }
+
+  /**
+   *
+   * @param url
+   * @param params
+   * @return
+   */
+  public static String put(String url, List<NameValuePair> params) {
+    return sendEntityRequest(url, HttpPut.METHOD_NAME, params);
+  }
+
+  public static String postJson(String url, JsonNode json) {
+    StringEntity entity = new StringEntity(json.toString(), StandardCharsets.UTF_8);
+    entity.setContentType(MediaType.APPLICATION_JSON);
+    return sendEntityRequest(url, HttpPost.METHOD_NAME, entity);
+  }
+
+  public static String putJson(String url, JsonNode json) {
+    StringEntity entity = new StringEntity(json.toString(), StandardCharsets.UTF_8);
+    entity.setContentType(MediaType.APPLICATION_JSON);
+    return sendEntityRequest(url, HttpPut.METHOD_NAME, entity);
+  }
+
+  private static String sendEntityRequest(String url, String method, AbstractHttpEntity entity) {
+    Logger.debug("Sending entity request of type " + method + " to " + url);
+
+    try {
+      HttpEntityEnclosingRequestBase request;
+      switch (method) {
+        case HttpPost.METHOD_NAME:
+          request = new HttpPost(url);
+          break;
+        case HttpPut.METHOD_NAME:
+          request = new HttpPut(url);
+          break;
+        default: {
+          return "INVALID REQUEST: PLACEHOLDER";
+        }
+      }
+
+      request.setEntity(entity);
+      CloseableHttpResponse response = client.execute(request);
+
+      try {
+
+
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+
+        } else {
+
+        }
+
+        HttpEntity responseEntity = response.getEntity();
+
+        OutputStream ostream = new ByteArrayOutputStream();
+        responseEntity.writeTo(ostream);
+        ostream.close();
+
+        Logger.debug("Received response " + ostream);
+
+        EntityUtils.consume(responseEntity);
+        return ostream.toString();
+
+      } finally {
+        Logger.debug("Closing response");
+        response.close();
+      }
+
+    } catch (IOException e) {
+      Logger.error("Exception while processing post request to: " + url
+          + " with params " + entity, e);
+      return null;
+    }
+
+  }
+
+  private static String sendEntityRequest(String url, String method,
+                                          List<NameValuePair> params) {
+    UrlEncodedFormEntity urlEntity = new UrlEncodedFormEntity(params, StandardCharsets.UTF_8);
+    return sendEntityRequest(url, method, urlEntity);
   }
 
   /**

@@ -1,5 +1,7 @@
 package co.fr8.data.interfaces.dto;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.UUID;
 
 /**
@@ -21,7 +23,8 @@ public class Fr8DataDTO {
 
   public Fr8DataDTO(ActivityDTO activityPayload, String containerId) {
     this.activityPayload = activityPayload;
-    this.containerId = UUID.fromString(containerId);
+    this.containerId =
+        (StringUtils.isBlank(containerId) || "null".equals(containerId))? UUID.randomUUID() : UUID.fromString(StringUtils.replace(containerId, "\"", ""));
   }
 
   public Fr8DataDTO(ActivityDTO activityPayload, UUID containerId, String explicitData) {

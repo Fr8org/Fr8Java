@@ -2,15 +2,22 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET         /terminals/discover                 controllers.GitHubTerminalController.discover()
+GET         /discover                           controllers.GitHubTerminalController.discover()
 
-POST        /terminals/activities/:activity     controllers.GitHubTerminalController.activities(activity: String)
-POST        /terminals/authenticate             controllers.GitHubTerminalController.authenticate()
+POST        /terminals/activities/:activity     controllers.ActivitiesController.activities(activity: String)
+POST        /terminals/authenticate             controllers.AuthenticationController.authenticate()
 
-POST        /authentication/internal            controllers.GitHubTerminalController.authenticateInternal()
-POST        /authentication/initial_url         controllers.GitHubTerminalController.initialUrl()
-POST        /authentication/token               controllers.GitHubTerminalController.authenticateToken()
+POST        /authentication/internal            controllers.AuthenticationController.authenticateInternal()
+POST        /authentication/initial_url         controllers.AuthenticationController.initialUrl()
+POST        /authentication/token               controllers.AuthenticationController.authenticateToken()
+POST        /authentication/request_url         controllers.AuthenticationController.requestUrl()
 
-POST        /activities/configure               controllers.GitHubTerminalController.configureActivities()
+POST        /activities/activate                controllers.ActivitiesController.activateActivities()
+POST        /activities/configure               controllers.ActivitiesController.configureActivities()
+POST        /activities/deactivate              controllers.ActivitiesController.activateActivities()
+POST        /activities/run                     controllers.ActivitiesController.runActivities()
 
-GET         /test/testInitialConfigure          controllers.TestController.configTest()
+GET         /test/testMonitorConfigure          controllers.TestController.configTest()
+GET         /test/testMonitorActivate           controllers.TestController.activateTest()
+GET         /test/testGetConfigure              controllers.TestController.configGetTest()
+GET         /test/testGetActivate               controllers.TestController.activateGetTest()

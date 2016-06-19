@@ -1,13 +1,10 @@
 package co.fr8.data.interfaces.dto;
 
-import co.fr8.data.crates.Crate;
-import co.fr8.data.crates.CrateStorage;
 import co.fr8.terminal.base.ActivityPayload;
 import co.fr8.util.CollectionUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -16,44 +13,44 @@ import java.util.UUID;
 public class ActivityDTO {
 
   @JsonProperty("Label")
-  protected String label;
+  private String label;
 
-  protected ActivityTemplateDTO activityTemplate;
+  private ActivityTemplateDTO activityTemplate;
 
   @JsonProperty("RootPlanNodeId")
-  protected UUID rootPlanNodeId;
+  private UUID rootPlanNodeId;
 
   @JsonProperty("ParentPlanNodeId")
-  protected UUID parentPlanNodeId;
+  private UUID parentPlanNodeId;
 
   @JsonProperty("CurrentView")
-  protected String currentView;
+  private String currentView;
 
   @JsonProperty("Ordering")
-  protected int ordering;
+  private int ordering;
 
   @JsonProperty("Id")
-  protected UUID id;
+  private UUID id;
 
   @JsonProperty("CrateStorage")
-  protected CrateStorageDTO crateStorage;
+  private CrateStorageDTO crateStorage;
 
   @JsonProperty("ChildrenActivities")
-  protected ActivityDTO[] childActivities;
+  private ActivityDTO[] childActivities;
 
   @JsonProperty("AuthTokenId")
-  protected UUID authTokenId;
+  private UUID authTokenId;
 
   @JsonProperty("AuthToken")
-  protected AuthorizationTokenDTO authToken;
+  private AuthorizationTokenDTO authToken;
 
   @JsonProperty("Fr8AccountId")
-  protected String fr8AccountId;
+  private String fr8AccountId;
 
-  protected String documentation;
+  private String documentation;
 
   @JsonProperty("Name")
-  protected String name;
+  private String name;
 
   public ActivityDTO() {
   }
@@ -226,4 +223,23 @@ public class ActivityDTO {
     this.authTokenId = authTokenId;
   }
 
+  @Override
+  public String toString() {
+    return "ActivityDTO{" +
+        "label='" + label + "\'\n" +
+        ", activityTemplate=" + activityTemplate + "\'\n" +
+        ", rootPlanNodeId=" + rootPlanNodeId + "\'\n" +
+        ", parentPlanNodeId=" + parentPlanNodeId + "\'\n" +
+        ", currentView='" + currentView + "\'\n" +
+        ", ordering=" + ordering + "\'\n" +
+        ", id=" + id + "\'\n" +
+        ", crateStorage=" + crateStorage + "\'\n" +
+        ", childActivities=" + Arrays.toString(childActivities) + "\'\n" +
+        ", authTokenId=" + authTokenId + "\'\n" +
+        ", authToken=" + authToken + "\'\n" +
+        ", fr8AccountId='" + fr8AccountId + "\'\n" +
+        ", documentation='" + documentation + "\'\n" +
+        ", name='" + name + "\'\n" +
+        '}';
+  }
 }

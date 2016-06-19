@@ -5,6 +5,7 @@ import co.fr8.data.states.AvailabilityTypeEnum;
 import co.fr8.util.json.JsonUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -22,18 +23,31 @@ public class CrateDTO {
   private String label;
   private JsonNode contents;
   private String parentCrateId;
-  private Date createTime;
-  private AvailabilityTypeEnum availability;
+  private Date createTime = Calendar.getInstance().getTime();
+  private int availability;
+  private String sourceActivityId;
+
+  public CrateDTO() {
+  }
 
   public CrateDTO(Crate crate) {
 //    this.manifestId = crate.getId();
     this.manifestType = crate.getCrateManifestType().getFriendlyName();
     this.label = crate.getLabel();
     this.id = crate.getId();
-    this.contents = JsonUtils.writeObjectToJsonNode(crate.getContent());
+
+    if (crate.getKnownContent() != null) {
+      this.contents = JsonUtils.writeObjectToJsonNode(crate.getKnownContent());
+    } else if (crate.getContent() != null) {
+      this.contents = JsonUtils.writeObjectToJsonNode(crate.getContent());
+    } else {
+      this.contents = crate.getRawContent();
+    }
     // HERE IS YOUR PROBLEM
 //    this.contents = crate.getRawContent();
-    this.availability = crate.getAvailability();
+    this.availability =
+        (crate.getAvailability() == null) ? AvailabilityTypeEnum.NotSet.getCode() : crate.getAvailability().getCode();
+    this.manifestId = crate.getCrateManifestType().getId();
 
   }
 
@@ -105,49 +119,20 @@ public class CrateDTO {
     this.createTime = createTime;
   }
 
-  public AvailabilityTypeEnum getAvailability() {
+  public int getAvailability() {
     return availability;
   }
 
   public void setAvailability(AvailabilityTypeEnum availability) {
-    this.availability = availability;
+    this.availability =
+        (availability == null) ? AvailabilityTypeEnum.NotSet.getCode() : availability.getCode();
   }
 
-  /*
-
-  [JsonProperty("manifestType")]
-  public string ManifestType { get; set; }
-
-  [JsonProperty("manifestId")]
-  public int ManifestId { get; set; }
-
-  [JsonProperty("manufacturer")]
-  public ManufacturerDTO Manufacturer { get; set; }
-
-  [JsonProperty("manifestRegistrar")]
-  public string ManifestRegistrar
-  {
-    get { return "www.fr8.co/registry"; }
+  public String getSourceActivityId() {
+    return sourceActivityId;
   }
 
-  [JsonProperty("id")]
-  public string Id { get; set; }
-
-  [JsonProperty("label")]
-  public string Label { get; set; }
-
-  [JsonProperty("contents")]
-  public JToken Contents { get; set; }
-
-  [JsonProperty("parentCrateId")]
-  public string ParentCrateId { get; set; }
-
-  [JsonProperty("createTime")]
-      [JsonConverter(typeof(CreateTimeConverter))]
-  public DateTime CreateTime { get; set; }
-
-  [JsonProperty("availability")]
-      [JsonConverter(typeof(AvailabilityConverter))]
-  public AvailabilityType Availability { get; set; }
-*/
+  public void setSourceActivityId(String sourceActivityId) {
+    this.sourceActivityId = sourceActivityId;
+  }
 }

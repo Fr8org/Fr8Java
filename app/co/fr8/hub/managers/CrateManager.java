@@ -1,5 +1,6 @@
 package co.fr8.hub.managers;
 
+import co.fr8.data.constants.MT;
 import co.fr8.data.crates.AbstractCrateStorage;
 import co.fr8.data.crates.Crate;
 import co.fr8.data.crates.CrateStorage;
@@ -10,6 +11,7 @@ import co.fr8.data.states.AvailabilityTypeEnum;
 import co.fr8.util.json.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -102,9 +104,15 @@ public class CrateManager implements ICrateManager {
     return null;
   }
 
-  @Override
-  public Crate createStandardEventSubscriptionsCrate(String label, String manufacturer, String... subscriptions) {
-    return null;
+  public static Crate createStandardEventSubscriptionsCrate(String label, String manufacturer, String[] subscriptions) {
+    EventSubscriptionCM eventSub = new EventSubscriptionCM(Arrays.asList(subscriptions), manufacturer);
+    Crate<EventSubscriptionCM> ret =
+        new Crate<>(MT.StandardEventSubscription, eventSub);
+    ret.setLabel(label);
+    ret.setAvailability(AvailabilityTypeEnum.NotSet);
+
+    return ret;
+
   }
 
   @Override
