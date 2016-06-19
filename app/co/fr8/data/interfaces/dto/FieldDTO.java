@@ -3,7 +3,6 @@ package co.fr8.data.interfaces.dto;
 import co.fr8.data.crates.CrateManifestType;
 import co.fr8.data.states.AvailabilityTypeEnum;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sun.javafx.collections.MappingChange;
 
 /**
  * TODO: Implement
