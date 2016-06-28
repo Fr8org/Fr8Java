@@ -21,7 +21,28 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * TODO: Implement
+ * This is the main base class which must be extended in order to create a new
+ * Fr8 activity.
+ *
+ * Subclasses will implement the following methods:
+ * <ul>
+ * <li>initializeActivityState(ActionNameEnum actionName)</li>
+ * <li>checkAuthentication</li>
+ * <li>initialize</li>
+ * <li>beforeConfigure(ConfigurationRequestType configurationRequestType)</li>
+ * <li>followUp</li>
+ * <li>ActivityFunctionalInterface runChildActivities</li>
+ * <li>deactivate</li>
+ * <li>beforeRun</li>
+ * <li>ActivityFunctionalInterface run</li>
+ * <li>afterRun</li>
+ * <li>afterDeactivate</li>
+ * <li>beforeDeactivate</li>
+ * <li>activate</li>
+ * <li>afterActivate</li>
+ * <li>#beforeActivate</li>
+ * </ul>
+ *
  */
 abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
     implements IActivity {
@@ -33,12 +54,29 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
   private AuthenticationMode authenticationMode = AuthenticationMode.InternalMode;
   protected T activityUI;
 
+  /**
+   * Base constructor for an AbstractTerminalActivity. Any subclasses will
+   * call this method in their constructors
+   *
+   * @param activityTemplate an {@link ActivityTemplateDTO} object to use to set
+   *                         the {@link ActivityContext#activityPayload} property
+   */
   public AbstractTerminalActivity(ActivityTemplateDTO activityTemplate) {
     this.activityContext = new ActivityContext();
     this.activityContext.setActivityPayload(new ActivityPayload(activityTemplate.getName()));
     this.activityTemplateDTO = activityTemplate;
   }
 
+  /**
+   * Private method which ensures that the activity is properly configured to
+   * process the activity request
+   *
+   * @param activityContext the {@link ActivityContext} associated with the
+   *                        activity
+   * @param containerExecutionContext the {@link ContainerExecutionContext} associated
+   *                                  with the activity
+   * @param actionName the {@link ActionNameEnum} associated with the request
+   */
   private void initializeInternalState(ActivityContext activityContext,
                                        ContainerExecutionContext containerExecutionContext,
                                        ActionNameEnum actionName) {
@@ -73,7 +111,7 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
    * Super method for the configure activity
    * Subclasses must implement initialize() and followup();
    *
-   * @param activityContext
+   * @param activityContext the {@link ActivityContext}
    */
   public void configure(ActivityContext activityContext) {
     initializeInternalState(activityContext, null, ActionNameEnum.CONFIGURE);
@@ -110,8 +148,8 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
   }
 
   /**
-   *
-   * @param activityContext
+   * Main work method which processes the /activate request
+   * @param activityContext the {@link ActivityContext} associated with the activity
    */
   public void activate(ActivityContext activityContext) {
     initializeInternalState(activityContext, null, ActionNameEnum.ACTIVATE);
@@ -125,8 +163,8 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
   }
 
   /**
-   *
-   * @param activityContext
+   * Main work method which processes /deactivate request
+   * @param activityContext the ActivityContext associated with the activity
    */
   public void deactivate(ActivityContext activityContext) {
     initializeInternalState(activityContext, null, ActionNameEnum.DEACTIVATE);
@@ -140,9 +178,10 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
   }
 
   /**
-   *
-   * @param activityContext
-   * @param containerExecutionContext
+   * Main work method which processes the activity /run request the implemented
+   * {@link #run()} method
+   * @param activityContext the ActivityContext for the activity
+   * @param containerExecutionContext the ContainerExecutionContext for the activity
    */
   public void run(ActivityContext activityContext, ContainerExecutionContext containerExecutionContext) {
     initializeInternalState(activityContext, containerExecutionContext, ActionNameEnum.RUN);
@@ -151,9 +190,11 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
   }
 
   /**
-   *
-   * @param activityContext
-   * @param containerExecutionContext
+   * Main work method which processes the activity /run request the implemented
+   * {@link #runChildActivities()} method
+   * @param activityContext the ActivityContext associated with this activity
+   * @param containerExecutionContext the ContainerExecutionContext associated
+   *                                  with this activity
    */
   public void runChildActivities(ActivityContext activityContext, ContainerExecutionContext containerExecutionContext) {
 
@@ -163,6 +204,25 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
     run(runChildActivities());
   }
 
+  /**
+   * The run method is called when a request is made to /activities/run path of
+   * the terminal.
+   *
+   * The logic path is to check the authorization state of the request,
+   * call {@link #beforeRun()}, which may or may not be implemented by a subclass.
+   *
+   * If {@link #beforeRun()} returns true, then the code moves on the call the execute()
+   * method of the ActivityFunctionalInterface method provided in the runMode
+   * parameter.
+   *
+   * After runMode.execute() is called, the {@link #afterRun()} method is called to finalize
+   * any information that must be returned in the response.
+   *
+   * Finally, the logic checks errors in the operational state for the activity and
+   * updates the response state accordingly by calling {@link #success(String)} or
+   * {@link #error(String, ActivityErrorCode)}
+   * @param runMode an implementation of ActivityFunctionalInterface to run
+   */
   private void run(ActivityFunctionalInterface runMode) {
     if (!checkAuthentication()) {
       AuthorizationTokenDTO authToken =
@@ -192,31 +252,50 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
     }
   }
 
+  /**
+   * Sets the response type to ActivityResponse.REQUEST_SUSPEND
+   * @param message the message associated with the suspend request
+   */
   protected void suspendHubExecution(String message) {
     setResponse(ActivityResponse.REQUEST_SUSPEND, message, null);
   }
 
+  /**
+   * Sets the response type to ActivityResponse.REQUEST_TERMINATE
+   * @param message the message associated with the termination request
+   */
   protected void terminateHubExecution(String message) {
     setResponse(ActivityResponse.REQUEST_TERMINATE, message, null);
   }
 
-  protected void requestHubExecutionTermination(String message) {
-    terminateHubExecution(message);
-  }
-
+  /**
+   * Set the response type to ActivityResponse.SUCCESS
+   * @param message
+   */
   protected void success(String message) {
     setResponse(ActivityResponse.SUCCESS, message, null);
   }
 
-  protected void executeClientActivity(String clientActionName) {
+  /**
+   * Setst the response type to ActivityResponse.EXECUTE_CLIENT_ACTIVITY
+   * @param clientActivityName the name of the activity
+   */
+  protected void executeClientActivity(String clientActivityName) {
     setResponse(ActivityResponse.EXECUTE_CLIENT_ACTIVITY, StringUtils.EMPTY, null);
-    operationalState.setCurrentClientActivityName(clientActionName);
+    operationalState.setCurrentClientActivityName(clientActivityName);
   }
 
+  /**
+   * Sets the response type to ActivityResponse.SKIP_CHILDREN
+   */
   protected void requestSkipChildren() {
     setResponse(ActivityResponse.SKIP_CHILDREN, StringUtils.EMPTY, null);
   }
 
+  /**
+   * Sets the response to the ActivityResponse.CALL_AND_RETURN type
+   * @param targetNodeId the ID of the plan
+   */
   protected void requestCall(UUID targetNodeId) {
     setResponse(ActivityResponse.CALL_AND_RETURN, StringUtils.EMPTY, null);
     ResponseMessageDTO responseMessage = new ResponseMessageDTO();
@@ -226,23 +305,9 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
   }
 
   /**
-   private void SyncConfControlsBack()
-   {
-   Storage.Remove<StandardConfigurationControlsCM>();
-   // we create new StandardConfigurationControlsCM with controls from ActivityUi.
-   // We do this because ActivityUi can has properties to access specific controls. We don't want those propeties exist in serialized crate.
-
-   var configurationControlsToAdd = new StandardConfigurationControlsCM(ActivityUI.Controls);
-   Storage.Add(Crate.FromContent(ConfigurationControlsLabel, configurationControlsToAdd, AvailabilityType.Configuration));
-   ActivityUI.SaveDynamicControlsTo(configurationControlsToAdd);
-   }
+   * Jumps to an activity that resides in the same subplan as the current activity
+   * @param targetActivityId the ID of the activity to jump to
    */
-
-  /**********************************************************************************/
-  /// <summary>
-  /// Jumps to an activity that resides in same subplan as current activity
-  /// </summary>
-  /// <returns></returns>
   protected void requestJumpToActivity(UUID targetActivityId) {
     setResponse(ActivityResponse.JUMP_TO_ACTIVITY, StringUtils.EMPTY, null);
     ResponseMessageDTO responseMessage = new ResponseMessageDTO();
@@ -251,11 +316,10 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
         responseMessage);
   }
 
-  /**********************************************************************************/
-  /// <summary>
-  /// Jumps to an activity that resides in same subplan as current activity
-  /// </summary>
-  /// <returns></returns>
+  /**
+   * Jumps to an subplan that resides in the same plan as the current activity
+   * @param targetSubplanId the ID of the subplan
+   */
   protected void requestJumpToSubplan(UUID targetSubplanId) {
     setResponse(ActivityResponse.JUMP_TO_SUBPLAN, StringUtils.EMPTY, null);
     ResponseMessageDTO responseMessage = new ResponseMessageDTO();
@@ -264,11 +328,10 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
         responseMessage);
   }
 
-  /**********************************************************************************/
-  /// <summary>
-  /// Jumps to another plan
-  /// </summary>
-  /// <returns></returns>
+  /**
+   * Jumps to another plan
+   * @param targetPlanId the ID of the plan to jump to
+   */
   protected void launchPlan(UUID targetPlanId) {
     setResponse(ActivityResponse.LAUNCH_ADDITIONAL_PLAN, StringUtils.EMPTY, null);
     ResponseMessageDTO responseDTO = new ResponseMessageDTO();
@@ -278,8 +341,12 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
         responseDTO);
   }
 
-  /**********************************************************************************/
-
+  /**
+   * Sets the response with the specified activity type
+   * @param response The ActivityResponse to set
+   * @param message The message String
+   * @param details an object to set the set the ResponseMessageDTO.details property.
+   */
   protected void setResponse(ActivityResponse response, String message, Object details) {
     operationalState.setCurrentActivityResponse(new ActivityResponseDTO(response.getFriendlyName()));
 
@@ -289,10 +356,11 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
     }
   }
 
-  /**********************************************************************************/
-  /// <summary>
-  /// returns error to hub
-  /// </summary>
+  /**
+   * Sets the error response with a generic error
+   * @param errorMessage the error message
+   * @param errorCode the ActivityErrorCoded
+   */
   protected void error(String errorMessage, ActivityErrorCode errorCode) {
     setResponse(ActivityResponse.ERROR, StringUtils.EMPTY, StringUtils.EMPTY);
     operationalState.setCurrentActivityErrorCode(errorCode);
@@ -319,30 +387,15 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
 
   }
 
-  /**********************************************************************************/
-  /// <summary>
-  /// returns error to hub
-  /// </summary>
-  /// <param name="errorMessage"></param>
-  /// <param name="errorCode"></param>
-  /// <param name="currentActivity">Activity where the error occured</param>
-  /// <param name="currentTerminal">Terminal where the error occured</param>
-  /// <returns></returns>
-  protected void raiseError(String errorMessage, ActivityErrorCode errorCode,
-                            String currentActivity, String currentTerminal) {
-    raiseError(errorMessage, ErrorType.Generic, errorCode, currentActivity, currentTerminal);
-  }
 
-  /**********************************************************************************/
-  /// <summary>
-  /// returns error to hub
-  /// </summary>
-  /// <param name="errorCode"></param>
-  /// <param name="currentActivity">Activity where the error occured</param>
-  /// <param name="currentTerminal">Terminal where the error occured</param>
-  /// <param name="errorMessage"></param>
-  /// <param name="errorType"></param>
-  /// <returns></returns>
+  /**
+   * Return an error to the hub by adding it to the activity response
+   * @param errorMessage a String representing the specific error message
+   * @param errorType the ErrorType enum of the error
+   * @param errorCode the ActivityErrorCode associated with the error
+   * @param currentActivity the name of the activity for which the error occurred
+   * @param currentTerminal the name of the terminal which contains the activity
+   */
   protected void raiseError(String errorMessage, ErrorType errorType, ActivityErrorCode errorCode,
                             String currentActivity, String currentTerminal) {
     operationalState.setCurrentActivityErrorCode(errorCode);
@@ -351,55 +404,39 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
         new ErrorDTO(errorMessage, errorCode.toString(), errorType.name(), null, currentActivity, currentTerminal));
   }
 
-  /**********************************************************************************/
-  /// <summary>
-  /// Returns Needs authentication error to hub
-  /// </summary>
-  /// <returns></returns>
-  protected void raiseNeedsAuthenticationError() {
+  /**
+   * Returns authentication error to hub indicating that the AuthorizationToken
+   * is missing
+   */
+  protected void raiseAuthenticationError() {
     raiseError("No AuthToken provided.", ErrorType.Authentication,
         ActivityErrorCode.AUTH_TOKEN_NOT_PROVIDED_OR_INVALID, StringUtils.EMPTY, StringUtils.EMPTY);
   }
 
   /**
-  /// Returns authentication error to hub
-  /// </summary>
-  /// <returns></returns>
-  */
-  protected void raiseInvalidTokenError(String instructionsToUser) {
-    raiseError(instructionsToUser, ErrorType.Authentication,
-        ActivityErrorCode.AUTH_TOKEN_NOT_PROVIDED_OR_INVALID, StringUtils.EMPTY,
-        StringUtils.EMPTY);
-  }
-
-
+   * Base implementation of the getDocumentation() request. This should be overridden
+   * by a subclass
+   * @param documentationType the type of the documentation to retrieve
+   * @return a SolutionPageDTO object with default values
+   */
   protected SolutionPageDTO getDocumentation(String documentationType) {
     SolutionPageDTO ret = new SolutionPageDTO();
     ret.setName("No documentation found");
-    ret.setBody("Please override the getDocumentation in your subclass");
+    ret.setBody("No documentation is provided for: " + documentationType);
 
     return ret;
   }
 
 
+  /**
+   * Called during a request to /activity/documentation
+   * @param activityContext the ActivityContext associated with the request
+   * @param documentationType the type of documentation to retrieve
+   * @return a SolutionPageDTO object to be added to the response crate
+   */
   public SolutionPageDTO getDocumentation(ActivityContext activityContext, String documentationType) {
     initializeInternalState(activityContext, null, ActionNameEnum.DOCUMENTATION);
     return getDocumentation(documentationType);
-  }
-
-  protected AbstractCrateStorage getPayload() throws InvalidOperationException {
-    checkRunTime("Payload storage is not available at the design time");
-    return activityContext.getActivityPayload().getCrateStorage();
-  }
-
-  protected ContainerExecutionContext getContainerExecutionContext() throws InvalidOperationException {
-    checkRunTime("Execution context is not available at the design time");
-    return containerExecutionContext;
-  }
-
-  protected OperationalStateCM getOperationalState() throws InvalidOperationException {
-    checkRunTime("Operations state is not available at the design time");
-    return operationalState;
   }
 
   protected ICrateStorage getStorage() {

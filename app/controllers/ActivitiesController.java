@@ -87,7 +87,7 @@ public class ActivitiesController extends AbstractTerminalController<GitHubTermi
    */
   public Result configureActivities() {
     Logger.debug("Call to /activities/configure");
-//    DynamicForm form = Form.form().bindFromRequest();
+
     JsonNode jsonBody = request().body().asJson();
 
     if (jsonBody == null) {
@@ -118,6 +118,39 @@ public class ActivitiesController extends AbstractTerminalController<GitHubTermi
     Logger.debug("handleFr8Request returned: " + responseString);
 
     return ok(responseString);
+  }
+
+  /**
+   * Handlee the request to /documentation
+   *
+   * @return a JSON response containing a crate with a DocumentationDTO
+   */
+  public Result documentation() {
+    Logger.warn("Documentation Placeholder method called");
+
+    JsonNode jsonBody = request().body().asJson();
+
+    if (jsonBody == null) {
+      return ok(createErrorResponse("Unable to extract activity DTO"));
+    }
+
+    Logger.debug("Configure body: " + jsonBody);
+
+    JsonNode activityJson = jsonBody.get("ActivityDTO");
+    String containerId = jsonBody.get("ContainerId").asText();
+
+
+    ActivityDTO activityDTO =
+        JsonUtils.writeStringToActivityDTO(activityJson.toString());
+
+    if (activityDTO == null) {
+      Logger.error("Unable to extract ActivityPayload");
+      return ok(createErrorResponse( "Unable to parse form data to ActivityPayload"));
+    }
+
+    ActivityDTO resultDTO = terminal.handleFr8Request(ActionNameEnum.DOCUMENTATION,
+        new Fr8DataDTO(activityDTO, containerId), request().queryString());
+    return ok("message", "Placeholder");
   }
 
 

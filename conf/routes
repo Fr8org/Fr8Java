@@ -16,6 +16,7 @@ POST        /activities/activate                controllers.ActivitiesController
 POST        /activities/configure               controllers.ActivitiesController.configureActivities()
 POST        /activities/deactivate              controllers.ActivitiesController.activateActivities()
 POST        /activities/run                     controllers.ActivitiesController.runActivities()
+POST        /activities/documentation           controllers.ActivitiesController.documentation()
 
 GET         /test/testMonitorConfigure          controllers.TestController.configTest()
 GET         /test/testMonitorActivate           controllers.TestController.activateTest()

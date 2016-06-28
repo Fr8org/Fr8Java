@@ -58,7 +58,7 @@ abstract class AbstractRepositoryRetrievalActivity
           String fieldName;
           while(fieldNameIterator.hasNext() && StringUtils.isNotBlank(fieldName = fieldNameIterator.next())) {
             Logger.debug("Adding field: " + fieldName);
-            fieldNames.add(new FieldDTO("name", fieldName, AvailabilityTypeEnum.Always));
+            fieldNames.add(new FieldDTO(fieldName, fieldName, AvailabilityTypeEnum.Always));
           }
         }
 
