@@ -4,9 +4,8 @@ import co.fr8.data.crates.AbstractCrateStorage;
 import co.fr8.data.crates.Crate;
 import co.fr8.data.crates.CrateStorage;
 import co.fr8.data.interfaces.dto.ActivityDTO;
-import co.fr8.data.interfaces.dto.ActivityTemplateDTO;
+import co.fr8.data.interfaces.dto.ActivityTemplateSummaryDTO;
 import co.fr8.data.interfaces.dto.CrateDTO;
-import co.fr8.hub.managers.ICrateStorage;
 import co.fr8.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * TODO: document
+ * Transitional object used for converting Fr8Data into ActivityDTO
  */
 public class ActivityPayload {
 
@@ -22,9 +21,9 @@ public class ActivityPayload {
   private String label;
   private String name;
   private List<ActivityPayload> childrenActivities;
-  private ActivityTemplateDTO activityTemplate;
+  private ActivityTemplateSummaryDTO activityTemplate;
   private AbstractCrateStorage crateStorage;
-  private UUID rootPlanNodeId;
+  private UUID planId;
   private UUID parentPlanNodeId;
   private int ordering;
 
@@ -35,12 +34,12 @@ public class ActivityPayload {
   public ActivityPayload(ActivityDTO activityDTO) {
     this.id = activityDTO.getId();
     this.label = activityDTO.getLabel();
-    this.name = activityDTO.getName();
+//    this.name = activityDTO.getName();
 
-    if (CollectionUtils.isNotEmpty(activityDTO.getChildActivities())) {
-      this.childrenActivities = new ArrayList<>(activityDTO.getChildActivities().length);
+    if (CollectionUtils.isNotEmpty(activityDTO.getChildrenActivities())) {
+      this.childrenActivities = new ArrayList<>(activityDTO.getChildrenActivities().length);
 
-      for (ActivityDTO childActivities : activityDTO.getChildActivities()) {
+      for (ActivityDTO childActivities : activityDTO.getChildrenActivities()) {
         this.childrenActivities.add(new ActivityPayload(childActivities));
       }
     }
@@ -57,7 +56,7 @@ public class ActivityPayload {
       }
     }
 
-    this.rootPlanNodeId = activityDTO.getRootPlanNodeId();
+    this.planId = activityDTO.getPlanId();
     this.parentPlanNodeId = activityDTO.getParentPlanNodeId();
     this.ordering = activityDTO.getOrdering();
   }
@@ -94,11 +93,11 @@ public class ActivityPayload {
     this.childrenActivities = childrenActivities;
   }
 
-  public ActivityTemplateDTO getActivityTemplate() {
+  public ActivityTemplateSummaryDTO getActivityTemplate() {
     return activityTemplate;
   }
 
-  public void setActivityTemplate(ActivityTemplateDTO activityTemplate) {
+  public void setActivityTemplate(ActivityTemplateSummaryDTO activityTemplate) {
     this.activityTemplate = activityTemplate;
   }
 
@@ -114,12 +113,12 @@ public class ActivityPayload {
     this.crateStorage = crateStorage;
   }
 
-  public UUID getRootPlanNodeId() {
-    return rootPlanNodeId;
+  public UUID getPlanId() {
+    return planId;
   }
 
-  public void setRootPlanNodeId(UUID rootPlanNodeId) {
-    this.rootPlanNodeId = rootPlanNodeId;
+  public void setPlanId(UUID planId) {
+    this.planId = planId;
   }
 
   public UUID getParentPlanNodeId() {
@@ -147,7 +146,7 @@ public class ActivityPayload {
         ", childrenActivities=" + childrenActivities +
         ", activityTemplate=" + activityTemplate +
         ", crateStorage=" + crateStorage +
-        ", rootPlanNodeId=" + rootPlanNodeId +
+        ", planId=" + planId +
         ", parentPlanNodeId=" + parentPlanNodeId +
         ", ordering=" + ordering +
         '}';

@@ -52,7 +52,6 @@ public class JsonUtils {
     } catch (JsonProcessingException e) {
       Logger.error("Exception converting object of type " + object.getClass().getName(), e);
     }
-
     return StringUtils.EMPTY;
   }
 
@@ -62,7 +61,6 @@ public class JsonUtils {
     } catch (IllegalArgumentException e) {
       Logger.error("Exception converting object to JsonNode: " + object, e);
     }
-
     return null;
   }
 

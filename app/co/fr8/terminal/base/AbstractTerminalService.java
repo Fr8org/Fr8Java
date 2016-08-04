@@ -2,7 +2,6 @@ package co.fr8.terminal.base;
 
 import co.fr8.data.interfaces.dto.*;
 import co.fr8.data.interfaces.manifests.StandardFr8TerminalCM;
-import co.fr8.data.states.ActivityTypeEnum;
 import co.fr8.hub.managers.CrateManager;
 import co.fr8.hub.managers.ICrateManager;
 import co.fr8.play.ApplicationConstants;
@@ -99,7 +98,7 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
     if (curDataDTO.getActivityPayload().getActivityTemplate() == null)
       throw new IllegalArgumentException("ActivityTemplate is null " + curDataDTO.getActivityPayload().getClass());
 
-      logWhenRequest(actionName.getLowerValue(), curActivityPayload.getActivityTemplate().getTerminal().getName(),
+      logWhenRequest(actionName.getLowerValue(), curActivityPayload.getActivityTemplate().getTerminalName(),
           curActivityPayload.getId().toString(), "received");
 
       Logger.debug("Checking curActionPath " + actionName + " as enum: " +
@@ -150,11 +149,8 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
         case CONFIGURE: {
           Logger.debug("In configure statement");
           terminalActivity.configure(activityContext);
-
           ActivityPayload resultActivityPayload = terminalActivity.getActivityPayload();
-
           Logger.debug("Returning ActivityPayload from configure: " + resultActivityPayload);
-
           return new ActivityDTO(resultActivityPayload);
         }
         case RUN: {
@@ -222,7 +218,7 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
 
     Logger.debug("HandleFr8Request returning end value");
 
-    logWhenRequest(actionName.getLowerValue(), curActivityPayload.getActivityTemplate().getTerminal().getName(),
+    logWhenRequest(actionName.getLowerValue(), curActivityPayload.getActivityTemplate().getTerminalName(),
         curActivityPayload.getId().toString(), "responded");
 
 

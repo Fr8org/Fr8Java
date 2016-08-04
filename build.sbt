@@ -13,6 +13,8 @@ libraryDependencies ++= Seq(
   "org.apache.httpcomponents" % "httpasyncclient" % "4.1.1",
   "org.apache.commons" % "commons-lang3" % "3.4",
   "com.jcabi" % "jcabi-github" % "0.27",
+  "junit" % "junit" % "4.12" % "test",
+  "org.mockito" % "mockito-core" % "1.10.19",
   javaJdbc,
   cache,
   javaWs

@@ -28,9 +28,7 @@ public class ListActivityUI extends AbstractActivityUI {
 
   @Override
   protected void consolidateControls() {
-
     if (!controls.contains(repoList))
       controls.add(repoList);
-
   }
 }

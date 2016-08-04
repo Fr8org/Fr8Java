@@ -121,7 +121,7 @@ public class ActivitiesController extends AbstractTerminalController<GitHubTermi
   }
 
   /**
-   * Handlee the request to /documentation
+   * Handle the request to /documentation
    *
    * @return a JSON response containing a crate with a DocumentationDTO
    */

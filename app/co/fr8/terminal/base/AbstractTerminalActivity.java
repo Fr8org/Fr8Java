@@ -1,7 +1,6 @@
 package co.fr8.terminal.base;
 
 import co.fr8.data.constants.MT;
-import co.fr8.data.crates.AbstractCrateStorage;
 import co.fr8.data.crates.Crate;
 import co.fr8.data.interfaces.dto.*;
 import co.fr8.data.interfaces.manifests.AuthenticationMode;
@@ -40,7 +39,7 @@ import java.util.UUID;
  * <li>beforeDeactivate</li>
  * <li>activate</li>
  * <li>afterActivate</li>
- * <li>#beforeActivate</li>
+ * <li>beforeActivate</li>
  * </ul>
  *
  */
@@ -119,6 +118,7 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
 
     Logger.debug("conType for request is: " + conType);
 
+    //TODO why?
     Logger.debug("checking authentication: " + checkAuthentication());
     if (!checkAuthentication()) {
       addAuthenticationCrate(false);
@@ -481,13 +481,9 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
 
   protected void afterConfigure(ConfigurationRequestType configurationRequestType, Exception e) {
     Logger.debug("In after configure with configurationRequestType : " + configurationRequestType);
-
-    getStorage().add(generateStandardConfigurationControlsCrate());
-
-    Logger.debug("There are " + getStorage().getCount() + " items in storage " + getStorage());
   }
 
-  private Crate generateStandardConfigurationControlsCrate() {
+  protected Crate generateStandardConfigurationControlsCrate() {
     StandardConfigurationControlsCM controls =
         new StandardConfigurationControlsCM(activityUI.getControls());
     Crate crate = new Crate<>(MT.StandardConfigurationControls, "Configuration_Controls", controls);

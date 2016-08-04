@@ -29,15 +29,10 @@ public class GitHubTerminal extends AbstractTerminalService {
 
   @Override
   public StandardFr8TerminalCM discover() {
-
     Logger.debug("Discover called host is: " + TERMINAL_HOST);
-
     StandardFr8TerminalCM ret = new StandardFr8TerminalCM(GITHUB_TERMINAL_DTO,
-//       Collections.singletonList(GITHUB_LIST_REPOS_TEMPLATE_DTO));
         ALL_ACTIVITIES);
-
     Logger.debug("Created new StandardFr8TerminalCM " + ret);
-
     return ret;
   }
 
@@ -49,7 +44,6 @@ public class GitHubTerminal extends AbstractTerminalService {
 
   @Override
   public AuthorizationToken authenticateToken(ExternalAuthDTO externalAuthDTO) {
-
     return authentication.authenticate(externalAuthDTO);
   }
 

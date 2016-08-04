@@ -1,50 +1,26 @@
 package co.fr8.data.interfaces.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * TODO: Document
  */
 public class AuthorizationTokenDTO {
 
-  @JsonProperty("Id")
   private String id;
-
-  @JsonProperty("Token")
   private String token;
-
-  @JsonProperty("ExternalAccountId")
   private String externalAccountId;
-
-  @JsonProperty("ExternalAccountName")
   private String externalAccountName;
-
-  @JsonProperty("ExternalDomainId")
   private String externalDomainId;
-
-  @JsonProperty("ExternalDomainName")
   private String externalDomainName;
-
-  @JsonProperty("UserId")
   private String userId;
-
-  @JsonProperty("ExternalStateToken")
   private String externalStateToken;
-
-  @JsonProperty("AdditionalAttributes")
   private String additionalAttributes;
-
-  @JsonProperty("Error")
   private String error;
-
-  @JsonProperty("AuthCompletedNotificationRequired")
+  private String expiresAt;
   private boolean authCompletedNotificationRequired;
-
   /**
    * @deprecated property no longer in use and replaced by id
    */
-  @JsonProperty("TerminalID")
-  private int terminalId = 0;
+  private int terminalId;
 
   public String getId() {
     return id;
@@ -132,5 +108,21 @@ public class AuthorizationTokenDTO {
 
   public void setTerminalId(int terminalId) {
     this.terminalId = terminalId;
+  }
+
+  public String getExternalDomainName() {
+    return externalDomainName;
+  }
+
+  public void setExternalDomainName(String externalDomainName) {
+    this.externalDomainName = externalDomainName;
+  }
+
+  public String getExpiresAt() {
+    return expiresAt;
+  }
+
+  public void setExpiresAt(String expiresAt) {
+    this.expiresAt = expiresAt;
   }
 }

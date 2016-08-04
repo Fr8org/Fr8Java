@@ -6,15 +6,13 @@ import java.util.UUID;
 
 /**
  * Data Transfer Object which represents Fr8Data
+ * We get Fr8Data
  */
 public class Fr8DataDTO {
+
   private ActivityDTO activityPayload;
   private UUID containerId;
-
-
-  /// <summary>
-  /// This property is used for integration tests
-  /// </summary>
+  // This property is used for integration tests
   private String explicitData;
 
   // TODO: Is this necessary

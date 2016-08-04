@@ -71,4 +71,11 @@ public class ApplicationConstants {
   public static final boolean DEBUG_JSON =
       Play.application().configuration().getBoolean("fr8.terminal.json.debug");
 
+  public static final String WEBHOOK_URL =
+      Play.application().configuration().getString("github.client.webhookUrl");
+
+  public static final String WEBHOOK_NAME = "name";
+
+  public static final String WEBHOOK_CONFIG = "config";
+
 }

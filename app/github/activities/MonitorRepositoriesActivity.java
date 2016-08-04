@@ -18,7 +18,7 @@ import play.libs.Json;
 
 import java.util.List;
 
-import static github.util.GitHubTerminalConstants.GITHUB_LIST_REPOS_TEMPLATE_DTO;
+import static github.util.GitHubTerminalConstants.GITHUB_LIST_REPO_TEMPLATE_DTO;
 
 /**
  * TODO: Implement
@@ -29,7 +29,7 @@ public class MonitorRepositoriesActivity extends AbstractRepositoryRetrievalActi
    *
    */
   public MonitorRepositoriesActivity() {
-    super(GITHUB_LIST_REPOS_TEMPLATE_DTO);
+    super(GITHUB_LIST_REPO_TEMPLATE_DTO);
   }
 
   /**
