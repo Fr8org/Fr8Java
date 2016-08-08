@@ -16,15 +16,15 @@ import github.service.GitHubService;
 
 import java.util.List;
 
-import static github.util.GitHubTerminalConstants.GITHUB_GET_EXAMPLE_DTO;
+import static github.util.GitHubTerminalConstants.MONITOR_GITHUB_REPOSITORY_DTO;
 
 /**
- * TODO: Implement
+ * @deprecated
  */
 public class GitGetRepositoriesActivity extends AbstractRepositoryRetrievalActivity {
 
   public GitGetRepositoriesActivity() {
-    super(GITHUB_GET_EXAMPLE_DTO);
+    super(MONITOR_GITHUB_REPOSITORY_DTO);
   }
 
   @Override
@@ -106,7 +106,8 @@ public class GitGetRepositoriesActivity extends AbstractRepositoryRetrievalActiv
                 if (dropDownList != null) {
                   ListItem selectedRepo = dropDownList.findBySelected();
                   Logger.debug("Found selected ListItem: " + selectedRepo);
-                  GitHubService.getInstance().postWebhookToGithubPullRequests(selectedRepo.getValue(), authToken);
+                  GitHubService.getInstance().postWebhookToGithubPullRequests(selectedRepo.getValue(), authToken,
+                      getActivityContext().getAuthorizationToken().getExternalAccountId());
                   Logger.debug("Successfully sent the webhook to github to: ", selectedRepo.getValue(), " repository");
                 }
               }

@@ -1,3 +1,5 @@
+package controller;
+
 import controllers.GitHubTerminalController;
 import org.junit.Test;
 import play.Application;

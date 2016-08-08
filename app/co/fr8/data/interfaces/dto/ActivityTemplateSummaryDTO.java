@@ -47,4 +47,14 @@ public class ActivityTemplateSummaryDTO {
   public void setTerminalVersion(String terminalVersion) {
     this.terminalVersion = terminalVersion;
   }
+
+  @Override
+  public String toString() {
+    return "ActivityTemplateSummaryDTO{" +
+        "name='" + name + "\'" +
+        ", version=" + version + "\'" +
+        ", terminalName=" + terminalName + "\'" +
+        ", terminalVersion=" + terminalVersion + "\'" +
+        '}';
+  }
 }

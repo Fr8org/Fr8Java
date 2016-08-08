@@ -135,4 +135,21 @@ public class CrateDTO {
   public void setSourceActivityId(String sourceActivityId) {
     this.sourceActivityId = sourceActivityId;
   }
+
+  @Override
+  public String toString() {
+    return "CrateDTO{" +
+        "manifestType='" + manifestType + '\'' +
+        ", manifestId=" + manifestId +
+        ", manufacturer=" + manufacturer +
+        ", manifestRegistrar='" + manifestRegistrar + '\'' +
+        ", id='" + id + '\'' +
+        ", label='" + label + '\'' +
+        ", contents=" + contents +
+        ", parentCrateId='" + parentCrateId + '\'' +
+        ", createTime=" + createTime +
+        ", availability=" + availability +
+        ", sourceActivityId='" + sourceActivityId + '\'' +
+        '}';
+  }
 }

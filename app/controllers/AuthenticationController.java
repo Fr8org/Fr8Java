@@ -32,7 +32,17 @@ public class AuthenticationController extends AbstractTerminalController<GitHubT
    * @return
    */
   public Result authenticateInternal() {
-    return ok("authenticate placeholder");
+    Logger.debug("Call to authenticateInternal");
+    DynamicForm form = Form.form().bindFromRequest();
+
+    debugForm(form);
+
+    // TODO: Make constants
+    String fr8UserId = form.get("Fr8UserId");
+    response().setHeader("Authorization", terminal.generateHMACHeader(fr8UserId));
+
+    return ok(JsonUtils.writeObjectAsString(response()));
+
   }
 
   /**
@@ -60,7 +70,7 @@ public class AuthenticationController extends AbstractTerminalController<GitHubT
     if (StringUtils.isBlank(requestQueryString)) {
       Logger.warn("No RequestQueryString sent in /authenticate/token request");
 
-      AuthorizationToken response; response = new AuthorizationToken();
+      AuthorizationToken response = new AuthorizationToken();
       response.setError("An error occurred while trying to authorize, please try again later.");
 
       return badRequest(JsonUtils.writeObjectAsString(response));

@@ -125,4 +125,22 @@ public class AuthorizationTokenDTO {
   public void setExpiresAt(String expiresAt) {
     this.expiresAt = expiresAt;
   }
+
+  @Override
+  public String toString() {
+    return "AuthorizationTokenDTO{" +
+        "id='" + id + "\'" +
+        ", token=" + token + "\'" +
+        ", externalAccountId=" + externalAccountId + "\'" +
+        ", externalAccountName=" + externalAccountName + "\'" +
+        ", externalDomainId=" + externalDomainId + "\'" +
+        ", externalDomainName=" + externalDomainName + "\'" +
+        ", userId=" + userId + "\'" +
+        ", externalStateToken=" + externalStateToken + "\'" +
+        ", additionalAttributes=" + additionalAttributes + "\'" +
+        ", error=" + error + "\'" +
+        ", expiresAt='" + expiresAt + "\'" +
+        ", authCompletedNotificationRequired='" + authCompletedNotificationRequired + "\'" +
+        '}';
+  }
 }
