@@ -12,11 +12,9 @@ import co.fr8.terminal.base.exception.InvalidOperationException;
 import co.fr8.terminal.base.ui.AbstractActivityUI;
 import co.fr8.terminal.infrastructure.IHubCommunicator;
 import co.fr8.terminal.infrastructure.states.ConfigurationRequestType;
-import co.fr8.util.CollectionUtils;
 import co.fr8.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -82,15 +80,15 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
     this.activityContext = activityContext;
     this.containerExecutionContext = containerExecutionContext;
 
-    if (containerExecutionContext != null) {
-      List<Crate> crates = getActivityPayload().getCrateStorage().getCratesOfType(MT.OperationalStatus);
-
-      if (CollectionUtils.isEmpty(crates) || operationalState == null) {
-        throw new IllegalArgumentException("Operational state crate is not found");
-      } else {
-        operationalState = (OperationalStateCM) crates.get(0).getContent();
-      }
-    }
+    //TODO Commenting out till I solve why security is not working.
+//    if (containerExecutionContext != null) {
+//      List<Crate> crates = getActivityPayload().getCrateStorage().getCratesOfType(MT.OperationalStatus);
+//      if (CollectionUtils.isEmpty(crates) || operationalState == null) {
+//        throw new IllegalArgumentException("Operational state crate is not found");
+//      } else {
+//        operationalState = (OperationalStateCM) crates.get(0).getContent();
+//      }
+//    }
 
     initializeActivityState(actionName);
   }
@@ -235,7 +233,7 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
       return;
     }
 
-    operationalState.setCurrentActivityResponse(null);
+//    operationalState.setCurrentActivityResponse(null);
 
     if (!beforeRun()) {
       return;
@@ -244,12 +242,12 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
     runMode.execute();
     afterRun();
 
-    if (operationalState.getCurrentActivityErrorCode() == null) {
-      success(StringUtils.EMPTY);
-    } else {
-      error(operationalState.getCurrentActivityErrorMessage(),
-          operationalState.getCurrentActivityErrorCode());
-    }
+//    if (operationalState.getCurrentActivityErrorCode() == null) {
+//      success(StringUtils.EMPTY);
+//    } else {
+//      error(operationalState.getCurrentActivityErrorMessage(),
+//          operationalState.getCurrentActivityErrorCode());
+//    }
   }
 
   /**

@@ -172,17 +172,17 @@ public class ActivityDTO {
   @Override
   public String toString() {
     return "ActivityDTO{" +
-        "label='" + label + "\'\n" +
-        ", activityTemplate=" + activityTemplate + "\'\n" +
-        ", planId=" + planId + "\'\n" +
-        ", parentPlanNodeId=" + parentPlanNodeId + "\'\n" +
-        ", ordering=" + ordering + "\'\n" +
-        ", id=" + id + "\'\n" +
-        ", crateStorage=" + crateStorage + "\'\n" +
-        ", childActivities=" + Arrays.toString(childrenActivities) + "\'\n" +
-        ", authTokenId=" + authTokenId + "\'\n" +
-        ", authToken=" + authToken + "\'\n" +
-        ", documentation='" + documentation + "\'\n" +
+        "label='" + label + "\'" +
+        ", activityTemplate=" + activityTemplate + "\'" +
+        ", planId=" + planId + "\'" +
+        ", parentPlanNodeId=" + parentPlanNodeId + "\'" +
+        ", ordering=" + ordering + "\'" +
+        ", id=" + id + "\'" +
+        ", crateStorage=" + crateStorage + "\'" +
+        ", childActivities=" + Arrays.toString(childrenActivities) + "\'" +
+        ", authTokenId=" + authTokenId + "\'" +
+        ", authToken=" + authToken + "\'" +
+        ", documentation='" + documentation + "\'" +
         '}';
   }
 }

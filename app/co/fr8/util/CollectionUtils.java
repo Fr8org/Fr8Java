@@ -52,12 +52,13 @@ public class CollectionUtils {
   }
 
   public static <T> String toString(List<T> list) {
-    String ret = "";
+    String ret = "[";
     if (isEmpty(list))
       return ret;
     for (T t : list) {
-      ret += t.toString() + "\n";
+      ret += t.toString() + ",";
     }
+    ret += "]";
     return ret;
   }
 

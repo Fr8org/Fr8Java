@@ -4,42 +4,49 @@ import co.fr8.data.constants.MT;
 import co.fr8.data.controls.ListItem;
 import co.fr8.data.controls.impl.DropDownList;
 import co.fr8.data.crates.Crate;
-import co.fr8.data.interfaces.dto.ActivityTemplateDTO;
 import co.fr8.data.interfaces.dto.CrateDescriptionDTO;
 import co.fr8.data.interfaces.dto.FieldDTO;
+import co.fr8.data.interfaces.dto.SolutionPageDTO;
 import co.fr8.data.interfaces.manifests.CrateDescriptionCM;
 import co.fr8.data.states.AvailabilityTypeEnum;
 import co.fr8.terminal.base.AbstractTerminalActivity;
+import co.fr8.terminal.base.ActionNameEnum;
+import co.fr8.terminal.infrastructure.states.ConfigurationRequestType;
 import co.fr8.util.logging.Logger;
-import com.fasterxml.jackson.databind.JsonNode;
-import github.activities.ui.MonitorPullRequestActivityUI;
+import github.activities.ui.MonitorGithubRepositoryActivityUI;
 import github.service.GitHubService;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static github.util.GitHubTerminalConstants.MONITOR_GITHUB_REPOSITORY_DTO;
 
 /**
- * @deprecated
- * Abstract class that initializes Github Activities with Authenticated user's
- * Github repository names set as a DropDownList
+ * TODO: Implement
  */
-abstract class AbstractRepositoryRetrievalActivity
-    extends AbstractTerminalActivity<MonitorPullRequestActivityUI> {
+public class MonitorGithubRepositoryActivity extends AbstractTerminalActivity<MonitorGithubRepositoryActivityUI> {
 
-  AbstractRepositoryRetrievalActivity(ActivityTemplateDTO activityTemplate) {
-    super(activityTemplate);
-    this.activityUI = new MonitorPullRequestActivityUI();
+  public MonitorGithubRepositoryActivity() {
+    super(MONITOR_GITHUB_REPOSITORY_DTO);
+    this.activityUI = new MonitorGithubRepositoryActivityUI();
   }
 
-  /**
-   * Initialize method overrides AbstractTerminalActivity's abstract initialize method.
-   */
+  @Override
+  protected SolutionPageDTO getDocumentation(String documentationType) {
+    Logger.debug("Process getDocumentation placeholder returns null");
+    return null;
+  }
+
+  @Override
+  protected boolean checkAuthentication() {
+    Logger.debug("process check authentication placeholder returns true");
+    return true;
+  }
+
   @Override
   public void initialize() {
-    List<ListItem> repoListItems = getListItems();
+    List<ListItem> repoListItems = GitHubService.getInstance().
+        getRepositoriesAsListItems(getActivityContext().getAuthorizationToken().getToken());
     List<FieldDTO> fieldNames = new ArrayList<>();
     fieldNames.add(new FieldDTO("Number", "Number", AvailabilityTypeEnum.Always));
     fieldNames.add(new FieldDTO("PullRequestName", "PullRequestName", AvailabilityTypeEnum.Always));
@@ -64,12 +71,10 @@ abstract class AbstractRepositoryRetrievalActivity
 //    getStorage().add(CrateManager.createStandardEventSubscriptionsCrate("Standard Event Subscriptions", "GitHub", new String[]{"GitHub repository monitor"}));
   }
 
-  /**
-   * Initialize method overrides AbstractTerminalActivity's abstract initialize method.
-   */
   @Override
   public void followUp() {
-    List<ListItem> repoListItems = getListItems();
+    List<ListItem> repoListItems = GitHubService.getInstance().
+        getRepositoriesAsListItems( getActivityContext().getAuthorizationToken().getToken());
     DropDownList repoListDropDown = getActivityUI().getRepoList();
     repoListDropDown.setListItems(repoListItems);
     List<FieldDTO> fieldNames = new ArrayList<>();
@@ -91,18 +96,88 @@ abstract class AbstractRepositoryRetrievalActivity
     getStorage().add(uiCrate);
   }
 
-  private List<ListItem> getListItems() {
-    JsonNode repoJson =
-        GitHubService.getInstance().getRepositoryJsonForUser(getActivityContext().getAuthorizationToken().getToken());
-    List<ListItem> repoListItems = new ArrayList<>();
-    if (repoJson != null && repoJson.isArray()) {
-      Iterator<JsonNode> repositories = repoJson.elements();
-      repositories.forEachRemaining(repo -> {
-        Logger.debug("Adding " + repo.get("name").asText());
-        repoListItems.add(new ListItem(repo.get("name").asText(), repo.get("full_name").asText()));
-      });
-    }
-    return repoListItems;
+  @Override
+  public ActivityFunctionalInterface run() {
+    Logger.debug("Run placeholder");
+    return () -> {
+      Logger.debug("Run placeholder git process");
+      getActivityContext().getActivityPayload();
+    };
   }
 
+  @Override
+  public ActivityFunctionalInterface runChildActivities() {
+    Logger.debug("runChildActivities placeholder");
+    return () -> {
+      Logger.debug("RunChildActivities placeholder git process");
+      getActivityContext().getActivityPayload();
+    };
+  }
+
+  @Override
+  public void activate() {
+
+    Logger.debug("MonitorRepositoriesActivity.activate() called");
+  }
+
+  @Override
+  protected void afterRun() {
+
+  }
+
+  @Override
+  protected void afterDeactivate() {
+
+  }
+
+  @Override
+  protected boolean afterActivate() {
+    return false;
+  }
+
+  @Override
+  public void deactivate() {
+    Logger.debug("deactivate placeholder");
+  }
+
+  @Override
+  protected boolean beforeRun() {
+    Logger.debug("before run returns false placeholder");
+    return false;
+  }
+
+  @Override
+  protected boolean beforeDeactivate() {
+    Logger.debug("before deactivate placeholder returns false");
+    return false;
+  }
+
+  @Override
+  protected boolean beforeActivate() {
+    Logger.debug("before activate placeholder returns true");
+    return true;
+  }
+
+  @Override
+  protected void afterConfigure(ConfigurationRequestType configurationRequestType, Exception e) {
+    Logger.debug("after configure placeholder calls super");
+    super.afterConfigure(configurationRequestType, e);
+  }
+
+  @Override
+  protected boolean beforeConfigure(ConfigurationRequestType configurationRequestType) {
+    Logger.debug("before configure returns true placeholder");
+    return true;
+  }
+
+
+  /**
+   * Method abstraction to configure settings unique to the activity implementation
+   *
+   * Called from AbstractTerminalService#initializeInternalState
+   */
+  @Override
+  protected void initializeActivityState(ActionNameEnum actionName) {
+    Logger.debug("initializeActivityState placeholder");
+  }
 }

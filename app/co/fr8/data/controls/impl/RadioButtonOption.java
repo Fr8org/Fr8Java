@@ -21,6 +21,17 @@ public class RadioButtonOption extends AbstractControlDefinition implements ISup
   public RadioButtonOption() {
   }
 
+  public RadioButtonOption(String value, String name) {
+    this.value = value;
+    this.name = name;
+  }
+
+  public RadioButtonOption(String value, String name, List<ControlDefinitionDTO> controls) {
+    this.value = value;
+    this.name = name;
+    this.controls = controls;
+  }
+
   public Iterable<ControlDefinitionDTO> enumerateChildren() {
     return controls;
   }

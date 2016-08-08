@@ -1,5 +1,7 @@
 package co.fr8.util.net;
 
+import co.fr8.data.interfaces.dto.Fr8HubSecurityDTO;
+import co.fr8.play.ApplicationConstants;
 import co.fr8.util.CollectionUtils;
 import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -98,6 +100,53 @@ public class HttpUtils {
       Logger.error("Exception while processing GET response", e);
       return StringUtils.EMPTY;
     }
+  }
+
+  /**
+   *
+   * @param url
+   * @return
+   */
+  public static String getSecure(String url, Fr8HubSecurityDTO hubSecurityDTO) {
+
+    if (StringUtils.isBlank(url)) {
+      Logger.warn("Attempt to make GET request with no URL");
+      return "Invalid request";
+    }
+
+    try {
+      HttpGet getRequest = new HttpGet(url);
+      String headerAuthorization = "FR8-TOKEN key=" + hubSecurityDTO.getFr8HubCallBackSecret()
+          + ", user=" + hubSecurityDTO.getFr8UserId();
+      getRequest.setHeader("Authorization", headerAuthorization);
+      CloseableHttpResponse response = client.execute(getRequest);
+
+      if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+        // TODO: Implement
+        Logger.debug("Successful response");
+      } else {
+        Logger.warn("Bad response: " + response.getStatusLine().getStatusCode()
+            + ": " + response.getStatusLine().getReasonPhrase());
+      }
+
+      HttpEntity responseEntity = response.getEntity();
+      OutputStream ostream = new ByteArrayOutputStream();
+      responseEntity.writeTo(ostream);
+      ostream.close();
+
+      Logger.debug("Received GET response: " + ostream);
+      EntityUtils.consume(responseEntity);
+      return ostream.toString();
+
+    } catch (IOException e) {
+      Logger.error("Exception while processing GET response", e);
+      return StringUtils.EMPTY;
+    }
+  }
+
+  private String getAuthentication() {
+    String url = ApplicationConstants.TERMINAL_HOST + "/authentication/internal";
+    return get(url);
   }
 
   /**

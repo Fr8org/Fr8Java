@@ -1,5 +1,7 @@
 package co.fr8.data.interfaces.dto;
 
+import java.util.Arrays;
+
 /**
  * TODO: Implement
  */
@@ -16,5 +18,12 @@ public class CrateStorageDTO {
 
   public void setCrates(CrateDTO[] crates) {
     this.crates = crates;
+  }
+
+  @Override
+  public String toString() {
+    return "CrateStorageDTO{" +
+        "crates=" + Arrays.toString(crates) +
+        '}';
   }
 }

@@ -1,12 +1,12 @@
 package github;
 
-import co.fr8.data.interfaces.dto.*;
+import co.fr8.data.interfaces.dto.AuthorizationToken;
+import co.fr8.data.interfaces.dto.ExternalAuthDTO;
+import co.fr8.data.interfaces.dto.ExternalAuthUrlDTO;
 import co.fr8.data.interfaces.manifests.StandardFr8TerminalCM;
 import co.fr8.terminal.base.AbstractTerminalService;
-import github.activities.GitForwardRepositoriesActivity;
-import github.activities.GitGetRepositoriesActivity;
-import github.activities.GitProcessRepositoriesActivity;
-import github.activities.MonitorRepositoriesActivity;
+import github.activities.MonitorGithubRepositoryActivity;
+import github.activities.MonitorPullRequestActivity;
 import play.Logger;
 
 import java.text.MessageFormat;
@@ -49,9 +49,9 @@ public class GitHubTerminal extends AbstractTerminalService {
 
   @Override
   public void registerActivities() {
-    registerActivity(new MonitorRepositoriesActivity());
-    registerActivity(new GitForwardRepositoriesActivity());
-    registerActivity(new GitProcessRepositoriesActivity());
-    registerActivity(new GitGetRepositoriesActivity());
+    registerActivity(new MonitorPullRequestActivity());
+    registerActivity(new MonitorGithubRepositoryActivity());
+//    registerActivity(new GitProcessRepositoriesActivity());
+//    registerActivity(new GitGetRepositoriesActivity());
   }
 }

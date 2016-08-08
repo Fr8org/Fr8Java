@@ -102,23 +102,22 @@ public class Application extends Controller {
   private void logRequest(Http.Request request) {
     if(Logger.isInfoEnabled()) {
       StringBuilder requestString = new StringBuilder("Request:")
-          .append("\n")
           .append("\tbody [")
           .append(request().body())
-          .append("]\n")
+          .append("]")
           .append("\tparameters [");
       DynamicForm form = Form.form().bindFromRequest();
 
       if(form != null) {
         form.data().forEach((key, value) -> {
-          requestString.append("\n\tkey: ")
+          requestString.append("\tkey: ")
               .append(key)
               .append(", value: ")
               .append(value);
         });
       }
 
-      requestString.append("\n\t]");
+      requestString.append("\t]");
 
       Logger.info(requestString.toString());
     }

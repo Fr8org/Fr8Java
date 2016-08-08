@@ -33,6 +33,7 @@ abstract public class ControlDefinitionDTO extends AbstractControlDefinition {
   @JsonProperty("isCollapsed")
   private boolean collapsed= false;
   private ControlTypeEnum type;
+  private String errorMessage;
 
   public ControlDefinitionDTO(ControlTypeEnum type) {
     this.type = type;
@@ -131,4 +132,11 @@ abstract public class ControlDefinitionDTO extends AbstractControlDefinition {
     this.type = ControlTypeEnum.findByFriendlyName(controlTypeString);
   }
 
+  public String getErrorMessage() {
+    return errorMessage;
+  }
+
+  public void setErrorMessage(String errorMessage) {
+    this.errorMessage = errorMessage;
+  }
 }

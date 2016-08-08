@@ -23,6 +23,11 @@ public class RadioButtonGroup extends ControlDefinitionDTO implements IContainer
     super(ControlTypeEnum.RADIO_BUTTON_GROUP);
   }
 
+  public RadioButtonGroup(String groupName) {
+    super(ControlTypeEnum.RADIO_BUTTON_GROUP);
+    this.groupName = groupName;
+  }
+
   @Override
   public Iterable<RadioButtonOption> enumerateChildren() {
     return radios;
