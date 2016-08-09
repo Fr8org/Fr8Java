@@ -214,4 +214,15 @@ abstract public class AbstractCrateStorage implements Iterable<Crate>, IUpdatabl
   public String findField(String key) {
     return null;
   }
+
+  @Override
+  public String toString() {
+    final StringBuilder cratesSB = new StringBuilder();
+    crates.forEach((k,v)-> {
+      cratesSB.append("Crate with key: " + k).append(", has Crate: ").append(v.toString());
+    });
+    return "AbstractCrateStorage{" +
+        "crates= " + cratesSB.toString() +
+        '}';
+  }
 }

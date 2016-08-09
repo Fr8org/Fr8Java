@@ -5,5 +5,5 @@ package co.fr8.terminal.infrastructure.states;
  */
 public enum ConfigurationRequestType {
   INITIAL,
-  FOLLOWUP;
+  FOLLOWUP
 }

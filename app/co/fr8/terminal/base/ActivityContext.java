@@ -51,4 +51,14 @@ public class ActivityContext {
   public void setHubCommunicator(IHubCommunicator hubCommunicator) {
     this.hubCommunicator = hubCommunicator;
   }
+
+  @Override
+  public String toString() {
+    return "ActivityContext{" +
+        "activityPayload=" + activityPayload.toString() +
+        ", authorizationToken=" + authorizationToken.toString() +
+        ", userId='" + userId + '\'' +
+        ", hubCommunicator=" + hubCommunicator +
+        '}';
+  }
 }

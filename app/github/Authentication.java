@@ -44,12 +44,12 @@ public class Authentication {
       Map<String, String> requestParamMap =
           HttpUtils.requestStringToMap(externalAuthDTO.getRequestQueryString());
 
-      String code = requestParamMap.get(OAUTH_CODE_PARAM);
-      String state = requestParamMap.get(OAUTH_STATE_PARAM);
+      String code = requestParamMap.get(CODE_PARAM);
+      String state = requestParamMap.get(STATE_PARAM);
 
       List<NameValuePair> nameValuePairList = new ArrayList<>(5);
-      nameValuePairList.add(new BasicNameValuePair(OAUTH_CODE_PARAM, code));
-      nameValuePairList.add(new BasicNameValuePair(OAUTH_STATE_PARAM, state));
+      nameValuePairList.add(new BasicNameValuePair(CODE_PARAM, code));
+      nameValuePairList.add(new BasicNameValuePair(STATE_PARAM, state));
       nameValuePairList.add(new BasicNameValuePair("client_id", CLIENT_ID));
       nameValuePairList.add(new BasicNameValuePair("client_secret", CLIENT_SECRET));
       nameValuePairList.add(new BasicNameValuePair("redirect_uri", AUTH_PATH));

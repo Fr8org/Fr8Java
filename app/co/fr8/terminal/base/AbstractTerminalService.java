@@ -2,7 +2,6 @@ package co.fr8.terminal.base;
 
 import co.fr8.data.interfaces.dto.*;
 import co.fr8.data.interfaces.manifests.StandardFr8TerminalCM;
-import co.fr8.data.states.ActivityTypeEnum;
 import co.fr8.hub.managers.CrateManager;
 import co.fr8.hub.managers.ICrateManager;
 import co.fr8.play.ApplicationConstants;
@@ -60,10 +59,10 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
    *
    * @param terminalActivity the activity that will use the hubCommunicator
    */
-  private void configureHubCommunicator(AbstractTerminalActivity terminalActivity) {
+  private void configureHubCommunicator(AbstractTerminalActivity terminalActivity, Fr8HubSecurityDTO fr8HubSecurity) {
 
     if (terminalActivity != null) {
-      hubCommunicator.configure(this.name);
+      hubCommunicator.configure(fr8HubSecurity);
       terminalActivity.getActivityContext().setHubCommunicator(hubCommunicator);
     }
 
@@ -99,7 +98,7 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
     if (curDataDTO.getActivityPayload().getActivityTemplate() == null)
       throw new IllegalArgumentException("ActivityTemplate is null " + curDataDTO.getActivityPayload().getClass());
 
-      logWhenRequest(actionName.getLowerValue(), curActivityPayload.getActivityTemplate().getTerminal().getName(),
+      logWhenRequest(actionName.getLowerValue(), curActivityPayload.getActivityTemplate().getTerminalName(),
           curActivityPayload.getId().toString(), "received");
 
       Logger.debug("Checking curActionPath " + actionName + " as enum: " +
@@ -137,7 +136,7 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
    *                   the Hub
    * @return an ActivityDTO with crates that contain the result of the operation
    */
-  public ActivityDTO handleFr8Request(ActionNameEnum actionName, Fr8DataDTO curDataDTO,
+  public ActivityDTO handleFr8Request(ActionNameEnum actionName, Fr8HubSecurityDTO fr8HubSecurity, Fr8DataDTO curDataDTO,
                                       Map<String, String[]> params) {
     ActivityDTO curActivityPayload = curDataDTO.getActivityPayload();
     ActivityContext activityContext = extractActivityContextFromData(curDataDTO, actionName);
@@ -145,16 +144,12 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
     try {
       AbstractTerminalActivity terminalActivity = extractActivity(curDataDTO);
       //Set Current user of action
-      configureHubCommunicator(terminalActivity);
+      configureHubCommunicator(terminalActivity, fr8HubSecurity);
       switch (actionName) {
         case CONFIGURE: {
           Logger.debug("In configure statement");
           terminalActivity.configure(activityContext);
-
           ActivityPayload resultActivityPayload = terminalActivity.getActivityPayload();
-
-          Logger.debug("Returning ActivityPayload from configure: " + resultActivityPayload);
-
           return new ActivityDTO(resultActivityPayload);
         }
         case RUN: {
@@ -222,7 +217,7 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
 
     Logger.debug("HandleFr8Request returning end value");
 
-    logWhenRequest(actionName.getLowerValue(), curActivityPayload.getActivityTemplate().getTerminal().getName(),
+    logWhenRequest(actionName.getLowerValue(), curActivityPayload.getActivityTemplate().getTerminalName(),
         curActivityPayload.getId().toString(), "responded");
 
 
@@ -253,8 +248,7 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
    * @return a ContainerExecutionContext object
    */
   private ContainerExecutionContext createContainerExecutionContext(Fr8DataDTO dataDTO) {
-    PayloadDTO payload =
-        hubCommunicator.getPayload(
+    PayloadDTO payload = hubCommunicator.getPayload(
             (dataDTO.getContainerId() == null) ? UUID.randomUUID() : dataDTO.getContainerId());
 
     if (payload != null) {

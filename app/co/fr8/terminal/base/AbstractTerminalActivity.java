@@ -1,7 +1,6 @@
 package co.fr8.terminal.base;
 
 import co.fr8.data.constants.MT;
-import co.fr8.data.crates.AbstractCrateStorage;
 import co.fr8.data.crates.Crate;
 import co.fr8.data.interfaces.dto.*;
 import co.fr8.data.interfaces.manifests.AuthenticationMode;
@@ -13,11 +12,9 @@ import co.fr8.terminal.base.exception.InvalidOperationException;
 import co.fr8.terminal.base.ui.AbstractActivityUI;
 import co.fr8.terminal.infrastructure.IHubCommunicator;
 import co.fr8.terminal.infrastructure.states.ConfigurationRequestType;
-import co.fr8.util.CollectionUtils;
 import co.fr8.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -40,7 +37,7 @@ import java.util.UUID;
  * <li>beforeDeactivate</li>
  * <li>activate</li>
  * <li>afterActivate</li>
- * <li>#beforeActivate</li>
+ * <li>beforeActivate</li>
  * </ul>
  *
  */
@@ -83,15 +80,15 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
     this.activityContext = activityContext;
     this.containerExecutionContext = containerExecutionContext;
 
-    if (containerExecutionContext != null) {
-      List<Crate> crates = getActivityPayload().getCrateStorage().getCratesOfType(MT.OperationalStatus);
-
-      if (CollectionUtils.isEmpty(crates) || operationalState == null) {
-        throw new IllegalArgumentException("Operational state crate is not found");
-      } else {
-        operationalState = (OperationalStateCM) crates.get(0).getContent();
-      }
-    }
+    //TODO Commenting out till I solve why security is not working.
+//    if (containerExecutionContext != null) {
+//      List<Crate> crates = getActivityPayload().getCrateStorage().getCratesOfType(MT.OperationalStatus);
+//      if (CollectionUtils.isEmpty(crates) || operationalState == null) {
+//        throw new IllegalArgumentException("Operational state crate is not found");
+//      } else {
+//        operationalState = (OperationalStateCM) crates.get(0).getContent();
+//      }
+//    }
 
     initializeActivityState(actionName);
   }
@@ -119,6 +116,7 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
 
     Logger.debug("conType for request is: " + conType);
 
+    //TODO why?
     Logger.debug("checking authentication: " + checkAuthentication());
     if (!checkAuthentication()) {
       addAuthenticationCrate(false);
@@ -235,7 +233,7 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
       return;
     }
 
-    operationalState.setCurrentActivityResponse(null);
+//    operationalState.setCurrentActivityResponse(null);
 
     if (!beforeRun()) {
       return;
@@ -244,12 +242,12 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
     runMode.execute();
     afterRun();
 
-    if (operationalState.getCurrentActivityErrorCode() == null) {
-      success(StringUtils.EMPTY);
-    } else {
-      error(operationalState.getCurrentActivityErrorMessage(),
-          operationalState.getCurrentActivityErrorCode());
-    }
+//    if (operationalState.getCurrentActivityErrorCode() == null) {
+//      success(StringUtils.EMPTY);
+//    } else {
+//      error(operationalState.getCurrentActivityErrorMessage(),
+//          operationalState.getCurrentActivityErrorCode());
+//    }
   }
 
   /**
@@ -481,13 +479,9 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
 
   protected void afterConfigure(ConfigurationRequestType configurationRequestType, Exception e) {
     Logger.debug("In after configure with configurationRequestType : " + configurationRequestType);
-
-    getStorage().add(generateStandardConfigurationControlsCrate());
-
-    Logger.debug("There are " + getStorage().getCount() + " items in storage " + getStorage());
   }
 
-  private Crate generateStandardConfigurationControlsCrate() {
+  protected Crate generateStandardConfigurationControlsCrate() {
     StandardConfigurationControlsCM controls =
         new StandardConfigurationControlsCM(activityUI.getControls());
     Crate crate = new Crate<>(MT.StandardConfigurationControls, "Configuration_Controls", controls);

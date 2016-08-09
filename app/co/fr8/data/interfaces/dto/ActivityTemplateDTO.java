@@ -2,46 +2,52 @@ package co.fr8.data.interfaces.dto;
 
 import co.fr8.data.states.ActivityCategoryEnum;
 import co.fr8.data.states.ActivityTypeEnum;
+import co.fr8.util.CollectionUtils;
 
-import java.util.UUID;
+import java.util.List;
 
 /**
  * TODO: Implement
  */
 public class ActivityTemplateDTO {
 
-  private final UUID id = UUID.randomUUID();
+  //private final UUID id = UUID.randomUUID();
+  private String id;
   private String name;
   private String label;
   private String version;
-  private WebServiceDTO webService;
   private TerminalDTO terminal;
   private String tags;
+  private List<CategoriesDTO> categories;
   private ActivityCategoryEnum category;
   private ActivityTypeEnum type;
   private int minPaneWidth;
   private boolean needsAuthentication;
+  private WebServiceDTO webService;
 
   public ActivityTemplateDTO() {
   }
 
-  public ActivityTemplateDTO(String name, String label, String version, WebServiceDTO webService,
-                             TerminalDTO terminal, ActivityCategoryEnum category,
-                             boolean needsAuthentication, int minPaneWidth) {
+  public ActivityTemplateDTO(String id, String name, String label, String version, WebServiceDTO webService,
+                             TerminalDTO terminal, String tags, List<CategoriesDTO> categories,
+                             ActivityCategoryEnum category, boolean needsAuthentication, int minPaneWidth) {
+    this.id = id;
     this.name = name;
     this.label = label;
     this.version = version;
     this.webService = webService;
     this.terminal = terminal;
+    this.tags = tags;
+    this.categories = categories;
     this.category = category;
     this.needsAuthentication = needsAuthentication;
     this.minPaneWidth = minPaneWidth;
     this.type = ActivityTypeEnum.STANDARD;
   }
 
-  public UUID getId() {
-    return id;
-  }
+//  public UUID getId() {
+//    return id;
+//  }
 
   public String getName() {
     return name;
@@ -75,10 +81,6 @@ public class ActivityTemplateDTO {
     this.tags = tags;
   }
 
-  public ActivityCategoryEnum getCategory() {
-    return category;
-  }
-
   public ActivityTypeEnum getType() {
     return type;
   }
@@ -107,10 +109,6 @@ public class ActivityTemplateDTO {
     this.webService = webService;
   }
 
-  public void setCategory(String category) {
-    this.category = ActivityCategoryEnum.findByFriendlyName(category);
-  }
-
   public void setType(String type) {
     this.type = ActivityTypeEnum.findByFriendlyName(type);
   }
@@ -133,10 +131,35 @@ public class ActivityTemplateDTO {
         ", webService=" + webService +
         ", terminal=" + terminal +
         ", tags='" + tags + '\'' +
-        ", category=" + category +
+        ", categories=" + CollectionUtils.toString(categories) + '\'' +
+        ", category=" + category.getCode() + '\'' +
         ", type=" + type +
         ", minPaneWidth=" + minPaneWidth +
         ", needsAuthentication=" + needsAuthentication +
         '}';
+  }
+
+  public List<CategoriesDTO> getCategories() {
+    return categories;
+  }
+
+  public void setCategories(List<CategoriesDTO> categories) {
+    this.categories = categories;
+  }
+
+  public ActivityCategoryEnum getCategory() {
+    return category;
+  }
+
+  public void setCategory(ActivityCategoryEnum category) {
+    this.category = category;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 }
