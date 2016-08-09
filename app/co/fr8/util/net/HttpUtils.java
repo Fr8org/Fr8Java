@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO: Implement
+ * TODO: Implement (Has to be refactored, repeating code blocks)
  */
 public class HttpUtils {
 
@@ -269,5 +269,38 @@ public class HttpUtils {
     Logger.debug("Returning map " + ret);
 
     return ret;
+  }
+
+  public static String patch(String url) {
+    if (StringUtils.isBlank(url)) {
+      Logger.warn("Attempt to make GET request with no URL");
+      return "Invalid request";
+    }
+
+    try {
+      HttpPatch getRequest = new HttpPatch(url);
+      CloseableHttpResponse response = client.execute(getRequest);
+
+      if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+        // TODO: Implement
+        Logger.debug("Successful response");
+      } else {
+        Logger.warn("Bad response: " + response.getStatusLine().getStatusCode()
+            + ": " + response.getStatusLine().getReasonPhrase());
+      }
+
+      HttpEntity responseEntity = response.getEntity();
+      OutputStream oStream = new ByteArrayOutputStream();
+      responseEntity.writeTo(oStream);
+      oStream.close();
+
+      Logger.debug("Received GET response: " + oStream);
+      EntityUtils.consume(responseEntity);
+      return oStream.toString();
+
+    } catch (IOException e) {
+      Logger.error("Exception while processing GET response", e);
+      return StringUtils.EMPTY;
+    }
   }
 }

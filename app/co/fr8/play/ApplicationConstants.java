@@ -71,6 +71,18 @@ public class ApplicationConstants {
   public static final String MONITOR_GITHUB_REPOSITORY_ACTIVITY_NAME =
       Play.application().configuration().getString("github.activityNames.monitorGithubRepository");
 
+  public static final String UPDATE_GITHUB_ISSUE_ACTIVITY_NAME =
+      Play.application().configuration().getString("github.activityNames.updateGithubIssue");
+
+  public static final String MONITOR_PULL_REQUEST_ACTIVITY_ID =
+      Play.application().configuration().getString("github.activityId.monitorPullRequest");
+
+  public static final String MONITOR_GITHUB_REPOSITORY_ACTIVITY_ID  =
+      Play.application().configuration().getString("github.activityId.monitorGithubRepository");
+
+  public static final String UPDATE_GITHUB_ISSUE_ACTIVITY_ID =
+      Play.application().configuration().getString("github.activityId.updateGithubIssue");
+
   public static final boolean DEBUG_JSON =
       Play.application().configuration().getBoolean("fr8.terminal.json.debug");
 
@@ -80,12 +92,6 @@ public class ApplicationConstants {
   public static final String WEBHOOK_NAME = "name";
 
   public static final String WEBHOOK_CONFIG = "config";
-
-  public static final String MONITOR_PULL_REQUEST_ACTIVITY_ID =
-      Play.application().configuration().getString("github.activityId.monitorPullRequestActivity");
-
-  public static final String MONITOR_GITHUB_REPOSITORY_ACTIVITY_ID =
-      Play.application().configuration().getString("github.activityId.monitorGithubRepositoryActivity");
 
   public static final String FR8_USER_ID = "Fr8userid";
 

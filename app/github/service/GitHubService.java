@@ -61,6 +61,11 @@ public class GitHubService {
     return ret;
   }
 
+  public void updateGithubIssue(String authToken, String githubUserId, String repoName, String issueId) {
+    String patchGithubIssueUrl = REPOS_URL + "/" + githubUserId + "/" + repoName + "/issues" + "/" + issueId + "?access_token=\"" + authToken + "\"";
+    HttpUtils.patch(patchGithubIssueUrl);
+  }
+
   public String postWebhookToGithubPullRequests(String repoName, String authToken, String githubUserId){
     Logger.debug("Creating webhook to monitor Github pull requests");
     String githubWebhookUrl = REPOS_URL + "/" + githubUserId + "/" + repoName + "/hooks" + "?access_token=\"" + authToken + "\"";

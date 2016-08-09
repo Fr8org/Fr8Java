@@ -7,6 +7,7 @@ import co.fr8.data.interfaces.manifests.StandardFr8TerminalCM;
 import co.fr8.terminal.base.AbstractTerminalService;
 import github.activities.MonitorGithubRepositoryActivity;
 import github.activities.MonitorPullRequestActivity;
+import github.activities.UpdateGithubIssueActivity;
 import play.Logger;
 
 import java.text.MessageFormat;
@@ -51,6 +52,7 @@ public class GitHubTerminal extends AbstractTerminalService {
   public void registerActivities() {
     registerActivity(new MonitorPullRequestActivity());
     registerActivity(new MonitorGithubRepositoryActivity());
+    registerActivity(new UpdateGithubIssueActivity());
 //    registerActivity(new GitProcessRepositoriesActivity());
 //    registerActivity(new GitGetRepositoriesActivity());
   }

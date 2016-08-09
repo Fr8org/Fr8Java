@@ -33,8 +33,8 @@ public class GitHubTerminalConstants {
 
   private static CategoriesDTO githubCategory = new CategoriesDTO(githubName, "https://assets-cdn.github.com/favicon.ico");
   private static CategoriesDTO monitorCategory = new CategoriesDTO(ActivityCategoryEnum.MONITORS.getFriendlyName(), "/Content/icons/monitor-icon-64x64.png");
+  private static CategoriesDTO processCategory = new CategoriesDTO(ActivityCategoryEnum.PROCESSORS.getFriendlyName(), "/Content/icons/process-icon-64x64.png");
 //  private static CategoriesDTO receiverCategory = new CategoriesDTO(ActivityCategoryEnum.RECEIVERS.getFriendlyName(), "/Content/icons/get-icon-64x64.png");
-//  private static CategoriesDTO processCategory = new CategoriesDTO(ActivityCategoryEnum.PROCESSORS.getFriendlyName(), "/Content/icons/process-icon-64x64.png");
 //  private static CategoriesDTO sendersCategory = new CategoriesDTO(ActivityCategoryEnum.SENDERS.getFriendlyName(), "/Content/icons/forward-icon-64x64.png");
 
 //  private static List<CategoriesDTO> githubGetCategories = new ArrayList<>();
@@ -49,12 +49,15 @@ public class GitHubTerminalConstants {
       new ActivityTemplateDTO(MONITOR_GITHUB_REPOSITORY_ACTIVITY_ID, MONITOR_GITHUB_REPOSITORY_ACTIVITY_NAME, MONITOR_GITHUB_REPOSITORY_ACTIVITY_NAME, version,
           GITHUB_WEBSERVICE_DTO, GITHUB_TERMINAL_DTO, "", getCategories(monitorCategory, githubCategory), ActivityCategoryEnum.MONITORS, true, minWidth);
 
+  public static final ActivityTemplateDTO UPDATE_GITHUB_ISSUE_DTO =
+      new ActivityTemplateDTO(UPDATE_GITHUB_ISSUE_ACTIVITY_ID, UPDATE_GITHUB_ISSUE_ACTIVITY_NAME, UPDATE_GITHUB_ISSUE_ACTIVITY_NAME, version,
+          GITHUB_WEBSERVICE_DTO, GITHUB_TERMINAL_DTO, "", getCategories(githubCategory, processCategory), ActivityCategoryEnum.PROCESSORS, true, minWidth);
 //  public static final ActivityTemplateDTO GITHUB_PROCESS_EXAMPLE_DTO = new ActivityTemplateDTO("B2804A47-67E9-4305-B012-D5A154AA4DA2", "Git PROCESS Example", "Process git info", version, GITHUB_WEBSERVICE_DTO, GITHUB_TERMINAL_DTO, "", getCategories(githubProcessCategories, processCategory), ActivityCategoryEnum.PROCESSORS, true, minWidth);
   //public static final ActivityTemplateDTO GITHUB_FORWARD_EXAMPLE_DTO = new ActivityTemplateDTO("Git FORWARD Example", "Forward git info", version, GITHUB_WEBSERVICE_DTO, GITHUB_TERMINAL_DTO, "", getGithubSendersCategories(), ActivityCategoryEnum.SENDERS, true, minWidth);
 
 
   public static final List<ActivityTemplateDTO> ALL_ACTIVITIES = new ArrayList<>(
-      Arrays.asList(MONITOR_PULL_REQUEST_DTO, MONITOR_GITHUB_REPOSITORY_DTO));
+      Arrays.asList(MONITOR_PULL_REQUEST_DTO, MONITOR_GITHUB_REPOSITORY_DTO, UPDATE_GITHUB_ISSUE_DTO));
 
 
   // Category must be under github so that all activities are organized under Github in the Hub's Plan Builder.
