@@ -11,7 +11,7 @@ import java.util.Arrays;
  * ActivityUI for MonitorGithubRepositoryActivity
  * https://maginot.atlassian.net/wiki/display/SH/Activity%3A+Monitor+Github+Repository
  */
-public class MonitorGithubRepositoryActivityUI extends AbstractActivityUI {
+public class TriggerGithubRepositoryActivityUI extends AbstractActivityUI {
 
   private DropDownList repoList;
   private DropDownList branchList;
@@ -19,7 +19,7 @@ public class MonitorGithubRepositoryActivityUI extends AbstractActivityUI {
   private RadioButtonOption allBranches = new RadioButtonOption();
   private RadioButtonOption selectBranch = new RadioButtonOption();
 
-  public MonitorGithubRepositoryActivityUI() {
+  public TriggerGithubRepositoryActivityUI() {
     this.repoList = new DropDownList("Select a repository to monitor");
     this.branchList = new DropDownList();
     this.radioButtonGroup = new RadioButtonGroup("Specify Branch");

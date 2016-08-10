@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO: Implement
+ * TODO: Implement (Has to be refactored, repeating code blocks)
  */
 public class HttpUtils {
 
@@ -159,6 +159,10 @@ public class HttpUtils {
     return sendEntityRequest(url, HttpPut.METHOD_NAME, params);
   }
 
+  public static String patch(String url, List<NameValuePair> params) {
+    return sendEntityRequest(url, HttpPatch.METHOD_NAME, params);
+  }
+
   public static String postJson(String url, JsonNode json) {
     StringEntity entity = new StringEntity(json.toString(), StandardCharsets.UTF_8);
     entity.setContentType(MediaType.APPLICATION_JSON);
@@ -270,4 +274,5 @@ public class HttpUtils {
 
     return ret;
   }
+
 }

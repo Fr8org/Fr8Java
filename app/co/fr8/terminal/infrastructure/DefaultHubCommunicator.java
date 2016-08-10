@@ -2,8 +2,6 @@ package co.fr8.terminal.infrastructure;
 
 import co.fr8.data.interfaces.dto.Fr8HubSecurityDTO;
 import co.fr8.data.interfaces.dto.PayloadDTO;
-import co.fr8.util.json.JsonUtils;
-import co.fr8.util.net.HttpUtils;
 
 import java.util.UUID;
 
@@ -23,10 +21,11 @@ public class DefaultHubCommunicator implements IHubCommunicator {
 
   @Override
   public PayloadDTO getPayload(UUID containerId) {
-    String response = HttpUtils.getSecure(buildContainerPath(containerId.toString()), getFr8HubSecurityDTO());
+//    String response = HttpUtils.getSecure(buildContainerPath(containerId.toString()), getFr8HubSecurityDTO());
 //    var uri = new Uri($"{GetHubUrlWithApiVersion()}/containers/payload?id={containerId.ToString("D")}", UriKind.Absolute);
 //    var payloadDTOTask = await _restfulServiceClient.GetAsync<PayloadDTO>(uri, containerId.ToString(), await GetHMACHeader(uri));
-    return JsonUtils.writeStringToObject(response, PayloadDTO.class);
+//    return JsonUtils.writeStringToObject(response, PayloadDTO.class);
+    return null;
   }
 
   private String buildContainerPath(String containerId) {

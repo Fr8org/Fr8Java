@@ -7,7 +7,7 @@ import co.fr8.terminal.infrastructure.states.ConfigurationRequestType;
 import co.fr8.util.logging.Logger;
 import github.activities.ui.GitForwardActivityUI;
 
-import static github.util.GitHubTerminalConstants.MONITOR_GITHUB_REPOSITORY_DTO;
+import static github.util.GitHubTerminalConstants.TRIGGER_GITHUB_REPOSITORY_DTO;
 
 /**
  * @deprecated
@@ -15,7 +15,7 @@ import static github.util.GitHubTerminalConstants.MONITOR_GITHUB_REPOSITORY_DTO;
 public class GitForwardRepositoriesActivity extends AbstractTerminalActivity<GitForwardActivityUI> {
 
   public GitForwardRepositoriesActivity() {
-    super(MONITOR_GITHUB_REPOSITORY_DTO);
+    super(TRIGGER_GITHUB_REPOSITORY_DTO);
     this.activityUI = new GitForwardActivityUI();
   }
 

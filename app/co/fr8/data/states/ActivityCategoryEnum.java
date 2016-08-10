@@ -8,9 +8,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 
 public enum ActivityCategoryEnum {
-  MONITORS(1, "Monitor"),
+  TRIGGERS(1, "Triggers"),
   RECEIVERS(2, "Receiver"),
-  PROCESSORS(3, "Processor"),
+  PROCESSORS(3, "Process"),
   SENDERS(4, "Sender");
 
   private final int code;

@@ -12,9 +12,11 @@ import co.fr8.terminal.base.exception.InvalidOperationException;
 import co.fr8.terminal.base.ui.AbstractActivityUI;
 import co.fr8.terminal.infrastructure.IHubCommunicator;
 import co.fr8.terminal.infrastructure.states.ConfigurationRequestType;
+import co.fr8.util.CollectionUtils;
 import co.fr8.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -80,15 +82,14 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
     this.activityContext = activityContext;
     this.containerExecutionContext = containerExecutionContext;
 
-    //TODO Commenting out till I solve why security is not working.
-//    if (containerExecutionContext != null) {
-//      List<Crate> crates = getActivityPayload().getCrateStorage().getCratesOfType(MT.OperationalStatus);
-//      if (CollectionUtils.isEmpty(crates) || operationalState == null) {
-//        throw new IllegalArgumentException("Operational state crate is not found");
-//      } else {
-//        operationalState = (OperationalStateCM) crates.get(0).getContent();
-//      }
-//    }
+    if (containerExecutionContext != null) {
+      List<Crate> crates = getActivityPayload().getCrateStorage().getCratesOfType(MT.OperationalStatus);
+      if (CollectionUtils.isEmpty(crates) || operationalState == null) {
+        throw new IllegalArgumentException("Operational state crate is not found");
+      } else {
+        operationalState = (OperationalStateCM) crates.get(0).getContent();
+      }
+    }
 
     initializeActivityState(actionName);
   }
@@ -496,6 +497,14 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
     Logger.debug("getConfigurationRequestType: storage has " + getStorage().getCount());
     return getStorage().getCount() <= 0 ?
         ConfigurationRequestType.INITIAL : ConfigurationRequestType.FOLLOWUP;
+  }
+
+  public OperationalStateCM getOperationalState() {
+    return operationalState;
+  }
+
+  public void setOperationalState(OperationalStateCM operationalState) {
+    this.operationalState = operationalState;
   }
 
   abstract protected void initializeActivityState(ActionNameEnum actionName);

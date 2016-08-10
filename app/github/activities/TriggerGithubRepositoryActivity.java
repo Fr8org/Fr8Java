@@ -13,22 +13,22 @@ import co.fr8.terminal.base.AbstractTerminalActivity;
 import co.fr8.terminal.base.ActionNameEnum;
 import co.fr8.terminal.infrastructure.states.ConfigurationRequestType;
 import co.fr8.util.logging.Logger;
-import github.activities.ui.MonitorGithubRepositoryActivityUI;
+import github.activities.ui.TriggerGithubRepositoryActivityUI;
 import github.service.GitHubService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static github.util.GitHubTerminalConstants.MONITOR_GITHUB_REPOSITORY_DTO;
+import static github.util.GitHubTerminalConstants.TRIGGER_GITHUB_REPOSITORY_DTO;
 
 /**
  * TODO: Implement
  */
-public class MonitorGithubRepositoryActivity extends AbstractTerminalActivity<MonitorGithubRepositoryActivityUI> {
+public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<TriggerGithubRepositoryActivityUI> {
 
-  public MonitorGithubRepositoryActivity() {
-    super(MONITOR_GITHUB_REPOSITORY_DTO);
-    this.activityUI = new MonitorGithubRepositoryActivityUI();
+  public TriggerGithubRepositoryActivity() {
+    super(TRIGGER_GITHUB_REPOSITORY_DTO);
+    this.activityUI = new TriggerGithubRepositoryActivityUI();
   }
 
   @Override
@@ -56,7 +56,7 @@ public class MonitorGithubRepositoryActivity extends AbstractTerminalActivity<Mo
     crateDescriptionDTO.setLabel("Repository Properties");
     crateDescriptionDTO.setManifestId(MT.StandardPayloadData.getId());
     crateDescriptionDTO.setManifestType(MT.StandardPayloadData.getFriendlyName());
-    crateDescriptionDTO.setProducedBy(MONITOR_GITHUB_REPOSITORY_DTO.getName());
+    crateDescriptionDTO.setProducedBy(TRIGGER_GITHUB_REPOSITORY_DTO.getName());
     crateDescriptionDTO.setFields(fieldNames);
     CrateDescriptionCM crateDescriptionCM = new CrateDescriptionCM();
     crateDescriptionCM.addOrUpdate(crateDescriptionDTO);
@@ -86,7 +86,7 @@ public class MonitorGithubRepositoryActivity extends AbstractTerminalActivity<Mo
     crateDescriptionDTO.setLabel("Repository Properties");
     crateDescriptionDTO.setManifestId(MT.StandardPayloadData.getId());
     crateDescriptionDTO.setManifestType(MT.StandardPayloadData.getFriendlyName());
-    crateDescriptionDTO.setProducedBy(MONITOR_GITHUB_REPOSITORY_DTO.getName());
+    crateDescriptionDTO.setProducedBy(TRIGGER_GITHUB_REPOSITORY_DTO.getName());
     crateDescriptionDTO.setFields(fieldNames);
     CrateDescriptionCM crateDescriptionCM = new CrateDescriptionCM();
     crateDescriptionCM.addOrUpdate(crateDescriptionDTO);

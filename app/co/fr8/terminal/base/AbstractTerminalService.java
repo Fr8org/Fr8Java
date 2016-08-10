@@ -142,6 +142,7 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
     ActivityContext activityContext = extractActivityContextFromData(curDataDTO, actionName);
 
     try {
+      //to extract run, configure vs.
       AbstractTerminalActivity terminalActivity = extractActivity(curDataDTO);
       //Set Current user of action
       configureHubCommunicator(terminalActivity, fr8HubSecurity);

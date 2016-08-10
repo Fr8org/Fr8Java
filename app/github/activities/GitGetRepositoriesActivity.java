@@ -16,7 +16,7 @@ import github.service.GitHubService;
 
 import java.util.List;
 
-import static github.util.GitHubTerminalConstants.MONITOR_GITHUB_REPOSITORY_DTO;
+import static github.util.GitHubTerminalConstants.TRIGGER_GITHUB_REPOSITORY_DTO;
 
 /**
  * @deprecated
@@ -24,7 +24,7 @@ import static github.util.GitHubTerminalConstants.MONITOR_GITHUB_REPOSITORY_DTO;
 public class GitGetRepositoriesActivity extends AbstractRepositoryRetrievalActivity {
 
   public GitGetRepositoriesActivity() {
-    super(MONITOR_GITHUB_REPOSITORY_DTO);
+    super(TRIGGER_GITHUB_REPOSITORY_DTO);
   }
 
   @Override

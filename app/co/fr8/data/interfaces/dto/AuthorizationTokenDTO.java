@@ -1,5 +1,7 @@
 package co.fr8.data.interfaces.dto;
 
+import java.util.UUID;
+
 /**
  * TODO: Document
  */
@@ -20,7 +22,7 @@ public class AuthorizationTokenDTO {
   /**
    * @deprecated property no longer in use and replaced by id
    */
-  private int terminalId;
+  private UUID terminalId;
 
   public String getId() {
     return id;
@@ -102,11 +104,11 @@ public class AuthorizationTokenDTO {
     this.authCompletedNotificationRequired = authCompletedNotificationRequired;
   }
 
-  public int getTerminalId() {
+  public UUID getTerminalId() {
     return terminalId;
   }
 
-  public void setTerminalId(int terminalId) {
+  public void setTerminalId(UUID terminalId) {
     this.terminalId = terminalId;
   }
 

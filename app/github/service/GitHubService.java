@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import github.activities.request.WebhookRequest;
 import github.models.GitHubRepo;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import play.libs.Json;
 
 import java.util.ArrayList;
@@ -59,6 +61,28 @@ public class GitHubService {
       }
     }
     return ret;
+  }
+
+
+  public String createGithubIsse(String authToken, String githubUserId, String repoName, String title, String body) {
+    List<NameValuePair> nameValuePairList = new ArrayList<>(5);
+    nameValuePairList.add(new BasicNameValuePair("title", title));
+    nameValuePairList.add(new BasicNameValuePair("body", body));
+    String patchGithubIssueUrl = REPOS_URL + "/" + githubUserId + "/" + repoName + "/issues" + "/" + "?access_token=\"" + authToken + "\"";
+    Logger.debug("Calling patch for auth token with url: " + patchGithubIssueUrl +
+        " and parameters: title: " + title + ", body: " + body);
+    return HttpUtils.patch(patchGithubIssueUrl, nameValuePairList);
+  }
+
+  public String updateGithubIssue(String authToken, String githubUserId, String repoName, String issueId, String state, String title, String body) {
+    List<NameValuePair> nameValuePairList = new ArrayList<>(5);
+    nameValuePairList.add(new BasicNameValuePair(STATE_PARAM, state));
+    nameValuePairList.add(new BasicNameValuePair("title", title));
+    nameValuePairList.add(new BasicNameValuePair("body", body));
+    String patchGithubIssueUrl = REPOS_URL + "/" + githubUserId + "/" + repoName + "/issues" + "/" + issueId + "?access_token=\"" + authToken + "\"";
+    Logger.debug("Calling patch for auth token with url: " + patchGithubIssueUrl +
+        " and parameters: state " + state + ", title: " + title + ", body: " + body);
+    return HttpUtils.patch(patchGithubIssueUrl, nameValuePairList);
   }
 
   public String postWebhookToGithubPullRequests(String repoName, String authToken, String githubUserId){

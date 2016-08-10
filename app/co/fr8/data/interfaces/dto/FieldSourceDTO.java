@@ -19,6 +19,7 @@ public class FieldSourceDTO {
   public FieldSourceDTO(String label, String manifestType) {
     this.manifestType = manifestType;
     this.label = label;
+    this.availabilityType = AvailabilityTypeEnum.Always;
   }
 
   public String getManifestType() {

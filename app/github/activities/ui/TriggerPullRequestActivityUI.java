@@ -6,15 +6,15 @@ import co.fr8.terminal.base.ui.AbstractActivityUI;
 /**
  * TODO: Implement
  */
-public class MonitorPullRequestActivityUI extends AbstractActivityUI {
+public class TriggerPullRequestActivityUI extends AbstractActivityUI {
 
   private DropDownList repoList;
 
-  public MonitorPullRequestActivityUI() {
+  public TriggerPullRequestActivityUI() {
     this.repoList = new DropDownList("Select a repository to monitor");
   }
 
-  public MonitorPullRequestActivityUI(DropDownList repolist) {
+  public TriggerPullRequestActivityUI(DropDownList repolist) {
     this.repoList = repolist;
   }
 

@@ -32,17 +32,7 @@ public class AuthenticationController extends AbstractTerminalController<GitHubT
    * @return
    */
   public Result authenticateInternal() {
-    Logger.debug("Call to authenticateInternal");
-    DynamicForm form = Form.form().bindFromRequest();
-
-    debugForm(form);
-
-    // TODO: Make constants
-    String fr8UserId = form.get("Fr8UserId");
-    response().setHeader("Authorization", terminal.generateHMACHeader(fr8UserId));
-
-    return ok(JsonUtils.writeObjectAsString(response()));
-
+    return ok("authenticate placeholder");
   }
 
   /**
