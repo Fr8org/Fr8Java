@@ -1,13 +1,12 @@
 package co.fr8.data.interfaces.dto;
 
-import java.util.UUID;
+import java.util.Arrays;
 
 /**
  * TODO: Implement
  */
 public class TerminalDTO {
 
-  private String id;
   private String internalId;
   private String name;
   private String label;
@@ -27,7 +26,6 @@ public class TerminalDTO {
 
   public TerminalDTO(String name, String label, String version, int terminalStatus, String endpoint,
                      String description, int authenticationType) {
-    this.id = UUID.randomUUID().toString();
     this.internalId = "00000000-0000-0000-0000-000000000000";
     this.name = name;
     this.label = label;
@@ -73,27 +71,6 @@ public class TerminalDTO {
 
   public int getAuthenticationType() {
     return authenticationType;
-  }
-
-  @Override
-  public String toString() {
-    return "TerminalDTO{" +
-        "name='" + name + '\'' +
-        ", label='" + label + '\'' +
-        ", version='" + version + '\'' +
-        ", terminalStatus=" + terminalStatus +
-        ", endpoint='" + endpoint + '\'' +
-        ", description='" + description + '\'' +
-        ", authenticationType=" + authenticationType +
-        '}';
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
   }
 
   public String getInternalId() {
@@ -142,5 +119,24 @@ public class TerminalDTO {
 
   public void setRoles(String[] roles) {
     this.roles = roles;
+  }
+
+  @Override
+  public String toString() {
+    return "TerminalDTO{" +
+        "internalId='" + internalId + '\'' +
+        ", name='" + name + '\'' +
+        ", label='" + label + '\'' +
+        ", version='" + version + '\'' +
+        ", terminalStatus=" + terminalStatus +
+        ", participationState=" + participationState +
+        ", endpoint='" + endpoint + '\'' +
+        ", description='" + description + '\'' +
+        ", authenticationType=" + authenticationType +
+        ", devUrl='" + devUrl + '\'' +
+        ", prodUrl='" + prodUrl + '\'' +
+        ", isFr8OwnTerminal=" + isFr8OwnTerminal +
+        ", roles=" + Arrays.toString(roles) +
+        '}';
   }
 }
