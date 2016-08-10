@@ -8,28 +8,39 @@ import java.util.UUID;
 public class TerminalDTO {
 
   private String id;
+  private String internalId;
   private String name;
   private String label;
   private String version;
   private int terminalStatus;
+  private int participationState;
   private String endpoint;
   private String description;
   private int authenticationType;
+  private String devUrl;
+  private String prodUrl;
+  private boolean isFr8OwnTerminal;
+  private String[] roles;
 
   public TerminalDTO() {
-
   }
 
   public TerminalDTO(String name, String label, String version, int terminalStatus, String endpoint,
                      String description, int authenticationType) {
     this.id = UUID.randomUUID().toString();
+    this.internalId = "00000000-0000-0000-0000-000000000000";
     this.name = name;
     this.label = label;
     this.version = version;
     this.terminalStatus = terminalStatus;
+    this.participationState = 0;
     this.endpoint = endpoint;
     this.description = description;
     this.authenticationType = authenticationType;
+    this.devUrl = "";
+    this.prodUrl = "";
+    this.isFr8OwnTerminal = Boolean.FALSE;
+    this.roles = new String[0];
   }
 
   public String getName() {
@@ -83,5 +94,53 @@ public class TerminalDTO {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public String getInternalId() {
+    return internalId;
+  }
+
+  public void setInternalId(String internalId) {
+    this.internalId = internalId;
+  }
+
+  public int getParticipationState() {
+    return participationState;
+  }
+
+  public void setParticipationState(int participationState) {
+    this.participationState = participationState;
+  }
+
+  public String getDevUrl() {
+    return devUrl;
+  }
+
+  public void setDevUrl(String devUrl) {
+    this.devUrl = devUrl;
+  }
+
+  public String getProdUrl() {
+    return prodUrl;
+  }
+
+  public void setProdUrl(String prodUrl) {
+    this.prodUrl = prodUrl;
+  }
+
+  public boolean getIsFr8OwnTerminal() {
+    return isFr8OwnTerminal;
+  }
+
+  public void setIsFr8OwnTerminal(boolean isFr8OwnTerminal) {
+    this.isFr8OwnTerminal = isFr8OwnTerminal;
+  }
+
+  public String[] getRoles() {
+    return roles;
+  }
+
+  public void setRoles(String[] roles) {
+    this.roles = roles;
   }
 }

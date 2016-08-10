@@ -74,6 +74,9 @@ public class ApplicationConstants {
   public static final String UPDATE_GITHUB_ISSUE_ACTIVITY_NAME =
       Play.application().configuration().getString("github.activityNames.updateGithubIssue");
 
+  public static final String CREATE_GITHUB_ISSUE_ACTIVITY_NAME =
+      Play.application().configuration().getString("github.activityNames.createGithubIssue");
+
   public static final String MONITOR_PULL_REQUEST_ACTIVITY_ID =
       Play.application().configuration().getString("github.activityId.monitorPullRequest");
 
@@ -82,6 +85,9 @@ public class ApplicationConstants {
 
   public static final String UPDATE_GITHUB_ISSUE_ACTIVITY_ID =
       Play.application().configuration().getString("github.activityId.updateGithubIssue");
+
+  public static final String CREATE_GITHUB_ISSUE_ACTIVITY_ID =
+      Play.application().configuration().getString("github.activityId.createGithubIssue");
 
   public static final boolean DEBUG_JSON =
       Play.application().configuration().getBoolean("fr8.terminal.json.debug");
