@@ -32,4 +32,13 @@ public class StandardConfigurationControlsCM extends Manifest {
   public List<ControlDefinitionDTO> getControls() {
     return controls;
   }
+
+  public Object getSpecificControl(Object o) {
+    for (Object control : controls){
+      if (control.getClass() == o.getClass()) {
+        return control;
+      }
+    }
+    return null;
+  }
 }

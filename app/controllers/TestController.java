@@ -6,15 +6,12 @@ import co.fr8.terminal.base.ActionNameEnum;
 import co.fr8.util.json.JsonUtils;
 import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.jcabi.github.Git;
 import github.GitHubTerminal;
 import org.apache.commons.lang3.StringUtils;
-import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
 import java.util.Iterator;
-import java.util.UUID;
 
 public class TestController extends Controller {
 
@@ -71,7 +68,7 @@ public class TestController extends Controller {
   private Result processDTO(ActivityDTO activityDTO, String containerId, ActionNameEnum actionName) {
     GitHubTerminal terminal = new GitHubTerminal();
 
-    ActivityDTO resultDTO = terminal.handleFr8Request(actionName,
+    ActivityDTO resultDTO = terminal.handleFr8Request(actionName, null,
         new Fr8DataDTO(activityDTO,
             (StringUtils.isBlank(containerId) || "null".equalsIgnoreCase(containerId) ? CID : containerId)),
             request().queryString());

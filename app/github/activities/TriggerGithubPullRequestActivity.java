@@ -5,8 +5,13 @@ import co.fr8.data.controls.ControlTypeEnum;
 import co.fr8.data.controls.ListItem;
 import co.fr8.data.controls.impl.DropDownList;
 import co.fr8.data.crates.Crate;
+import co.fr8.data.interfaces.dto.CrateDescriptionDTO;
+import co.fr8.data.interfaces.dto.FieldDTO;
 import co.fr8.data.interfaces.dto.SolutionPageDTO;
+import co.fr8.data.interfaces.manifests.CrateDescriptionCM;
+import co.fr8.data.states.AvailabilityTypeEnum;
 import co.fr8.play.ApplicationConstants;
+import co.fr8.terminal.base.AbstractTerminalActivity;
 import co.fr8.terminal.base.ActionNameEnum;
 import co.fr8.terminal.infrastructure.states.ConfigurationRequestType;
 import co.fr8.util.json.JsonUtils;
@@ -14,22 +19,26 @@ import co.fr8.util.logging.Logger;
 import co.fr8.util.net.HttpUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import github.activities.ui.TriggerPullRequestActivityUI;
+import github.service.GitHubService;
 import play.libs.Json;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static github.util.GitHubTerminalConstants.GITHUB_LIST_REPOS_TEMPLATE_DTO;
+import static github.util.GitHubTerminalConstants.TRIGGER_GITHUB_PULL_REQUEST_DTO;
 
 /**
  * TODO: Implement
  */
-public class MonitorRepositoriesActivity extends AbstractRepositoryRetrievalActivity {
+public class TriggerGithubPullRequestActivity extends AbstractTerminalActivity<TriggerPullRequestActivityUI> {
 
   /**
    *
    */
-  public MonitorRepositoriesActivity() {
-    super(GITHUB_LIST_REPOS_TEMPLATE_DTO);
+  public TriggerGithubPullRequestActivity() {
+    super(TRIGGER_GITHUB_PULL_REQUEST_DTO);
+    this.activityUI = new TriggerPullRequestActivityUI();
   }
 
   /**
@@ -52,12 +61,61 @@ public class MonitorRepositoriesActivity extends AbstractRepositoryRetrievalActi
     Logger.debug("check authentication placeholder returns true");
     return true;
   }
+
+  @Override
+  public void initialize() {
+    List<ListItem> repoListItems = GitHubService.getInstance().
+        getRepositoriesAsListItems( getActivityContext().getAuthorizationToken().getToken());
+    List<FieldDTO> fieldNames = new ArrayList<>();
+    fieldNames.add(new FieldDTO("Number", "Number", AvailabilityTypeEnum.Always));
+    fieldNames.add(new FieldDTO("PullRequestName", "PullRequestName", AvailabilityTypeEnum.Always));
+    fieldNames.add(new FieldDTO("RequesterGitHubName", "RequesterGitHubName", AvailabilityTypeEnum.Always));
+    fieldNames.add(new FieldDTO("Status", "Status", AvailabilityTypeEnum.Always));
+    CrateDescriptionDTO crateDescriptionDTO = new CrateDescriptionDTO();
+    crateDescriptionDTO.setLabel("Repository Properties");
+    crateDescriptionDTO.setManifestId(MT.StandardPayloadData.getId());
+    crateDescriptionDTO.setManifestType(MT.StandardPayloadData.getFriendlyName());
+    crateDescriptionDTO.setProducedBy(TRIGGER_GITHUB_PULL_REQUEST_DTO.getName());
+    crateDescriptionDTO.setFields(fieldNames);
+    CrateDescriptionCM crateDescriptionCM = new CrateDescriptionCM();
+    crateDescriptionCM.addOrUpdate(crateDescriptionDTO);
+    Crate crate = new Crate<>(MT.CrateDescription, crateDescriptionCM);
+    getStorage().add(crate);
+    Logger.debug("Setting " + repoListItems.size() + " repositories");
+    DropDownList repoListDropDown = getActivityUI().getRepoList();
+    repoListDropDown.setListItems(repoListItems);
+//    repoListDropDown.getEvents().add(ControlEvent.getRequestConfigOnChange());
+    Crate uiCrate = generateStandardConfigurationControlsCrate();
+    getStorage().add(uiCrate);
+//    getStorage().add(CrateManager.createStandardEventSubscriptionsCrate("Standard Event Subscriptions", "GitHub", new String[]{"GitHub repository monitor"}));
+  }
+
   /**
    *
    */
   @Override
   public void followUp() {
-    Logger.debug("Followup placeholder");
+    List<ListItem> repoListItems = GitHubService.getInstance().
+        getRepositoriesAsListItems( getActivityContext().getAuthorizationToken().getToken());
+    DropDownList repoListDropDown = getActivityUI().getRepoList();
+    repoListDropDown.setListItems(repoListItems);
+    List<FieldDTO> fieldNames = new ArrayList<>();
+    fieldNames.add(new FieldDTO("Number", "Number", AvailabilityTypeEnum.Always));
+    fieldNames.add(new FieldDTO("PullRequestName", "PullRequestName", AvailabilityTypeEnum.Always));
+    fieldNames.add(new FieldDTO("RequesterGitHubName", "RequesterGitHubName", AvailabilityTypeEnum.Always));
+    fieldNames.add(new FieldDTO("Status", "Status", AvailabilityTypeEnum.Always));
+    CrateDescriptionDTO crateDescriptionDTO = new CrateDescriptionDTO();
+    crateDescriptionDTO.setLabel("Repository Properties");
+    crateDescriptionDTO.setManifestId(MT.StandardPayloadData.getId());
+    crateDescriptionDTO.setManifestType(MT.StandardPayloadData.getFriendlyName());
+    crateDescriptionDTO.setProducedBy(TRIGGER_GITHUB_PULL_REQUEST_DTO.getName());
+    crateDescriptionDTO.setFields(fieldNames);
+    CrateDescriptionCM crateDescriptionCM = new CrateDescriptionCM();
+    crateDescriptionCM.addOrUpdate(crateDescriptionDTO);
+    Crate crate = new Crate<>(MT.CrateDescription, crateDescriptionCM);
+    getStorage().add(crate);
+    Crate uiCrate = generateStandardConfigurationControlsCrate();
+    getStorage().add(uiCrate);
   }
 
   /**
@@ -68,9 +126,10 @@ public class MonitorRepositoriesActivity extends AbstractRepositoryRetrievalActi
   public ActivityFunctionalInterface run() {
 
     Logger.debug("Run placeholder");
+    Logger.debug("Executing run ActivityFunctionalInterface");
+    Logger.debug("ENTERING HERE CENK");
+    Logger.debug(getActivityContext().getActivityPayload().toString());
     return () -> {
-      Logger.debug("Executing run ActivityFunctionalInterface");
-      getActivityContext().getActivityPayload();
     };
   }
 
@@ -200,4 +259,6 @@ public class MonitorRepositoriesActivity extends AbstractRepositoryRetrievalActi
   protected void initializeActivityState(ActionNameEnum actionName) {
     Logger.debug("initializeActivityState placeholder");
   }
+
+
 }

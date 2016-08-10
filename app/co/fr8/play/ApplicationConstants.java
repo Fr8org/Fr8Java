@@ -61,14 +61,48 @@ public class ApplicationConstants {
   public static final String REPOS_URL =
       Play.application().configuration().getString("github.api.reposPath");
 
-  public static final String OAUTH_CODE_PARAM = "code";
+  public static final String CODE_PARAM = "code";
 
-  public static final String OAUTH_STATE_PARAM = "state";
+  public static final String STATE_PARAM = "state";
 
-  public static final String LIST_REPOSITORIES_ACTIVITY_NAME =
-      Play.application().configuration().getString("github.terminals.subscribe.name");
+  public static final String TRIGGER_GITHUB_PULL_REQUEST_ACTIVITY_NAME =
+      Play.application().configuration().getString("github.activityNames.monitorPullRequest");
+
+  public static final String TRIGGER_GITHUB_REPOSITORY_ACTIVITY_NAME =
+      Play.application().configuration().getString("github.activityNames.monitorGithubRepository");
+
+  public static final String UPDATE_GITHUB_ISSUE_ACTIVITY_NAME =
+      Play.application().configuration().getString("github.activityNames.updateGithubIssue");
+
+  public static final String CREATE_GITHUB_ISSUE_ACTIVITY_NAME =
+      Play.application().configuration().getString("github.activityNames.createGithubIssue");
+
+  public static final String MONITOR_PULL_REQUEST_ACTIVITY_ID =
+      Play.application().configuration().getString("github.activityId.monitorPullRequest");
+
+  public static final String MONITOR_GITHUB_REPOSITORY_ACTIVITY_ID  =
+      Play.application().configuration().getString("github.activityId.monitorGithubRepository");
+
+  public static final String UPDATE_GITHUB_ISSUE_ACTIVITY_ID =
+      Play.application().configuration().getString("github.activityId.updateGithubIssue");
+
+  public static final String CREATE_GITHUB_ISSUE_ACTIVITY_ID =
+      Play.application().configuration().getString("github.activityId.createGithubIssue");
 
   public static final boolean DEBUG_JSON =
       Play.application().configuration().getBoolean("fr8.terminal.json.debug");
+
+  public static final String WEBHOOK_URL =
+      Play.application().configuration().getString("github.client.webhookUrl");
+
+  public static final String WEBHOOK_NAME = "name";
+
+  public static final String WEBHOOK_CONFIG = "config";
+
+  public static final String FR8_USER_ID = "Fr8userid";
+
+  public static final String FR8_HUB_CALLBACK_URL = "Fr8hubcallbackurl";
+
+  public static final String FR8HUBCALLBACKSECRET = "Fr8hubcallbacksecret";
 
 }

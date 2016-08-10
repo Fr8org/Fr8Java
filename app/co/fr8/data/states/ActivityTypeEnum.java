@@ -1,5 +1,7 @@
 package co.fr8.data.states;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * Enum representing the ActivityType
  */
@@ -16,6 +18,7 @@ public enum ActivityTypeEnum {
     this.friendlyName = friendlyName;
   }
 
+  @JsonValue
   public int getCode() {
     return code;
   }

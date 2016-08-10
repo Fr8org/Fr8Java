@@ -11,11 +11,13 @@ import java.security.NoSuchAlgorithmException;
  * Utility class for manipulating String objects
  */
 public class Fr8StringUtils {
+
   private static final String MD5_HASH = "MD5";
 
   /**
    * Helper method that hashes the input String using the MD5 algorithm and
    * returns the Base64 encoded representation of that String
+   *
    * @param rawString the String to hash and encode
    * @return a Base64 encoded String object
    */
@@ -24,22 +26,16 @@ public class Fr8StringUtils {
     if (StringUtils.isNotBlank(rawString)) {
       content = rawString.getBytes();
     } else {
-      content = new byte[] { };
+      content = new byte[]{};
     }
-
     try {
       MessageDigest md5 = MessageDigest.getInstance(MD5_HASH);
       md5.update(content, 0, content.length);
-
       Logger.debug("Converted content to md5: " + new String(content));
-
     } catch (NoSuchAlgorithmException e) {
       Logger.error("Unable to create MD5 hash", e);
     }
-
     Logger.debug("Returning base 64 hash: " + new String(content));
-
     return Base64.encode(content);
-
   }
 }

@@ -3,7 +3,7 @@ package co.fr8.terminal.base;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Enum representation for the
+ * Enum representation for actions
  */
 public enum ActionNameEnum {
   CONFIGURE("configure"),
@@ -28,7 +28,7 @@ public enum ActionNameEnum {
 
   /**
    * Get the enum value by its lower case value
-   * This code is probably overengineered
+   * This code is probably over-engineered
    *
    * @param lowerValue the String associated with the enum
    * @return an enum if one exists for the String, null otherwise
@@ -40,5 +40,10 @@ public enum ActionNameEnum {
       }
     }
     return UNKNOWN;
+  }
+
+  public String getPrettyActionName() {
+    return this.getLowerValue().substring(0, 1).toUpperCase() +
+        this.getLowerValue().substring(1, this.getLowerValue().length());
   }
 }

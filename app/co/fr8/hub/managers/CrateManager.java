@@ -172,7 +172,8 @@ public class CrateManager implements ICrateManager {
 
   @Override
   public AbstractCrateStorage updateStorage(CrateStorageDTO storageAccessExpression) {
-    return null;
+    AbstractCrateStorage storage =fromDto(storageAccessExpression);
+    return storage;
   }
 
   @Override

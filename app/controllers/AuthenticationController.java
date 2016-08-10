@@ -60,7 +60,7 @@ public class AuthenticationController extends AbstractTerminalController<GitHubT
     if (StringUtils.isBlank(requestQueryString)) {
       Logger.warn("No RequestQueryString sent in /authenticate/token request");
 
-      AuthorizationToken response; response = new AuthorizationToken();
+      AuthorizationToken response = new AuthorizationToken();
       response.setError("An error occurred while trying to authorize, please try again later.");
 
       return badRequest(JsonUtils.writeObjectAsString(response));

@@ -1,12 +1,14 @@
 package github;
 
-import co.fr8.data.interfaces.dto.*;
+import co.fr8.data.interfaces.dto.AuthorizationToken;
+import co.fr8.data.interfaces.dto.ExternalAuthDTO;
+import co.fr8.data.interfaces.dto.ExternalAuthUrlDTO;
 import co.fr8.data.interfaces.manifests.StandardFr8TerminalCM;
 import co.fr8.terminal.base.AbstractTerminalService;
-import github.activities.GitForwardRepositoriesActivity;
-import github.activities.GitGetRepositoriesActivity;
-import github.activities.GitProcessRepositoriesActivity;
-import github.activities.MonitorRepositoriesActivity;
+import github.activities.CreateGithubIssueActivity;
+import github.activities.TriggerGithubRepositoryActivity;
+import github.activities.TriggerGithubPullRequestActivity;
+import github.activities.UpdateGithubIssueActivity;
 import play.Logger;
 
 import java.text.MessageFormat;
@@ -29,15 +31,10 @@ public class GitHubTerminal extends AbstractTerminalService {
 
   @Override
   public StandardFr8TerminalCM discover() {
-
     Logger.debug("Discover called host is: " + TERMINAL_HOST);
-
     StandardFr8TerminalCM ret = new StandardFr8TerminalCM(GITHUB_TERMINAL_DTO,
-//       Collections.singletonList(GITHUB_LIST_REPOS_TEMPLATE_DTO));
         ALL_ACTIVITIES);
-
     Logger.debug("Created new StandardFr8TerminalCM " + ret);
-
     return ret;
   }
 
@@ -49,15 +46,15 @@ public class GitHubTerminal extends AbstractTerminalService {
 
   @Override
   public AuthorizationToken authenticateToken(ExternalAuthDTO externalAuthDTO) {
-
     return authentication.authenticate(externalAuthDTO);
   }
 
   @Override
   public void registerActivities() {
-    registerActivity(new MonitorRepositoriesActivity());
-    registerActivity(new GitForwardRepositoriesActivity());
-    registerActivity(new GitProcessRepositoriesActivity());
-    registerActivity(new GitGetRepositoriesActivity());
+    registerActivity(new TriggerGithubPullRequestActivity());
+    registerActivity(new TriggerGithubRepositoryActivity());
+    registerActivity(new UpdateGithubIssueActivity());
+    registerActivity(new CreateGithubIssueActivity());
   }
+
 }

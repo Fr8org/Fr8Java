@@ -1,5 +1,6 @@
 package co.fr8.terminal.infrastructure;
 
+import co.fr8.data.interfaces.dto.Fr8HubSecurityDTO;
 import co.fr8.data.interfaces.dto.PayloadDTO;
 
 import java.util.UUID;
@@ -8,7 +9,8 @@ import java.util.UUID;
  * TODO: Implement
  */
 public interface IHubCommunicator {
-  /*Task*/ void configure(String terminalName);
+
+  /*Task*/ void configure(Fr8HubSecurityDTO fr8HubSecurityDTO);
 
 
   PayloadDTO getPayload(UUID containerIdd);

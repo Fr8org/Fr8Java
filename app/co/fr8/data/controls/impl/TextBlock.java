@@ -16,6 +16,13 @@ public class TextBlock extends ControlDefinitionDTO {
     super(ControlTypeEnum.TEXT_BLOCK);
   }
 
+  public TextBlock(String cssClass, String name, String value) {
+    this();
+    this.setCssClass(cssClass);
+    this.setName(name);
+    this.setValue(value);
+  }
+
   public String getCssClass() {
     return cssClass;
   }

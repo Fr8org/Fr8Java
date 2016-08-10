@@ -1,47 +1,50 @@
 package co.fr8.data.interfaces.dto;
 
-import co.fr8.data.states.ActivityCategoryEnum;
 import co.fr8.data.states.ActivityTypeEnum;
+import co.fr8.util.CollectionUtils;
 
-import java.util.UUID;
+import java.util.List;
 
 /**
  * TODO: Implement
  */
 public class ActivityTemplateDTO {
 
-  private final UUID id = UUID.randomUUID();
+  //private final UUID id = UUID.randomUUID();
+  private String internalId;
   private String name;
   private String label;
   private String version;
-  private WebServiceDTO webService;
-  private TerminalDTO terminal;
   private String tags;
-  private ActivityCategoryEnum category;
+  private List<CategoriesDTO> categories;
   private ActivityTypeEnum type;
   private int minPaneWidth;
   private boolean needsAuthentication;
+  private String showDocumentation;
+  private String description;
 
   public ActivityTemplateDTO() {
   }
 
-  public ActivityTemplateDTO(String name, String label, String version, WebServiceDTO webService,
-                             TerminalDTO terminal, ActivityCategoryEnum category,
-                             boolean needsAuthentication, int minPaneWidth) {
+  public ActivityTemplateDTO(String name, String label, String version,
+                             String tags, List<CategoriesDTO> categories,
+                              boolean needsAuthentication, int minPaneWidth) {
+    this.internalId = null;
     this.name = name;
     this.label = label;
     this.version = version;
-    this.webService = webService;
-    this.terminal = terminal;
-    this.category = category;
+    this.tags = tags;
+    this.categories = categories;
     this.needsAuthentication = needsAuthentication;
     this.minPaneWidth = minPaneWidth;
     this.type = ActivityTypeEnum.STANDARD;
+    this.showDocumentation = null;
+    this.description = null;
   }
 
-  public UUID getId() {
-    return id;
-  }
+//  public UUID getId() {
+//    return id;
+//  }
 
   public String getName() {
     return name;
@@ -55,28 +58,12 @@ public class ActivityTemplateDTO {
     return version;
   }
 
-  public WebServiceDTO getWebService() {
-    return webService;
-  }
-
-  public TerminalDTO getTerminal() {
-    return terminal;
-  }
-
-  public void setTerminal(TerminalDTO terminal) {
-    this.terminal = terminal;
-  }
-
   public String getTags() {
     return tags;
   }
 
   public void setTags(String tags) {
     this.tags = tags;
-  }
-
-  public ActivityCategoryEnum getCategory() {
-    return category;
   }
 
   public ActivityTypeEnum getType() {
@@ -103,14 +90,6 @@ public class ActivityTemplateDTO {
     this.version = version;
   }
 
-  public void setWebService(WebServiceDTO webService) {
-    this.webService = webService;
-  }
-
-  public void setCategory(String category) {
-    this.category = ActivityCategoryEnum.findByFriendlyName(category);
-  }
-
   public void setType(String type) {
     this.type = ActivityTypeEnum.findByFriendlyName(type);
   }
@@ -123,20 +102,52 @@ public class ActivityTemplateDTO {
     return needsAuthentication;
   }
 
+  public List<CategoriesDTO> getCategories() {
+    return categories;
+  }
+
+  public void setCategories(List<CategoriesDTO> categories) {
+    this.categories = categories;
+  }
+
+  public String getShowDocumentation() {
+    return showDocumentation;
+  }
+
+  public void setShowDocumentation(String showDocumentation) {
+    this.showDocumentation = showDocumentation;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
   @Override
   public String toString() {
     return "ActivityTemplateDTO{" +
-        "id=" + id +
+        "internalId='" + internalId + '\'' +
         ", name='" + name + '\'' +
         ", label='" + label + '\'' +
         ", version='" + version + '\'' +
-        ", webService=" + webService +
-        ", terminal=" + terminal +
         ", tags='" + tags + '\'' +
-        ", category=" + category +
+        ", categories=" + CollectionUtils.toString(categories) + '\'' +
         ", type=" + type +
         ", minPaneWidth=" + minPaneWidth +
         ", needsAuthentication=" + needsAuthentication +
+        ", showDocumentation='" + showDocumentation + '\'' +
+        ", description='" + description + '\'' +
         '}';
+  }
+
+  public String getInternalId() {
+    return internalId;
+  }
+
+  public void setInternalId(String internalId) {
+    this.internalId = internalId;
   }
 }
