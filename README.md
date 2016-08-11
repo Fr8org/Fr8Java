@@ -29,7 +29,7 @@ Join the discussion here in the Issues list and in the #fr8dev-java channel on t
 4) Choose a [development approach](https://github.com/Fr8org/Fr8Core/blob/master/Docs/ForDevelopers/DevelopmentGuides/ChoosingADevelopmentApproach.md).  The Fr8 service at fr8.co uses Heroku to deploy production and dev Java Terminals.  
 
 
-5) You can also jump directly to developing your Java Activities by clicking [here](/docs/Home.md).
+
 
 6) Setup your dev environment. These environment variables are needed. (Heroku example shown)
 
@@ -37,5 +37,8 @@ Join the discussion here in the Issues list and in the #fr8dev-java channel on t
 |---|---|
 | TERMINAL_HOST: | http://fr8java.herokuapp.com |
 
- 
+Additional Resources
+====================
+[Overview of this project](/docs/Home.md).
+[Walkthrough of the Github Terminal](/docs/Github_use_case.md)
 
