@@ -1,5 +1,7 @@
 package github.models;
 
+import java.util.Date;
+
 /**
  * Model to map JSON response
  *
@@ -24,6 +26,18 @@ public class GitHubOwner {
   private String receivedEventsUrl;
   private String type;
   private boolean siteAdmin;
+  private String company;
+  private String blog;
+  private String location;
+  private String email;
+  private boolean hireable;
+  private String bio;
+  private String publicRepos;
+  private String publicGists;
+  private int followers;
+  private int following;
+  private Date createdAt;
+  private Date updatedAt;
 
   public GitHubOwner() {
   }
@@ -164,6 +178,102 @@ public class GitHubOwner {
     this.siteAdmin = siteAdmin;
   }
 
+  public String getCompany() {
+    return company;
+  }
+
+  public void setCompany(String company) {
+    this.company = company;
+  }
+
+  public String getBlog() {
+    return blog;
+  }
+
+  public void setBlog(String blog) {
+    this.blog = blog;
+  }
+
+  public String getLocation() {
+    return location;
+  }
+
+  public void setLocation(String location) {
+    this.location = location;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public boolean isHireable() {
+    return hireable;
+  }
+
+  public void setHireable(boolean hireable) {
+    this.hireable = hireable;
+  }
+
+  public String getBio() {
+    return bio;
+  }
+
+  public void setBio(String bio) {
+    this.bio = bio;
+  }
+
+  public String getPublicRepos() {
+    return publicRepos;
+  }
+
+  public void setPublicRepos(String publicRepos) {
+    this.publicRepos = publicRepos;
+  }
+
+  public String getPublicGists() {
+    return publicGists;
+  }
+
+  public void setPublicGists(String publicGists) {
+    this.publicGists = publicGists;
+  }
+
+  public int getFollowers() {
+    return followers;
+  }
+
+  public void setFollowers(int followers) {
+    this.followers = followers;
+  }
+
+  public int getFollowing() {
+    return following;
+  }
+
+  public void setFollowing(int following) {
+    this.following = following;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Date getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(Date updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
   @Override
   public String toString() {
     return "GitHubOwner{" +
@@ -184,26 +294,18 @@ public class GitHubOwner {
         ", receivedEventsUrl='" + receivedEventsUrl + '\'' +
         ", type='" + type + '\'' +
         ", siteAdmin=" + siteAdmin +
+        ", company='" + company + '\'' +
+        ", blog='" + blog + '\'' +
+        ", location='" + location + '\'' +
+        ", email='" + email + '\'' +
+        ", hireable=" + hireable +
+        ", bio='" + bio + '\'' +
+        ", publicRepos='" + publicRepos + '\'' +
+        ", publicGists='" + publicGists + '\'' +
+        ", followers=" + followers +
+        ", following=" + following +
+        ", createdAt=" + createdAt +
+        ", updatedAt=" + updatedAt +
         '}';
   }
-
-  /*
-      "login": "octocat",
-      "id": 1,
-      "avatar_url": "https://github.com/images/error/octocat_happy.gif",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/octocat",
-      "html_url": "https://github.com/octocat",
-      "followers_url": "https://api.github.com/users/octocat/followers",
-      "following_url": "https://api.github.com/users/octocat/following{/other_user}",
-      "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
-      "organizations_url": "https://api.github.com/users/octocat/orgs",
-      "repos_url": "https://api.github.com/users/octocat/repos",
-      "events_url": "https://api.github.com/users/octocat/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/octocat/received_events",
-      "type": "User",
-      "site_admin": false
-   */
 }
