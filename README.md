@@ -40,5 +40,6 @@ Join the discussion here in the Issues list and in the #fr8dev-java channel on t
 Additional Resources
 ====================
 [Overview of this project](/docs/Home.md).
+
 [Walkthrough of the Github Terminal](/docs/Github_use_case.md)
 
