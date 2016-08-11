@@ -1,6 +1,6 @@
 ![Fr8 Logo](https://github.com/Fr8org/Fr8Core/blob/master/Docs/img/Fr8Logo.png)
 
-# Fr8 Java SDK and Terminals and SDK
+# Fr8 Java SDK and Terminals
 
 
 [![NPM Version][npm-image]][npm-url]
