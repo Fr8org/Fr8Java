@@ -1,40 +1,35 @@
-# Fr8 Java Terminal
-> Fr8's Java terminal including Github Activities
+# Fr8 Java SDK and Terminals and SDK
+
 
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![Downloads Stats][npm-downloads]][npm-url]
 
-Fr8 is an open source cloud based integration platform ([IPAAS](https://en.wikipedia.org/wiki/Cloud-based_integration)).
+These Java-based Fr8 Terminals work with the [Fr8 ecosystem](http://www.fr8.co). Fr8 is an open source cloud based integration platform ([iPaaS](https://en.wikipedia.org/wiki/Cloud-based_integration)).
 
-* Fr8 core is written in .NET.
-* Fr8 uses JSON extensively.
-* This helps other language developers to easily integrate their open source implementations with Fr8.
-* Java Terminal holds Object representations that gets serialized into JSON.
-* In turn, Fr8 is able to use this Java Terminal.
-* This Terminal holds some of the Core functionality.
-* It also holds Github Activities that are already available in the PB (Plan Builder) of Fr8.
+* Fr8 Terminals communicate with Fr8 Hubs using RESTful endpoints, Http, and JSON. The SDK portion of this repository provides tools to make it easier for Terminals to be created and to keep things DRY. For example, there are object mapper classes that allow Java developers to avoid having to personally deal with the serialization and deserialization of POJO into JSON.
 
-You can join in on the development of this terminal or you can extend this repo to create your own Terminals.
+The Java SDK services are in an early stage of development. (To get a sense of the roadmap, you may want to look at the more mature [.NET SDK](https://github.com/Fr8org/Fr8Core/blob/master/Docs/ForDevelopers/SDK/.NET/Home.md))
 
 
+Currently, this repository contains a single Terminal, the Fr8 Github Terminal. This Terminal exposes useful Github services to Fr8 Plans via a set of activities like Get Issue.
 
-**Go on reading and learn how you can easily create your own Cloud integrations with Fr8.**
+Join the discussion here in the Issues list and in the #fr8dev-java channel on the [public Fr8 Slack Team](http://slack.fr8.co).
 
-## Installation
 
- - Start by cloning this repo.
- - Java Terminal is based on [Play Framework](https://www.playframework.com). It is a good idea to learn the basics of Play Framework.
- - This terminal is hosted on Heroku. While you can also use Heroku, you can host your terminal anywhere and integrate it with Fr8.
- - Fr8 Development server is [here](http://dev.fr8.co). Create an account and play with it to get a sense of Fr8. You should use this server first to develop and finalize your Fr8 Java implementation.
- - Fr8 Production server is [here](http://fr8.co). After your work is complete on the Dev server, you submit a request to Fr8's admins to move your implementation to Production server.
- 
+## Developing a Fr8 Terminal
 
-## Documentation
 
-* Fr8 Core functionality is explained extensively [here](https://github.com/Fr8org/Fr8Core/blob/master/Docs/ForDevelopers/SDK/.NET/Home.md).
-* It is a good idea to learn a little about Fr8 architecture in the link above. 
-* You can also jump directly to developing your Java Activities by clicking [here](/docs/Home.md).
+1) You only need to clone this repo if you want to build or modify Fr8 Terminals written in Java. Before doing so, make sure you're familiar with Fr8 as an end user by building Fr8 Plans at the [main Fr8 website](http://fr8.co).
+
+2) Read the [development guides](https://github.com/Fr8org/Fr8Core/blob/master/Docs/ForDevelopers/DevGuideHome.md), especially the [Terminal Development Guide](https://github.com/Fr8org/Fr8Core/blob/master/Docs/ForDevelopers/DevelopmentGuides/TerminalDevelopmentGuide.md).
+
+3) Clone this repo. You'll want to be familiar with the  [Play Framework](https://www.playframework.com). 
+
+4) Choose a [development approach](https://github.com/Fr8org/Fr8Core/blob/master/Docs/ForDevelopers/DevelopmentGuides/ChoosingADevelopmentApproach.md).  The Fr8 service at fr8.co uses Heroku to deploy production and dev Java Terminals.  
+
+
+5) You can also jump directly to developing your Java Activities by clicking [here](/docs/Home.md).
 
 ## Development setup
 
