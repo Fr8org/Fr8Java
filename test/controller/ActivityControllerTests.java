@@ -1,45 +1,24 @@
 package controller;
 
+import base.AbstractFakeApplication;
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.ActivitiesController;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import play.Application;
-import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.test.FakeApplication;
-import play.test.Helpers;
-import play.test.WithApplication;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ActivityControllerTests extends WithApplication {
-
-  public static FakeApplication app;
+public class ActivityControllerTests extends AbstractFakeApplication {
 
   @Mock
   private Http.Request request;
-
-  @Override
-  protected Application provideApplication() {
-    return new GuiceApplicationBuilder()
-        .configure("play.http.router", "router.Routes")
-        .build();
-  }
-
-  @BeforeClass
-  public static void startApp() {
-    app = Helpers.fakeApplication();
-    Helpers.start(app);
-  }
 
   @Before
   public void setUp() throws Exception {
@@ -59,11 +38,6 @@ public class ActivityControllerTests extends WithApplication {
   public void testRun() {
     Result result = new ActivitiesController().runActivities();
     assertEquals(play.mvc.Http.Status.OK, result.status());
-  }
-
-  @AfterClass
-  public static void stopApp() {
-    Helpers.stop(app);
   }
 
 //  @Test

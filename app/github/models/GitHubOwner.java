@@ -1,5 +1,7 @@
 package github.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 /**
@@ -10,33 +12,51 @@ import java.util.Date;
 public class GitHubOwner {
 
   private String login;
-  private String id;
+  private int id;
+  @JsonProperty("avatar_url")
   private String avatarUrl;
+  @JsonProperty("gravatar_id")
   private String gravatarId;
   private String url;
+  @JsonProperty("html_url")
   private String htmlUrl;
+  @JsonProperty("followers_url")
   private String followersUrl;
+  @JsonProperty("following_url")
   private String followingUrl;
+  @JsonProperty("gists_url")
   private String gistsUrl;
+  @JsonProperty("starred_url")
   private String starredUrl;
+  @JsonProperty("subscriptions_url")
   private String subscriptionsUrl;
+  @JsonProperty("organizations_url")
   private String organizationsUrl;
+  @JsonProperty("repos_url")
   private String reposUrl;
+  @JsonProperty("events_url")
   private String eventsUrl;
+  @JsonProperty("received_events_url")
   private String receivedEventsUrl;
   private String type;
+  @JsonProperty("site_admin")
   private boolean siteAdmin;
+  private String name;
   private String company;
   private String blog;
   private String location;
   private String email;
   private boolean hireable;
   private String bio;
-  private String publicRepos;
-  private String publicGists;
+  @JsonProperty("public_repos")
+  private int publicRepos;
+  @JsonProperty("public_gists")
+  private int publicGists;
   private int followers;
   private int following;
+  @JsonProperty("created_at")
   private Date createdAt;
+  @JsonProperty("updated_at")
   private Date updatedAt;
 
   public GitHubOwner() {
@@ -50,11 +70,11 @@ public class GitHubOwner {
     this.login = login;
   }
 
-  public String getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -226,19 +246,19 @@ public class GitHubOwner {
     this.bio = bio;
   }
 
-  public String getPublicRepos() {
+  public int getPublicRepos() {
     return publicRepos;
   }
 
-  public void setPublicRepos(String publicRepos) {
+  public void setPublicRepos(int publicRepos) {
     this.publicRepos = publicRepos;
   }
 
-  public String getPublicGists() {
+  public int getPublicGists() {
     return publicGists;
   }
 
-  public void setPublicGists(String publicGists) {
+  public void setPublicGists(int publicGists) {
     this.publicGists = publicGists;
   }
 
@@ -307,5 +327,13 @@ public class GitHubOwner {
         ", createdAt=" + createdAt +
         ", updatedAt=" + updatedAt +
         '}';
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

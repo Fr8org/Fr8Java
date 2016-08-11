@@ -66,10 +66,9 @@ public class Authentication {
       String accessToken = responseMap.get("access_token");
       authTokenDTO.setExternalStateToken(state);
       GitHubOwner owner = getCurrentGitHubOwner(accessToken);
-      if (owner != null || owner.getId() != null) {
-        authTokenDTO.setExternalAccountId(owner.getId());
+      if (owner != null || 0 != owner.getId()) {
+        authTokenDTO.setExternalAccountId(Integer.toString(owner.getId()));
         authTokenDTO.setExternalAccountName(owner.getLogin());
-        System.out.println("CENK HERE: " + owner.getLogin());
       }
       if (StringUtils.isNotBlank(accessToken)) {
         authTokenDTO.setToken(accessToken);
@@ -85,7 +84,9 @@ public class Authentication {
     String response =
         HttpUtils.get(ApplicationConstants.USER_URL + "?access_token=" + accessToken);
     GitHubOwner gitHubOwner = JsonUtils.writeStringToObject(response, GitHubOwner.class);
-    Logger.debug("Request for current GitHub owner returns: " + gitHubOwner.toString());
+    if (gitHubOwner != null) {
+      Logger.debug("Request for current GitHub owner returns: " + gitHubOwner.toString());
+    }
     return gitHubOwner;
   }
 /*
