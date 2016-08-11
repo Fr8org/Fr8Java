@@ -63,11 +63,13 @@ public class Authentication {
       // https://developer.github.com/v3/oauth/
       Map<String, String> responseMap = HttpUtils.requestStringToMap(response);
 
+      responseMap.forEach((s, s2) -> System.out.println("For key: " + s + ", value is: " + s2));
       String accessToken = responseMap.get("access_token");
       authTokenDTO.setExternalStateToken(state);
 //      authTokenDTO.setUserId(externalAuthDTO.getFr8UserId());
 //      authTokenDTO.setTerminalId("0");
       authTokenDTO.setExternalAccountId(getCurrentGitHubUserId(accessToken));
+      authTokenDTO.setExternalAccountName(getCurrentGitHubUserId(accessToken));
       if (StringUtils.isNotBlank(accessToken)) {
         authTokenDTO.setToken(accessToken);
 
