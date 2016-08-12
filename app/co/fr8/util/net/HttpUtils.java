@@ -187,6 +187,9 @@ public class HttpUtils {
         case HttpPut.METHOD_NAME:
           request = new HttpPut(url);
           break;
+        case HttpPatch.METHOD_NAME:
+          request = new HttpPatch(url);
+          break;
         default: {
           return "INVALID REQUEST: PLACEHOLDER";
         }

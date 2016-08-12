@@ -5,6 +5,7 @@ import co.fr8.data.controls.ControlTypeEnum;
 import co.fr8.data.crates.AbstractCrateStorage;
 import co.fr8.data.interfaces.dto.FieldSourceDTO;
 import co.fr8.util.logging.Logger;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * DTO implementation for the TextSource UI control
@@ -16,9 +17,13 @@ public class TextSource extends DropDownList {
   private String textValue;
   private String valueSource;
   private String groupLabelText;
+  @JsonProperty("HasValue")
   private boolean hasValue;
+  @JsonProperty("HasUpstreamValue")
   private boolean hasUpstreamValue;
+  @JsonProperty("HasSpecificValue")
   private boolean hasSpecificValue;
+  @JsonProperty("ValueSourceIsNotSet")
   private boolean valueSourceIsNotSet;
 
 

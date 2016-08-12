@@ -9,6 +9,8 @@ import co.fr8.terminal.infrastructure.DefaultHubCommunicator;
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.ActivitiesController;
 import github.GitHubTerminal;
+import github.activities.request.CreateGithubIssueRequest;
+import github.service.GitHubService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +51,8 @@ public class ActivityControllerRunTest extends AbstractFakeApplication {
 
   @Test
   public void testRun() {
+    CreateGithubIssueRequest request = new CreateGithubIssueRequest("b678aca80bfe6525e70158b6c992413022c7ab52", "cenkozan", "Fr8Java", "denme", "deneme");
+    GitHubService.getInstance().createGithubIssue(request);
     PayloadDTO payloadDTO = new PayloadDTO();
     payloadDTO.setContainerId(UUID.randomUUID());
     CrateStorageDTO storageDTO = new CrateStorageDTO();
