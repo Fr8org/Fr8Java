@@ -10,7 +10,6 @@ import co.fr8.util.logging.Logger;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * TODO: Implement
@@ -39,14 +38,26 @@ abstract public class AbstractCrateStorage implements Iterable<Crate>, IUpdatabl
   }
 
   public List<Crate> getCratesOfType(MT type) {
-    MT manifestType = ManifestTypeCache.tryResolveManifest(type);
-
-    if (manifestType != null) {
-      return crates.values().stream().filter(c -> c.getCrateManifestType()
-          .equals(manifestType)).collect(Collectors.toList());
+//    MT manifestType = ManifestTypeCache.tryResolveManifest(type);
+//    System.out.println("CENK WATCH OUT!");
+//    System.out.println("incoming type: " + type.getFriendlyName());
+//    System.out.println("crates length: " + crates.size());
+    List<Crate> cratesToReturn = new ArrayList<>();
+    for (Crate crate : crates.values()) {
+//      System.out.println(crate.getCrateManifestType());
+      if (type == crate.getCrateManifestType())
+        cratesToReturn.add(crate);
+//        System.out.println("HEHEHE");
     }
 
-    return null;
+    return cratesToReturn;
+//    return crates.values().stream().filter(c -> c.getCrateManifestType() .equals(type)).collect(Collectors.toList());
+//    if (manifestType != null) {
+//      return crates.values().stream().filter(c -> c.getCrateManifestType()
+//          .equals(manifestType)).collect(Collectors.toList());
+//    }
+
+//    return null;
   }
 
   public MT getManifestType(MT type) {

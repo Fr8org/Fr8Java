@@ -5,6 +5,8 @@ import co.fr8.util.json.JsonUtils;
 import co.fr8.util.logging.Logger;
 import co.fr8.util.net.HttpUtils;
 import com.fasterxml.jackson.databind.JsonNode;
+import github.activities.request.CreateGithubIssueRequest;
+import github.activities.request.UpdateGithubIssueRequest;
 import github.activities.request.WebhookRequest;
 import github.models.GitHubRepo;
 import org.apache.commons.lang3.StringUtils;
@@ -64,24 +66,24 @@ public class GitHubService {
   }
 
 
-  public String createGithubIsse(String authToken, String githubUserId, String repoName, String title, String body) {
+  public String createGithubIssue(CreateGithubIssueRequest createGithubIssueRequest) {
     List<NameValuePair> nameValuePairList = new ArrayList<>(5);
-    nameValuePairList.add(new BasicNameValuePair("title", title));
-    nameValuePairList.add(new BasicNameValuePair("body", body));
-    String patchGithubIssueUrl = REPOS_URL + "/" + githubUserId + "/" + repoName + "/issues" + "/" + "?access_token=\"" + authToken + "\"";
+    nameValuePairList.add(new BasicNameValuePair("title", createGithubIssueRequest.getTitle()));
+    nameValuePairList.add(new BasicNameValuePair("body", createGithubIssueRequest.getBody()));
+    String patchGithubIssueUrl = REPOS_URL + "/" + createGithubIssueRequest.getGithubUserId() + "/" + createGithubIssueRequest.getRepoName() + "/issues" + "/" + "?access_token=\"" + createGithubIssueRequest.getAuthToken() + "\"";
     Logger.debug("Calling patch for auth token with url: " + patchGithubIssueUrl +
-        " and parameters: title: " + title + ", body: " + body);
+        " and parameters: title: " + createGithubIssueRequest.getTitle() + ", body: " + createGithubIssueRequest.getBody());
     return HttpUtils.patch(patchGithubIssueUrl, nameValuePairList);
   }
 
-  public String updateGithubIssue(String authToken, String githubUserId, String repoName, String issueId, String state, String title, String body) {
+  public String updateGithubIssue(UpdateGithubIssueRequest updateGithubIssueRequest) {
     List<NameValuePair> nameValuePairList = new ArrayList<>(5);
-    nameValuePairList.add(new BasicNameValuePair(STATE_PARAM, state));
-    nameValuePairList.add(new BasicNameValuePair("title", title));
-    nameValuePairList.add(new BasicNameValuePair("body", body));
-    String patchGithubIssueUrl = REPOS_URL + "/" + githubUserId + "/" + repoName + "/issues" + "/" + issueId + "?access_token=\"" + authToken + "\"";
+    nameValuePairList.add(new BasicNameValuePair(STATE_PARAM, updateGithubIssueRequest.getState()));
+    nameValuePairList.add(new BasicNameValuePair("title", updateGithubIssueRequest.getTitle()));
+    nameValuePairList.add(new BasicNameValuePair("body", updateGithubIssueRequest.getBody()));
+    String patchGithubIssueUrl = REPOS_URL + "/" + updateGithubIssueRequest.getGithubUserId() + "/" + updateGithubIssueRequest.getRepoName() + "/issues" + "/" + updateGithubIssueRequest.getIssueId() + "?access_token=\"" + updateGithubIssueRequest.getAuthToken() + "\"";
     Logger.debug("Calling patch for auth token with url: " + patchGithubIssueUrl +
-        " and parameters: state " + state + ", title: " + title + ", body: " + body);
+        " and parameters: state " + updateGithubIssueRequest.getState() + ", title: " + updateGithubIssueRequest.getTitle() + ", body: " + updateGithubIssueRequest.getBody());
     return HttpUtils.patch(patchGithubIssueUrl, nameValuePairList);
   }
 

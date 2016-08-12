@@ -70,7 +70,6 @@ public class AuthenticationController extends AbstractTerminalController<GitHubT
     String fr8UserId = form.get("Fr8UserId");
     response().setHeader("Authorization", terminal.generateHMACHeader(fr8UserId));
 
-    System.out.println("WATCH OUT CENK!");
     AuthorizationToken authorizationToken = terminal.authenticateToken(
         new ExternalAuthDTO(requestQueryString, fr8UserId));
     System.out.println(authorizationToken.getExternalAccountId());

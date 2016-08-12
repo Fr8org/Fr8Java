@@ -14,6 +14,7 @@ import co.fr8.util.json.JsonUtils;
 import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import github.activities.request.UpdateGithubIssueRequest;
 import github.activities.ui.UpdateGithubIssueActivityUI;
 import github.service.GitHubService;
 import play.libs.Json;
@@ -119,9 +120,7 @@ public class UpdateGithubIssueActivity extends AbstractTerminalActivity<UpdateGi
                 else
                   state = "open";
                 String patchResponse = GitHubService.getInstance().updateGithubIssue(
-                    getActivityContext().getAuthorizationToken().getToken(),
-                    getActivityContext().getAuthorizationToken().getExternalAccountName(), selectedRepo.getKey(),
-                    issueNumber, state, title, body);
+                    new UpdateGithubIssueRequest(getActivityContext().getAuthorizationToken().getToken(), getActivityContext().getAuthorizationToken().getExternalAccountName(), selectedRepo.getKey(), issueNumber, state, title, body));
                 Logger.debug("got response: " + patchResponse);
               }
             }//end of for

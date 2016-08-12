@@ -14,13 +14,14 @@ import co.fr8.util.json.JsonUtils;
 import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import github.activities.request.CreateGithubIssueRequest;
 import github.activities.ui.CreateGithubIssueActivityUI;
 import github.service.GitHubService;
 import play.libs.Json;
 
 import java.util.List;
 
-import static github.util.GitHubTerminalConstants.UPDATE_GITHUB_ISSUE_DTO;
+import static github.util.GitHubTerminalConstants.CREATE_GITHUB_ISSUE_DTO;
 
 /**
  * TODO: Implement
@@ -31,7 +32,7 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
    *
    */
   public CreateGithubIssueActivity() {
-    super(UPDATE_GITHUB_ISSUE_DTO);
+    super(CREATE_GITHUB_ISSUE_DTO);
     this.activityUI = new CreateGithubIssueActivityUI();
   }
 
@@ -109,12 +110,11 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
                 }//end of if
               }//end of if
               title = getSpecificTextSourceTextValue(control, "title");
+
               body = getSpecificTextSourceTextValue(control, "body");
               if (null != selectedRepo) {
-                String patchResponse = GitHubService.getInstance().createGithubIsse(
-                    getActivityContext().getAuthorizationToken().getToken(),
-                    getActivityContext().getAuthorizationToken().getExternalAccountName(), selectedRepo.getKey(),
-                    title, body);
+                String patchResponse = GitHubService.getInstance().createGithubIssue(
+                    new CreateGithubIssueRequest(getActivityContext().getAuthorizationToken().getToken(), getActivityContext().getAuthorizationToken().getExternalAccountName(), selectedRepo.getKey(), title, body));
                 Logger.debug("got response: " + patchResponse);
               }
             }//end of for
@@ -131,9 +131,10 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
   private String getSpecificTextSourceTextValue(JsonNode control, String name) {
     String toReturn = "";
     if (ControlTypeEnum.TEXT_SOURCE.getFriendlyName().equalsIgnoreCase(control.get("type").asText()) &&
-        control.get("name").equals("issueNumber")) {
+        control.get("name").textValue().equals(name)) {
       TextSource issueNumberTS = JsonUtils.writeNodeAsObject(control, TextSource.class);
-      toReturn = issueNumberTS.getTextValue();
+      if (issueNumberTS != null)
+        toReturn = issueNumberTS.getTextValue();
     }
     return toReturn;
   }

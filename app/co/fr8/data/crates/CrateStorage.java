@@ -7,8 +7,12 @@ import java.util.*;
  */
 public class CrateStorage extends AbstractCrateStorage {
 
+  ManifestTypeCache manifestTypeCache;
+
   public CrateStorage() {
     crates = new TreeMap<>();
+    System.out.println("Giriyor, girmiyor.");
+    manifestTypeCache = new ManifestTypeCache();
   }
 
   public CrateStorage(Map<String, Crate> crateMap) {

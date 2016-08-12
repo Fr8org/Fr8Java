@@ -250,12 +250,11 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
    */
   private ContainerExecutionContext createContainerExecutionContext(Fr8DataDTO dataDTO) {
     PayloadDTO payload = hubCommunicator.getPayload(
-            (dataDTO.getContainerId() == null) ? UUID.randomUUID() : dataDTO.getContainerId());
+            (dataDTO.getContainerId() == null) ? UUID.randomUUID().toString() : dataDTO.getContainerId().toString());
 
     if (payload != null) {
       return new ContainerExecutionContext(payload.getContainerId(), crateManager.getUpdatableStorage(payload));
     }
-
     return null;
   }
 

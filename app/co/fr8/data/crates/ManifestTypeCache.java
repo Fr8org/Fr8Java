@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * TODO This doesn't work. Why!?
  * This class acts as an in-memory cache for CrateManifestType objects
  */
 class ManifestTypeCache {
@@ -22,6 +23,7 @@ class ManifestTypeCache {
 
     for (MT manifestType : MT.values()) {
       nameMap.put(manifestType.getFriendlyName(), manifestType.getId());
+      System.out.println("Manifest type friendly name= " + manifestType.getFriendlyName());
     }
   }
 

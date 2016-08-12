@@ -83,8 +83,13 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
     this.containerExecutionContext = containerExecutionContext;
 
     if (containerExecutionContext != null) {
-      List<Crate> crates = getActivityPayload().getCrateStorage().getCratesOfType(MT.OperationalStatus);
-      if (CollectionUtils.isEmpty(crates) || operationalState == null) {
+//      System.out.println("HERE CENK: " + containerExecutionContext.getPayloadStorage().getCount());
+//      System.out.println("HERE CENK: " + containerExecutionContext.getPayloadStorage().toString());
+      List<Crate> crates = containerExecutionContext.getPayloadStorage().getCratesOfType(MT.OperationalStatus);  //getActivityPayload().getCrateStorage().getCratesOfType(MT.OperationalStatus);
+//      System.out.println("Crates size: " + crates.size());
+//      System.out.println("NOOOO: " + CollectionUtils.isEmpty(crates));
+      // TODO Check why Charles made like this before (check github history). It doesn't make sense now.
+      if (CollectionUtils.isEmpty(crates)) {
         throw new IllegalArgumentException("Operational state crate is not found");
       } else {
         operationalState = (OperationalStateCM) crates.get(0).getContent();
@@ -117,7 +122,6 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
 
     Logger.debug("conType for request is: " + conType);
 
-    //TODO why?
     Logger.debug("checking authentication: " + checkAuthentication());
     if (!checkAuthentication()) {
       addAuthenticationCrate(false);
