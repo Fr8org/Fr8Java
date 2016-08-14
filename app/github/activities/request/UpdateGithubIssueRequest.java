@@ -2,17 +2,15 @@ package github.activities.request;
 
 public class UpdateGithubIssueRequest {
   private final String authToken;
-  private final String githubUserId;
-  private final String repoName;
+  private final String repo;
   private final String issueId;
   private final String state;
   private final String title;
   private final String body;
 
-  public UpdateGithubIssueRequest(String authToken, String githubUserId, String repoName, String issueId, String state, String title, String body) {
+  public UpdateGithubIssueRequest(String authToken, String repo, String issueId, String state, String title, String body) {
     this.authToken = authToken;
-    this.githubUserId = githubUserId;
-    this.repoName = repoName;
+    this.repo= repo;
     this.issueId = issueId;
     this.state = state;
     this.title = title;
@@ -23,12 +21,8 @@ public class UpdateGithubIssueRequest {
     return authToken;
   }
 
-  public String getGithubUserId() {
-    return githubUserId;
-  }
-
-  public String getRepoName() {
-    return repoName;
+  public String getRepo() {
+    return repo;
   }
 
   public String getIssueId() {

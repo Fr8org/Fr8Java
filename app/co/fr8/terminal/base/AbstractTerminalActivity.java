@@ -82,22 +82,35 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
     this.activityContext = activityContext;
     this.containerExecutionContext = containerExecutionContext;
 
+//    Logger.debug("CENK: Container Execution Context must be null in: " + actionName + ", containerExecutionContext: " + containerExecutionContext);
     if (containerExecutionContext != null) {
-//      System.out.println("HERE CENK: " + containerExecutionContext.getPayloadStorage().getCount());
-//      System.out.println("HERE CENK: " + containerExecutionContext.getPayloadStorage().toString());
-      List<Crate> crates = containerExecutionContext.getPayloadStorage().getCratesOfType(MT.OperationalStatus);  //getActivityPayload().getCrateStorage().getCratesOfType(MT.OperationalStatus);
-//      System.out.println("Crates size: " + crates.size());
-//      System.out.println("NOOOO: " + CollectionUtils.isEmpty(crates));
-      // TODO Check why Charles made like this before (check github history). It doesn't make sense now.
+//      Logger.debug("HERE CENK: " + containerExecutionContext.getPayloadStorage().getCount());
+      Logger.debug("HERE CENK: " + containerExecutionContext.getPayloadStorage().toString());
+      List<Crate> crates = containerExecutionContext.getPayloadStorage().getCratesOfType(MT.OperationalStatus);
+//      Logger.debug("Crates size: " + crates.size());
+//      Logger.debug("NOOOO: " + CollectionUtils.isEmpty(crates));
       if (CollectionUtils.isEmpty(crates)) {
         throw new IllegalArgumentException("Operational state crate is not found");
       } else {
         operationalState = (OperationalStateCM) crates.get(0).getContent();
+//        Crate operationalStateCrate = new Crate(MT.OperationalStatus, "OperationalStatus", operationalState);
+//        Logger.debug("CENK, OPERATIONAL STATE CRATE: " + operationalStateCrate.toString());
+//        getStorage().add(operationalStateCrate);
       }
     }
 
     initializeActivityState(actionName);
   }
+
+//  protected void addOperationalStateToCrateStorage(ContainerExecutionContext containerExecutionContext) {
+//    Logger.debug("HERE CENK containerExecutionContext: " + containerExecutionContext.toString());
+//    Crate crate = containerExecutionContext.getPayloadStorage().getCratesOfType(MT.OperationalStatus).get(0);
+//    Logger.debug("HERE CENK Operational Status crate: " + crate.toString());
+//    Logger.debug("Adding operational state: " + JsonUtils.writeObjectAsString(operationalState));
+//    getActivityPayload().getCrateStorage().add(crate);
+//    activityContext.setActivityPayload(containerExecutionContext.getPayloadStorage().get);
+//    activityContext.setActivityPayload(containerExecutionContext);
+//  }
 
   /**
    * add an authentication crate to the storage for the activity
@@ -503,14 +516,6 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
         ConfigurationRequestType.INITIAL : ConfigurationRequestType.FOLLOWUP;
   }
 
-  public OperationalStateCM getOperationalState() {
-    return operationalState;
-  }
-
-  public void setOperationalState(OperationalStateCM operationalState) {
-    this.operationalState = operationalState;
-  }
-
   abstract protected void initializeActivityState(ActionNameEnum actionName);
 
   abstract protected boolean checkAuthentication();
@@ -554,7 +559,7 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
   abstract protected boolean beforeActivate();
 
   public interface ActivityFunctionalInterface {
-    public void execute();
+     ContainerExecutionContext execute();
   }
 
   public ActivityTemplateDTO getActivityTemplateDTO() {
@@ -563,5 +568,9 @@ abstract public class AbstractTerminalActivity<T extends AbstractActivityUI>
 
   public T getActivityUI() {
     return activityUI;
+  }
+
+  public ContainerExecutionContext getContainerExecutionContext() {
+    return containerExecutionContext;
   }
 }

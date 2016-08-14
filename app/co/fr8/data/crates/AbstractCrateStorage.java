@@ -10,6 +10,7 @@ import co.fr8.util.logging.Logger;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * TODO: Implement
@@ -42,15 +43,11 @@ abstract public class AbstractCrateStorage implements Iterable<Crate>, IUpdatabl
 //    System.out.println("CENK WATCH OUT!");
 //    System.out.println("incoming type: " + type.getFriendlyName());
 //    System.out.println("crates length: " + crates.size());
-    List<Crate> cratesToReturn = new ArrayList<>();
-    for (Crate crate : crates.values()) {
-//      System.out.println(crate.getCrateManifestType());
-      if (type == crate.getCrateManifestType())
-        cratesToReturn.add(crate);
+    return crates.values().stream().filter(crate -> type == crate.getCrateManifestType()).collect(Collectors.toList());
+    //      System.out.println(crate.getCrateManifestType());
 //        System.out.println("HEHEHE");
-    }
 
-    return cratesToReturn;
+//    return cratesToReturn;
 //    return crates.values().stream().filter(c -> c.getCrateManifestType() .equals(type)).collect(Collectors.toList());
 //    if (manifestType != null) {
 //      return crates.values().stream().filter(c -> c.getCrateManifestType()

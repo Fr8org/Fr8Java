@@ -100,8 +100,8 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
   public ActivityFunctionalInterface run() {
     Logger.debug("Run placeholder");
     return () -> {
-      Logger.debug("Run placeholder git process");
-      getActivityContext().getActivityPayload();
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
   }
 
@@ -109,8 +109,8 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
   public ActivityFunctionalInterface runChildActivities() {
     Logger.debug("runChildActivities placeholder");
     return () -> {
-      Logger.debug("RunChildActivities placeholder git process");
-      getActivityContext().getActivityPayload();
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
   }
 

@@ -34,6 +34,18 @@ public class ActivityControllerConfigureTest extends AbstractFakeApplication {
     assertEquals(play.mvc.Http.Status.OK, result.status());
   }
 
+  @Test
+  public void testActivate() {
+    Result result = new ActivitiesController().activateActivities();
+    assertEquals(play.mvc.Http.Status.OK, result.status());
+  }
+
+  @Test
+  public void testDeactivate() {
+    Result result = new ActivitiesController().deactivateActivities();
+    assertEquals(play.mvc.Http.Status.OK, result.status());
+  }
+
   /**
    * You have to get the example requests from the Heroku logs.
    */

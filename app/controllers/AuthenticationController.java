@@ -72,8 +72,8 @@ public class AuthenticationController extends AbstractTerminalController<GitHubT
 
     AuthorizationToken authorizationToken = terminal.authenticateToken(
         new ExternalAuthDTO(requestQueryString, fr8UserId));
-    System.out.println(authorizationToken.getExternalAccountId());
-    System.out.println(authorizationToken.getExternalAccountName());
+    Logger.debug(authorizationToken.getExternalAccountId());
+    Logger.debug(authorizationToken.getExternalAccountName());
 
     return ok(JsonUtils.writeObjectAsString(authorizationToken));
   }

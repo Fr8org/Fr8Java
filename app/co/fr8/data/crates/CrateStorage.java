@@ -1,6 +1,7 @@
 package co.fr8.data.crates;
 
-import java.util.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * TODO: Implement
@@ -11,7 +12,6 @@ public class CrateStorage extends AbstractCrateStorage {
 
   public CrateStorage() {
     crates = new TreeMap<>();
-    System.out.println("Giriyor, girmiyor.");
     manifestTypeCache = new ManifestTypeCache();
   }
 

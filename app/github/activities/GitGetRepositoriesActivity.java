@@ -52,8 +52,11 @@ public class GitGetRepositoriesActivity extends AbstractRepositoryRetrievalActiv
       }
     }
     return () -> {
-      Logger.debug("Updating ");
-
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
+    };
+//    return () -> {
+//      Logger.debug("Updating ");
 //      JsonNode repoJson =
 //          GitHubService.getInstance().getRepositoryJsonForUser(getActivityContext().getAuthorizationToken().getToken());
 ////      getActivityContext().getActivityPayload();
@@ -72,14 +75,15 @@ public class GitGetRepositoriesActivity extends AbstractRepositoryRetrievalActiv
 //        repositoriesCrate.setLabel("GitHub Repositories");
 //        getActivityPayload().getCrateStorage().add(repositoriesCrate);
 //      }
-    };
+//    };
   }
 
   @Override
   public ActivityFunctionalInterface runChildActivities() {
     Logger.debug("runChildActivities placeholder");
     return () -> {
-      Logger.debug("RunChildActivities placeholder git get");
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
   }
 

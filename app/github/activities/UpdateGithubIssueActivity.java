@@ -120,7 +120,7 @@ public class UpdateGithubIssueActivity extends AbstractTerminalActivity<UpdateGi
                 else
                   state = "open";
                 String patchResponse = GitHubService.getInstance().updateGithubIssue(
-                    new UpdateGithubIssueRequest(getActivityContext().getAuthorizationToken().getToken(), getActivityContext().getAuthorizationToken().getExternalAccountName(), selectedRepo.getKey(), issueNumber, state, title, body));
+                    new UpdateGithubIssueRequest(getActivityContext().getAuthorizationToken().getToken(), selectedRepo.getValue(), issueNumber, state, title, body));
                 Logger.debug("got response: " + patchResponse);
               }
             }//end of for
@@ -131,6 +131,8 @@ public class UpdateGithubIssueActivity extends AbstractTerminalActivity<UpdateGi
       }//end of if
     }//end of for
     return () -> {
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
   }
 
@@ -151,6 +153,8 @@ public class UpdateGithubIssueActivity extends AbstractTerminalActivity<UpdateGi
   @Override
   public ActivityFunctionalInterface runChildActivities() {
     return () -> {
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
   }
 
@@ -219,10 +223,6 @@ public class UpdateGithubIssueActivity extends AbstractTerminalActivity<UpdateGi
    */
   @Override
   protected void initializeActivityState(ActionNameEnum actionName) {
-    if (getOperationalState() != null) {
-      Crate operationalStateCrate = new Crate<>(MT.OperationalStatus, "OperationalStatus", getOperationalState());
-      getStorage().add(operationalStateCrate);
-    }
     Logger.debug("initializeActivityState placeholder");
   }
 

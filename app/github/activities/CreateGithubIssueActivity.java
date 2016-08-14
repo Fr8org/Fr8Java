@@ -38,7 +38,6 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
   }
 
   /**
-   *
    * @param documentationType
    * @return
    */
@@ -49,7 +48,6 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
   }
 
   /**
-   *
    * @return
    */
   @Override
@@ -77,15 +75,10 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
   }
 
   /**
-   *
    * @return
    */
   @Override
   public ActivityFunctionalInterface run() {
-    Logger.debug(getActivityContext().getActivityPayload().toString());
-    //1. get the crates
-    //2. find the entered results.
-    //3. update below code.
     ListItem selectedRepo = null;
     String title = "";
     String body = "";
@@ -122,10 +115,8 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
                 if (bodyTS != null)
                   body = bodyTS.getTextValue();
               }
-//              title = getSpecificTextSourceTextValue(control, "title");
-//              System.out.println("title is: " + title);
-//              body = getSpecificTextSourceTextValue(control, "body");
-//              System.out.println("body is: " + body);
+//            Logger.debug("title is: " + title);
+//            Logger.debug("body is: " + body);
             }//end of for
           }//end of if
         } else {
@@ -135,12 +126,14 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
     }//end of for
     if (null != selectedRepo && StringUtils.isNotBlank(title) && StringUtils.isNotBlank(body)) {
       String patchResponse = GitHubService.getInstance().createGithubIssue(
-          new CreateGithubIssueRequest(getActivityContext().getAuthorizationToken().getToken(), getActivityContext().getAuthorizationToken().getExternalAccountName(), selectedRepo.getKey(), title, body));
+          new CreateGithubIssueRequest(getActivityContext().getAuthorizationToken().getToken(), selectedRepo.getValue(), title, body));
       Logger.debug("got response: " + patchResponse);
     } else {
       throw new IllegalArgumentException("Please fill in the blanks!");
     }
     return () -> {
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
   }
 
@@ -156,13 +149,11 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
 //  }
 
   /**
-   *
    * @return
    */
   @Override
   public ActivityFunctionalInterface runChildActivities() {
-    return () -> {
-    };
+    return null;
   }
 
   /**
@@ -225,15 +216,11 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
 
   /**
    * Method abstraction to configure settings unique to the activity implementation
-   *
+   * <p>
    * Called from AbstractTerminalService#initializeInternalState
    */
   @Override
   protected void initializeActivityState(ActionNameEnum actionName) {
-    if (getOperationalState() != null) {
-      Crate operationalStateCrate = new Crate<>(MT.OperationalStatus, "OperationalStatus", getOperationalState());
-      getStorage().add(operationalStateCrate);
-    }
     Logger.debug("initializeActivityState placeholder");
   }
 

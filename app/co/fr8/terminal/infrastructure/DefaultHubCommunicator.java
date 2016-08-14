@@ -27,16 +27,16 @@ public class DefaultHubCommunicator implements IHubCommunicator {
     return JsonUtils.writeStringToObject(response, PayloadDTO.class);
   }
 
+//  private String buildContainerPath(String fr8CallBackUrl, String containerId) {
+//    return fr8CallBackUrl + "/api/v1" + "/containers/payload?id=" + containerId;
+//  }
+
   private String buildContainerPath(String containerId) {
     return HUB_API_PATH + "/containers/payload?id=" + containerId;
   }
 
   public Fr8HubSecurityDTO getFr8HubSecurityDTO() {
     return fr8HubSecurityDTO;
-  }
-
-  public void setFr8HubSecurityDTO(Fr8HubSecurityDTO fr8HubSecurityDTO) {
-    this.fr8HubSecurityDTO = fr8HubSecurityDTO;
   }
 
 }

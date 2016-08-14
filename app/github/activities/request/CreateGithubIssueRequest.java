@@ -2,15 +2,13 @@ package github.activities.request;
 
 public class CreateGithubIssueRequest {
   private final String authToken;
-  private final String githubUserId;
-  private final String repoName;
+  private final String repo;
   private final String title;
   private final String body;
 
-  public CreateGithubIssueRequest(String authToken, String githubUserId, String repoName, String title, String body) {
+  public CreateGithubIssueRequest(String authToken, String repo, String title, String body) {
     this.authToken = authToken;
-    this.githubUserId = githubUserId;
-    this.repoName = repoName;
+    this.repo = repo;
     this.title = title;
     this.body = body;
   }
@@ -19,12 +17,8 @@ public class CreateGithubIssueRequest {
     return authToken;
   }
 
-  public String getGithubUserId() {
-    return githubUserId;
-  }
-
-  public String getRepoName() {
-    return repoName;
+  public String getRepo() {
+    return repo;
   }
 
   public String getTitle() {

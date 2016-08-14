@@ -130,6 +130,8 @@ public class TriggerGithubPullRequestActivity extends AbstractTerminalActivity<T
     Logger.debug("ENTERING HERE CENK");
     Logger.debug(getActivityContext().getActivityPayload().toString());
     return () -> {
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
   }
 
@@ -141,9 +143,13 @@ public class TriggerGithubPullRequestActivity extends AbstractTerminalActivity<T
   public ActivityFunctionalInterface runChildActivities() {
     Logger.debug("runChildActivities placeholder");
     return () -> {
-      Logger.debug("Executing runChildActivities ActivityFunctionalInterface");
-      getActivityContext().getActivityPayload();
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
+//    return () -> {
+//      Logger.debug("Executing runChildActivities ActivityFunctionalInterface");
+//      getActivityContext().getActivityPayload();
+//    };
   }
 
   /**

@@ -58,7 +58,7 @@ public class ActivitiesController extends AbstractTerminalController<GitHubTermi
    */
   public Result runActivities() {
     ActivityDTO resultDTO = getResultActivityDTO(request(), ActionNameEnum.RUN);
-    return ok(JsonUtils.writeObjectAsString(resultDTO));
+    return ok(JsonUtils.writeObjectAsString(resultDTO.getContainerExecutionContext()));
   }
 
   /**

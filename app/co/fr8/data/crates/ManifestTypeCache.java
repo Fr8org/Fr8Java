@@ -2,6 +2,7 @@ package co.fr8.data.crates;
 
 import co.fr8.data.constants.MT;
 import co.fr8.data.interfaces.manifests.Manifest;
+import co.fr8.util.logging.Logger;
 
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ class ManifestTypeCache {
 
     for (MT manifestType : MT.values()) {
       nameMap.put(manifestType.getFriendlyName(), manifestType.getId());
-      System.out.println("Manifest type friendly name= " + manifestType.getFriendlyName());
+      Logger.debug("Manifest type friendly name= " + manifestType.getFriendlyName());
     }
   }
 
