@@ -13,12 +13,10 @@ import co.fr8.terminal.infrastructure.states.ConfigurationRequestType;
 import co.fr8.util.json.JsonUtils;
 import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import github.activities.request.CreateGithubIssueRequest;
 import github.activities.ui.CreateGithubIssueActivityUI;
 import github.service.GitHubService;
 import org.apache.commons.lang3.StringUtils;
-import play.libs.Json;
 
 import java.util.List;
 
@@ -98,9 +96,6 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
                 if (dropDownList != null) {
                   selectedRepo = dropDownList.findBySelected();
                   Logger.debug("Found selected ListItem: " + selectedRepo);
-                  ObjectNode jsonParams = Json.newObject();
-                  jsonParams.put("subscribed", true);
-                  jsonParams.put("ignored", false);
                 }//end of if
               }//end of if
               if (ControlTypeEnum.TEXT_SOURCE.getFriendlyName().equalsIgnoreCase(control.get("type").asText()) &&

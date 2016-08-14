@@ -10,8 +10,6 @@ import github.activities.request.UpdateGithubIssueRequest;
 import github.activities.request.WebhookRequest;
 import github.models.GitHubRepo;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import play.libs.Json;
 
 import java.util.ArrayList;
@@ -68,20 +66,16 @@ public class GitHubService {
 
   public String createGithubIssue(CreateGithubIssueRequest createGithubIssueRequest) {
     String patchGithubIssueUrl = REPOS_URL + "/" + createGithubIssueRequest.getRepo() + "/issues" + "?access_token=" + createGithubIssueRequest.getAuthToken();
-    Logger.debug("Calling patch for auth token with url: " + patchGithubIssueUrl +
+    Logger.debug("Calling post for auth token with url: " + patchGithubIssueUrl +
         " and parameters: title: " + createGithubIssueRequest.getTitle() + ", body: " + createGithubIssueRequest.getBody());
     return HttpUtils.postJson(patchGithubIssueUrl, JsonUtils.writeObjectToJsonNode(createGithubIssueRequest));
   }
 
   public String updateGithubIssue(UpdateGithubIssueRequest updateGithubIssueRequest) {
-    List<NameValuePair> nameValuePairList = new ArrayList<>(5);
-    nameValuePairList.add(new BasicNameValuePair(STATE_PARAM, updateGithubIssueRequest.getState()));
-    nameValuePairList.add(new BasicNameValuePair("title", updateGithubIssueRequest.getTitle()));
-    nameValuePairList.add(new BasicNameValuePair("body", updateGithubIssueRequest.getBody()));
     String patchGithubIssueUrl = REPOS_URL + "/" + updateGithubIssueRequest.getRepo() + "/issues" + "/" + updateGithubIssueRequest.getIssueId() + "?access_token=" + updateGithubIssueRequest.getAuthToken();
-    Logger.debug("Calling patch for auth token with url: " + patchGithubIssueUrl +
+    Logger.debug("Calling patch for issue: " + updateGithubIssueRequest.getIssueId() + ", with url: " + patchGithubIssueUrl +
         " and parameters: state " + updateGithubIssueRequest.getState() + ", title: " + updateGithubIssueRequest.getTitle() + ", body: " + updateGithubIssueRequest.getBody());
-    return HttpUtils.patch(patchGithubIssueUrl, nameValuePairList);
+    return HttpUtils.patchJson(patchGithubIssueUrl, JsonUtils.writeObjectToJsonNode(updateGithubIssueRequest));
   }
 
   public String postWebhookToGithubPullRequests(String repoName, String authToken, String githubUserId){
