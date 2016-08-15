@@ -11,7 +11,7 @@ import java.util.List;
 public class ActivityTemplateDTO {
 
   //private final UUID id = UUID.randomUUID();
-  private String internalId;
+  private String id;
   private String name;
   private String label;
   private String version;
@@ -26,10 +26,10 @@ public class ActivityTemplateDTO {
   public ActivityTemplateDTO() {
   }
 
-  public ActivityTemplateDTO(String name, String label, String version,
+  public ActivityTemplateDTO(String id, String name, String label, String version,
                              String tags, List<CategoriesDTO> categories,
                               boolean needsAuthentication, int minPaneWidth) {
-    this.internalId = null;
+    this.id = id;
     this.name = name;
     this.label = label;
     this.version = version;
@@ -129,12 +129,12 @@ public class ActivityTemplateDTO {
   @Override
   public String toString() {
     return "ActivityTemplateDTO{" +
-        "internalId='" + internalId + '\'' +
+        "id='" + id + '\'' +
         ", name='" + name + '\'' +
         ", label='" + label + '\'' +
         ", version='" + version + '\'' +
         ", tags='" + tags + '\'' +
-        ", categories=" + CollectionUtils.toString(categories) + '\'' +
+        ", categories=" + CollectionUtils.toString(categories) +
         ", type=" + type +
         ", minPaneWidth=" + minPaneWidth +
         ", needsAuthentication=" + needsAuthentication +
@@ -143,11 +143,11 @@ public class ActivityTemplateDTO {
         '}';
   }
 
-  public String getInternalId() {
-    return internalId;
+  public String getId() {
+    return id;
   }
 
-  public void setInternalId(String internalId) {
-    this.internalId = internalId;
+  public void setId(String id) {
+    this.id = id;
   }
 }

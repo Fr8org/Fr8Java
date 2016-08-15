@@ -39,14 +39,22 @@ abstract public class AbstractCrateStorage implements Iterable<Crate>, IUpdatabl
   }
 
   public List<Crate> getCratesOfType(MT type) {
-    MT manifestType = ManifestTypeCache.tryResolveManifest(type);
+//    MT manifestType = ManifestTypeCache.tryResolveManifest(type);
+//    System.out.println("CENK WATCH OUT!");
+//    System.out.println("incoming type: " + type.getFriendlyName());
+//    System.out.println("crates length: " + crates.size());
+    return crates.values().stream().filter(crate -> type == crate.getCrateManifestType()).collect(Collectors.toList());
+    //      System.out.println(crate.getCrateManifestType());
+//        System.out.println("HEHEHE");
 
-    if (manifestType != null) {
-      return crates.values().stream().filter(c -> c.getCrateManifestType()
-          .equals(manifestType)).collect(Collectors.toList());
-    }
+//    return cratesToReturn;
+//    return crates.values().stream().filter(c -> c.getCrateManifestType() .equals(type)).collect(Collectors.toList());
+//    if (manifestType != null) {
+//      return crates.values().stream().filter(c -> c.getCrateManifestType()
+//          .equals(manifestType)).collect(Collectors.toList());
+//    }
 
-    return null;
+//    return null;
   }
 
   public MT getManifestType(MT type) {

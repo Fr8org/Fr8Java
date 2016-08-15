@@ -44,7 +44,7 @@ public class AuthorizationToken {
    * @deprecated property no longer in use and replaced by id
    */
   @JsonProperty("TerminalID")
-  private int terminalId = 0;
+  private String terminalId = "a70ac71c-1c01-4c56-b87e-7ad88d44dea5";
 
   public AuthorizationToken() {
 
@@ -152,11 +152,11 @@ public class AuthorizationToken {
     this.externalDomainName = externalDomainName;
   }
 
-  public int getTerminalId() {
+  public String getTerminalId() {
     return terminalId;
   }
 
-  public void setTerminalId(int terminalId) {
+  public void setTerminalId(String terminalId) {
     this.terminalId = terminalId;
   }
 

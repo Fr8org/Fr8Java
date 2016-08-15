@@ -58,7 +58,7 @@ public class ActivitiesController extends AbstractTerminalController<GitHubTermi
    */
   public Result runActivities() {
     ActivityDTO resultDTO = getResultActivityDTO(request(), ActionNameEnum.RUN);
-    return ok(JsonUtils.writeObjectAsString(resultDTO));
+    return ok(JsonUtils.writeObjectAsString(resultDTO.getContainerExecutionContext()));
   }
 
   /**
@@ -132,10 +132,8 @@ public class ActivitiesController extends AbstractTerminalController<GitHubTermi
   }
 
   private Fr8HubSecurityDTO getFr8HubSecurity(Map<String, String[]> requestHeader) {
-    Logger.debug("WATCH OUT CENK!");
-    Logger.debug("user name: " + requestHeader.get(FR8_USER_ID)[0] + " , password= " + requestHeader.get(FR8HUBCALLBACKSECRET)[0]);
-    return new Fr8HubSecurityDTO(requestHeader.get(FR8_USER_ID)[0], requestHeader.get(FR8_HUB_CALLBACK_URL)[0],
-        requestHeader.get(FR8HUBCALLBACKSECRET)[0]);
+    //TODO Add error checking here.
+    return new Fr8HubSecurityDTO(requestHeader.get(FR8_USER_ID)[0], requestHeader.get(FR8_HUB_CALLBACK_URL)[0], requestHeader.get(FR8HUBCALLBACKSECRET)[0]);
   }
 
 }

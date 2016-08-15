@@ -5,14 +5,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CategoriesDTO {
 
+  private final String id;
   private final String name;
   private final String iconPath;
 
   @JsonCreator
-  public CategoriesDTO(@JsonProperty("name") String name,
+  public CategoriesDTO(@JsonProperty("id") String id,
+                       @JsonProperty("name") String name,
                        @JsonProperty("iconPath") String iconPath) {
+    this.id = id;
     this.name = name;
     this.iconPath = iconPath;
+  }
+
+  public String getId() {
+    return id;
   }
 
   public String getName() {
@@ -26,7 +33,8 @@ public class CategoriesDTO {
   @Override
   public String toString() {
     return "CategoriesDTO{" +
-        "name='" + name + '\'' +
+        "id='" + id + '\'' +
+        ", name='" + name + '\'' +
         ", iconPath='" + iconPath + '\'' +
         '}';
   }

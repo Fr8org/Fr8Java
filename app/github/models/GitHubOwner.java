@@ -1,5 +1,9 @@
 package github.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Date;
+
 /**
  * Model to map JSON response
  *
@@ -8,22 +12,52 @@ package github.models;
 public class GitHubOwner {
 
   private String login;
-  private String id;
+  private int id;
+  @JsonProperty("avatar_url")
   private String avatarUrl;
+  @JsonProperty("gravatar_id")
   private String gravatarId;
   private String url;
+  @JsonProperty("html_url")
   private String htmlUrl;
+  @JsonProperty("followers_url")
   private String followersUrl;
+  @JsonProperty("following_url")
   private String followingUrl;
+  @JsonProperty("gists_url")
   private String gistsUrl;
+  @JsonProperty("starred_url")
   private String starredUrl;
+  @JsonProperty("subscriptions_url")
   private String subscriptionsUrl;
+  @JsonProperty("organizations_url")
   private String organizationsUrl;
+  @JsonProperty("repos_url")
   private String reposUrl;
+  @JsonProperty("events_url")
   private String eventsUrl;
+  @JsonProperty("received_events_url")
   private String receivedEventsUrl;
   private String type;
+  @JsonProperty("site_admin")
   private boolean siteAdmin;
+  private String name;
+  private String company;
+  private String blog;
+  private String location;
+  private String email;
+  private boolean hireable;
+  private String bio;
+  @JsonProperty("public_repos")
+  private int publicRepos;
+  @JsonProperty("public_gists")
+  private int publicGists;
+  private int followers;
+  private int following;
+  @JsonProperty("created_at")
+  private Date createdAt;
+  @JsonProperty("updated_at")
+  private Date updatedAt;
 
   public GitHubOwner() {
   }
@@ -36,11 +70,11 @@ public class GitHubOwner {
     this.login = login;
   }
 
-  public String getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -164,6 +198,102 @@ public class GitHubOwner {
     this.siteAdmin = siteAdmin;
   }
 
+  public String getCompany() {
+    return company;
+  }
+
+  public void setCompany(String company) {
+    this.company = company;
+  }
+
+  public String getBlog() {
+    return blog;
+  }
+
+  public void setBlog(String blog) {
+    this.blog = blog;
+  }
+
+  public String getLocation() {
+    return location;
+  }
+
+  public void setLocation(String location) {
+    this.location = location;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public boolean isHireable() {
+    return hireable;
+  }
+
+  public void setHireable(boolean hireable) {
+    this.hireable = hireable;
+  }
+
+  public String getBio() {
+    return bio;
+  }
+
+  public void setBio(String bio) {
+    this.bio = bio;
+  }
+
+  public int getPublicRepos() {
+    return publicRepos;
+  }
+
+  public void setPublicRepos(int publicRepos) {
+    this.publicRepos = publicRepos;
+  }
+
+  public int getPublicGists() {
+    return publicGists;
+  }
+
+  public void setPublicGists(int publicGists) {
+    this.publicGists = publicGists;
+  }
+
+  public int getFollowers() {
+    return followers;
+  }
+
+  public void setFollowers(int followers) {
+    this.followers = followers;
+  }
+
+  public int getFollowing() {
+    return following;
+  }
+
+  public void setFollowing(int following) {
+    this.following = following;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Date getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(Date updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
   @Override
   public String toString() {
     return "GitHubOwner{" +
@@ -184,26 +314,26 @@ public class GitHubOwner {
         ", receivedEventsUrl='" + receivedEventsUrl + '\'' +
         ", type='" + type + '\'' +
         ", siteAdmin=" + siteAdmin +
+        ", company='" + company + '\'' +
+        ", blog='" + blog + '\'' +
+        ", location='" + location + '\'' +
+        ", email='" + email + '\'' +
+        ", hireable=" + hireable +
+        ", bio='" + bio + '\'' +
+        ", publicRepos='" + publicRepos + '\'' +
+        ", publicGists='" + publicGists + '\'' +
+        ", followers=" + followers +
+        ", following=" + following +
+        ", createdAt=" + createdAt +
+        ", updatedAt=" + updatedAt +
         '}';
   }
 
-  /*
-      "login": "octocat",
-      "id": 1,
-      "avatar_url": "https://github.com/images/error/octocat_happy.gif",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/octocat",
-      "html_url": "https://github.com/octocat",
-      "followers_url": "https://api.github.com/users/octocat/followers",
-      "following_url": "https://api.github.com/users/octocat/following{/other_user}",
-      "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
-      "organizations_url": "https://api.github.com/users/octocat/orgs",
-      "repos_url": "https://api.github.com/users/octocat/repos",
-      "events_url": "https://api.github.com/users/octocat/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/octocat/received_events",
-      "type": "User",
-      "site_admin": false
-   */
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
 }

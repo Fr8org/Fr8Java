@@ -3,8 +3,6 @@ package co.fr8.terminal.infrastructure;
 import co.fr8.data.interfaces.dto.Fr8HubSecurityDTO;
 import co.fr8.data.interfaces.dto.PayloadDTO;
 
-import java.util.UUID;
-
 /**
  * TODO: Implement
  */
@@ -13,7 +11,7 @@ public interface IHubCommunicator {
   /*Task*/ void configure(Fr8HubSecurityDTO fr8HubSecurityDTO);
 
 
-  PayloadDTO getPayload(UUID containerIdd);
+  PayloadDTO getPayload(String containerUIDD);
 /*
   Task<UserDTO> GetCurrentUser(ActivityDO activityDO, Guid containerId, string userId);
   Task<FieldDescriptionsCM> GetDesignTimeFieldsByDirection(ActivityDO activityDO, CrateDirection direction, AvailabilityType availability, string userId);

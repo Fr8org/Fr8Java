@@ -5,7 +5,7 @@ import co.fr8.data.controls.ControlTypeEnum;
 import co.fr8.data.crates.AbstractCrateStorage;
 import co.fr8.data.interfaces.dto.FieldSourceDTO;
 import co.fr8.util.logging.Logger;
-import org.apache.commons.lang3.StringUtils;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * DTO implementation for the TextSource UI control
@@ -16,6 +16,15 @@ public class TextSource extends DropDownList {
   private String upstreamSourceLabel;
   private String textValue;
   private String valueSource;
+  private String groupLabelText;
+  @JsonProperty("HasValue")
+  private boolean hasValue;
+  @JsonProperty("HasUpstreamValue")
+  private boolean hasUpstreamValue;
+  @JsonProperty("HasSpecificValue")
+  private boolean hasSpecificValue;
+  @JsonProperty("ValueSourceIsNotSet")
+  private boolean valueSourceIsNotSet;
 
 
   public TextSource() {
@@ -45,24 +54,24 @@ public class TextSource extends DropDownList {
     }
   }
 
-  public boolean canGetValue(AbstractCrateStorage payloadCrateStorage) {
-//    if (hasSpecifiedValue())
-//      return true;
+//  public boolean canGetValue(AbstractCrateStorage payloadCrateStorage) {
+////    if (hasSpecifiedValue())
+////      return true;
+//
+//    return !("upstream".equalsIgnoreCase(this.valueSource) && payloadCrateStorage == null && !hasSpecificValue());
+//  }
 
-    return !("upstream".equalsIgnoreCase(this.valueSource) && payloadCrateStorage == null && !hasSpecificValue());
-  }
-
-  public boolean hasValue() {
-    return StringUtils.isNotBlank(this.valueSource) && (hasUpstreamValue() || hasSpecificValue());
-  }
-
-  public boolean hasUpstreamValue() {
-    return ("upstream".equalsIgnoreCase(this.valueSource) && StringUtils.isNotBlank(getValue()));
-  }
-
-  public boolean hasSpecificValue() {
-    return ("specific".equalsIgnoreCase(this.valueSource) && StringUtils.isNotBlank(this.textValue));
-  }
+//  public boolean hasValue() {
+//    return StringUtils.isNotBlank(this.valueSource) && (hasUpstreamValue() || hasSpecificValue());
+//  }
+//
+//  public boolean hasUpstreamValue() {
+//    return ("upstream".equalsIgnoreCase(this.valueSource) && StringUtils.isNotBlank(getValue()));
+//  }
+//
+//  public boolean hasSpecificValue() {
+//    return ("specific".equalsIgnoreCase(this.valueSource) && StringUtils.isNotBlank(this.textValue));
+//  }
 
   public String getInitialLabel() {
     return initialLabel;
@@ -94,5 +103,45 @@ public class TextSource extends DropDownList {
 
   public void setValueSource(String valueSource) {
     this.valueSource = valueSource;
+  }
+
+  public boolean isHasValue() {
+    return hasValue;
+  }
+
+  public void setHasValue(boolean hasValue) {
+    this.hasValue = hasValue;
+  }
+
+  public boolean isHasUpstreamValue() {
+    return hasUpstreamValue;
+  }
+
+  public void setHasUpstreamValue(boolean hasUpstreamValue) {
+    this.hasUpstreamValue = hasUpstreamValue;
+  }
+
+  public boolean isHasSpecificValue() {
+    return hasSpecificValue;
+  }
+
+  public void setHasSpecificValue(boolean hasSpecificValue) {
+    this.hasSpecificValue = hasSpecificValue;
+  }
+
+  public boolean isValueSourceIsNotSet() {
+    return valueSourceIsNotSet;
+  }
+
+  public void setValueSourceIsNotSet(boolean valueSourceIsNotSet) {
+    this.valueSourceIsNotSet = valueSourceIsNotSet;
+  }
+
+  public String getGroupLabelText() {
+    return groupLabelText;
+  }
+
+  public void setGroupLabelText(String groupLabelText) {
+    this.groupLabelText = groupLabelText;
   }
 }
