@@ -13,14 +13,14 @@ import co.fr8.terminal.infrastructure.states.ConfigurationRequestType;
 import co.fr8.util.json.JsonUtils;
 import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import github.activities.request.CreateGithubIssueRequest;
 import github.activities.ui.CreateGithubIssueActivityUI;
 import github.service.GitHubService;
-import play.libs.Json;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
-import static github.util.GitHubTerminalConstants.UPDATE_GITHUB_ISSUE_DTO;
+import static github.util.GitHubTerminalConstants.CREATE_GITHUB_ISSUE_DTO;
 
 /**
  * TODO: Implement
@@ -31,12 +31,11 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
    *
    */
   public CreateGithubIssueActivity() {
-    super(UPDATE_GITHUB_ISSUE_DTO);
+    super(CREATE_GITHUB_ISSUE_DTO);
     this.activityUI = new CreateGithubIssueActivityUI();
   }
 
   /**
-   *
    * @param documentationType
    * @return
    */
@@ -47,7 +46,6 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
   }
 
   /**
-   *
    * @return
    */
   @Override
@@ -75,18 +73,13 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
   }
 
   /**
-   *
    * @return
    */
   @Override
   public ActivityFunctionalInterface run() {
-    Logger.debug(getActivityContext().getActivityPayload().toString());
-    //1. get the crates
-    //2. find the entered results.
-    //3. update below code.
     ListItem selectedRepo = null;
-    String title;
-    String body;
+    String title = "";
+    String body = "";
     List<Crate> crates =
         getActivityContext().getActivityPayload().getCrateStorage().getCratesAsList();
     for (Crate crate : crates) {
@@ -103,20 +96,22 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
                 if (dropDownList != null) {
                   selectedRepo = dropDownList.findBySelected();
                   Logger.debug("Found selected ListItem: " + selectedRepo);
-                  ObjectNode jsonParams = Json.newObject();
-                  jsonParams.put("subscribed", true);
-                  jsonParams.put("ignored", false);
                 }//end of if
               }//end of if
-              title = getSpecificTextSourceTextValue(control, "title");
-              body = getSpecificTextSourceTextValue(control, "body");
-              if (null != selectedRepo) {
-                String patchResponse = GitHubService.getInstance().createGithubIsse(
-                    getActivityContext().getAuthorizationToken().getToken(),
-                    getActivityContext().getAuthorizationToken().getExternalAccountName(), selectedRepo.getKey(),
-                    title, body);
-                Logger.debug("got response: " + patchResponse);
+              if (ControlTypeEnum.TEXT_SOURCE.getFriendlyName().equalsIgnoreCase(control.get("type").asText()) &&
+                  control.get("name").textValue().equals("title")) {
+                TextSource titleTS = JsonUtils.writeNodeAsObject(control, TextSource.class);
+                if (titleTS != null)
+                  title = titleTS.getTextValue();
               }
+              if (ControlTypeEnum.TEXT_SOURCE.getFriendlyName().equalsIgnoreCase(control.get("type").asText()) &&
+                  control.get("name").textValue().equals("body")) {
+                TextSource bodyTS = JsonUtils.writeNodeAsObject(control, TextSource.class);
+                if (bodyTS != null)
+                  body = bodyTS.getTextValue();
+              }
+//            Logger.debug("title is: " + title);
+//            Logger.debug("body is: " + body);
             }//end of for
           }//end of if
         } else {
@@ -124,28 +119,36 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
         }
       }//end of if
     }//end of for
+    if (null != selectedRepo && StringUtils.isNotBlank(title) && StringUtils.isNotBlank(body)) {
+      String patchResponse = GitHubService.getInstance().createGithubIssue(
+          new CreateGithubIssueRequest(getActivityContext().getAuthorizationToken().getToken(), selectedRepo.getValue(), title, body));
+      Logger.debug("got response: " + patchResponse);
+    } else {
+      throw new IllegalArgumentException("Please fill in the blanks!");
+    }
     return () -> {
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
   }
 
-  private String getSpecificTextSourceTextValue(JsonNode control, String name) {
-    String toReturn = "";
-    if (ControlTypeEnum.TEXT_SOURCE.getFriendlyName().equalsIgnoreCase(control.get("type").asText()) &&
-        control.get("name").equals("issueNumber")) {
-      TextSource issueNumberTS = JsonUtils.writeNodeAsObject(control, TextSource.class);
-      toReturn = issueNumberTS.getTextValue();
-    }
-    return toReturn;
-  }
+//  private String getSpecificTextSourceTextValue(JsonNode control, String name) {
+//    String toReturn = "";
+//    if (ControlTypeEnum.TEXT_SOURCE.getFriendlyName().equalsIgnoreCase(control.get("type").asText()) &&
+//        control.get("name").textValue().equals(name)) {
+//      TextSource issueNumberTS = JsonUtils.writeNodeAsObject(control, TextSource.class);
+//      if (issueNumberTS != null)
+//        toReturn = issueNumberTS.getTextValue();
+//    }
+//    return toReturn;
+//  }
 
   /**
-   *
    * @return
    */
   @Override
   public ActivityFunctionalInterface runChildActivities() {
-    return () -> {
-    };
+    return null;
   }
 
   /**
@@ -208,15 +211,11 @@ public class CreateGithubIssueActivity extends AbstractTerminalActivity<CreateGi
 
   /**
    * Method abstraction to configure settings unique to the activity implementation
-   *
+   * <p>
    * Called from AbstractTerminalService#initializeInternalState
    */
   @Override
   protected void initializeActivityState(ActionNameEnum actionName) {
-    if (getOperationalState() != null) {
-      Crate operationalStateCrate = new Crate<>(MT.OperationalStatus, "OperationalStatus", getOperationalState());
-      getStorage().add(operationalStateCrate);
-    }
     Logger.debug("initializeActivityState placeholder");
   }
 

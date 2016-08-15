@@ -6,7 +6,7 @@ import co.fr8.play.ApplicationConstants;
 import co.fr8.util.json.JsonUtils;
 import co.fr8.util.logging.Logger;
 import co.fr8.util.net.HttpUtils;
-import com.fasterxml.jackson.databind.JsonNode;
+import github.models.GitHubOwner;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -65,12 +65,13 @@ public class Authentication {
 
       String accessToken = responseMap.get("access_token");
       authTokenDTO.setExternalStateToken(state);
-//      authTokenDTO.setUserId(externalAuthDTO.getFr8UserId());
-//      authTokenDTO.setTerminalId("0");
-      authTokenDTO.setExternalAccountId(getCurrentGitHubUserId(accessToken));
+      GitHubOwner owner = getCurrentGitHubOwner(accessToken);
+      if (owner != null || 0 != owner.getId()) {
+        authTokenDTO.setExternalAccountId(Integer.toString(owner.getId()));
+        authTokenDTO.setExternalAccountName(owner.getLogin());
+      }
       if (StringUtils.isNotBlank(accessToken)) {
         authTokenDTO.setToken(accessToken);
-
       } else {
         authTokenDTO.setError("Authorization request did not return a valid token, see the terminal log file for more information");
       }
@@ -79,17 +80,14 @@ public class Authentication {
     return authTokenDTO;
   }
 
-  private String getCurrentGitHubUserId(String accessToken) {
-
+  private GitHubOwner getCurrentGitHubOwner(String accessToken) {
     String response =
         HttpUtils.get(ApplicationConstants.USER_URL + "?access_token=" + accessToken);
-
-    JsonNode userResponse = JsonUtils.writeStringToObject(response);
-
-    Logger.debug("Request for current GitHub user returns: " + userResponse);
-
-    return (userResponse == null || userResponse.get("id") == null) ?
-        StringUtils.EMPTY : userResponse.get("id").toString();
+    GitHubOwner gitHubOwner = JsonUtils.writeStringToObject(response, GitHubOwner.class);
+    if (gitHubOwner != null) {
+      Logger.debug("Request for current GitHub owner returns: " + gitHubOwner.toString());
+    }
+    return gitHubOwner;
   }
 /*
 

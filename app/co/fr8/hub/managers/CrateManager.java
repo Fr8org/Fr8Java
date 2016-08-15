@@ -36,7 +36,12 @@ public class CrateManager implements ICrateManager {
 
   @Override
   public AbstractCrateStorage fromDto(CrateStorageDTO storageDto) {
-    return null;
+    CrateStorage crates = new CrateStorage();
+    for (CrateDTO crateDTO : storageDto.getCrates()) {
+      Crate crate = new Crate(MT.findByFriendlyName(crateDTO.getManifestType()), "", crateDTO.getContents(), AvailabilityTypeEnum.getByCode(crateDTO.getAvailability()));
+      crates.addCrate(crate);
+    }
+    return crates;
   }
 
   @Override
@@ -172,7 +177,7 @@ public class CrateManager implements ICrateManager {
 
   @Override
   public AbstractCrateStorage updateStorage(CrateStorageDTO storageAccessExpression) {
-    AbstractCrateStorage storage =fromDto(storageAccessExpression);
+    AbstractCrateStorage storage = fromDto(storageAccessExpression);
     return storage;
   }
 

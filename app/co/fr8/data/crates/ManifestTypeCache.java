@@ -2,12 +2,14 @@ package co.fr8.data.crates;
 
 import co.fr8.data.constants.MT;
 import co.fr8.data.interfaces.manifests.Manifest;
+import co.fr8.util.logging.Logger;
 
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * TODO This doesn't work. Why!?
  * This class acts as an in-memory cache for CrateManifestType objects
  */
 class ManifestTypeCache {
@@ -22,6 +24,7 @@ class ManifestTypeCache {
 
     for (MT manifestType : MT.values()) {
       nameMap.put(manifestType.getFriendlyName(), manifestType.getId());
+      Logger.debug("Manifest type friendly name= " + manifestType.getFriendlyName());
     }
   }
 

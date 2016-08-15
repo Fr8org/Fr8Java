@@ -46,11 +46,9 @@ public class GitForwardRepositoriesActivity extends AbstractTerminalActivity<Git
   @Override
   public ActivityFunctionalInterface run() {
     Logger.debug("Run placeholder");
-    return new ActivityFunctionalInterface() {
-      @Override
-      public void execute() {
-        Logger.debug("Run placeholder git forward");
-      }
+    return () -> {
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
   }
 
@@ -58,11 +56,9 @@ public class GitForwardRepositoriesActivity extends AbstractTerminalActivity<Git
   public ActivityFunctionalInterface runChildActivities() {
     Logger.debug("runChildActivities placeholder");
 
-    return new ActivityFunctionalInterface() {
-      @Override
-      public void execute() {
-        Logger.debug("RunchildActivities placeholder git forward");
-      }
+    return () -> {
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
   }
 

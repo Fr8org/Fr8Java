@@ -169,6 +169,12 @@ public class HttpUtils {
     return sendEntityRequest(url, HttpPost.METHOD_NAME, entity);
   }
 
+  public static String patchJson(String url, JsonNode json) {
+    StringEntity entity = new StringEntity(json.toString(), StandardCharsets.UTF_8);
+    entity.setContentType(MediaType.APPLICATION_JSON);
+    return sendEntityRequest(url, HttpPatch.METHOD_NAME, entity);
+  }
+
   public static String putJson(String url, JsonNode json) {
     StringEntity entity = new StringEntity(json.toString(), StandardCharsets.UTF_8);
     entity.setContentType(MediaType.APPLICATION_JSON);
@@ -186,6 +192,9 @@ public class HttpUtils {
           break;
         case HttpPut.METHOD_NAME:
           request = new HttpPut(url);
+          break;
+        case HttpPatch.METHOD_NAME:
+          request = new HttpPatch(url);
           break;
         default: {
           return "INVALID REQUEST: PLACEHOLDER";
