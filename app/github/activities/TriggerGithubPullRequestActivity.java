@@ -19,7 +19,7 @@ import co.fr8.util.logging.Logger;
 import co.fr8.util.net.HttpUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import github.activities.ui.TriggerPullRequestActivityUI;
+import github.activities.ui.TriggerGithubPullRequestActivityUI;
 import github.service.GitHubService;
 import play.libs.Json;
 
@@ -31,14 +31,14 @@ import static github.util.GitHubTerminalConstants.TRIGGER_GITHUB_PULL_REQUEST_DT
 /**
  * TODO: Implement
  */
-public class TriggerGithubPullRequestActivity extends AbstractTerminalActivity<TriggerPullRequestActivityUI> {
+public class TriggerGithubPullRequestActivity extends AbstractTerminalActivity<TriggerGithubPullRequestActivityUI> {
 
   /**
    *
    */
   public TriggerGithubPullRequestActivity() {
     super(TRIGGER_GITHUB_PULL_REQUEST_DTO);
-    this.activityUI = new TriggerPullRequestActivityUI();
+    this.activityUI = new TriggerGithubPullRequestActivityUI();
   }
 
   /**
