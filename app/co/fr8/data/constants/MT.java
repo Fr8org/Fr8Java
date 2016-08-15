@@ -41,6 +41,7 @@ public enum MT {
   SalesForceEvent("Salesforce Event", 35),
   DocuSignEnvelope_v2("Docusign Envelope v2", 36),
   StandardBusinessFact("Standard Business Fact", 37),
+  ValidationResults("Validation Results", 39),
   UNKNOWN(null, 0),
   ANY(null, Integer.MIN_VALUE);
 

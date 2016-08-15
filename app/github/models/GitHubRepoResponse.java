@@ -1,6 +1,4 @@
-package github.service;
-
-import github.models.GitHubRepo;
+package github.models;
 
 import java.util.List;
 

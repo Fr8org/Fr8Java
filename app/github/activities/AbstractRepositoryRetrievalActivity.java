@@ -12,7 +12,7 @@ import co.fr8.data.states.AvailabilityTypeEnum;
 import co.fr8.terminal.base.AbstractTerminalActivity;
 import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
-import github.activities.ui.TriggerPullRequestActivityUI;
+import github.activities.ui.TriggerGithubPullRequestActivityUI;
 import github.service.GitHubService;
 
 import java.util.ArrayList;
@@ -27,11 +27,11 @@ import static github.util.GitHubTerminalConstants.TRIGGER_GITHUB_REPOSITORY_DTO;
  * Github repository names set as a DropDownList
  */
 abstract class AbstractRepositoryRetrievalActivity
-    extends AbstractTerminalActivity<TriggerPullRequestActivityUI> {
+    extends AbstractTerminalActivity<TriggerGithubPullRequestActivityUI> {
 
   AbstractRepositoryRetrievalActivity(ActivityTemplateDTO activityTemplate) {
     super(activityTemplate);
-    this.activityUI = new TriggerPullRequestActivityUI();
+    this.activityUI = new TriggerGithubPullRequestActivityUI();
   }
 
   /**

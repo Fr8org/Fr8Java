@@ -158,6 +158,9 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
           ContainerExecutionContext resultContainerExecutionContext =
               createContainerExecutionContext(curDataDTO);
 
+          curActivityPayload.setContainerExecutionContext(resultContainerExecutionContext);
+//          terminalActivity.addOperationalStateToCrateStorage(resultContainerExecutionContext);
+
           String[] scopeParams = params.get("scope");
           boolean isChildActivitiesScope = false;
 
@@ -178,6 +181,8 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
             terminalActivity.run(activityContext,
                 resultContainerExecutionContext);
           }
+
+//          return resultContainerExecutionContext;
 
           break;
 
@@ -250,12 +255,12 @@ abstract public class AbstractTerminalService<T extends BaseTerminalEvent> {
    */
   private ContainerExecutionContext createContainerExecutionContext(Fr8DataDTO dataDTO) {
     PayloadDTO payload = hubCommunicator.getPayload(
-            (dataDTO.getContainerId() == null) ? UUID.randomUUID() : dataDTO.getContainerId());
+            (dataDTO.getContainerId() == null) ? UUID.randomUUID().toString() : dataDTO.getContainerId().toString());
+
 
     if (payload != null) {
       return new ContainerExecutionContext(payload.getContainerId(), crateManager.getUpdatableStorage(payload));
     }
-
     return null;
   }
 

@@ -52,8 +52,11 @@ public class GitGetRepositoriesActivity extends AbstractRepositoryRetrievalActiv
       }
     }
     return () -> {
-      Logger.debug("Updating ");
-
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
+    };
+//    return () -> {
+//      Logger.debug("Updating ");
 //      JsonNode repoJson =
 //          GitHubService.getInstance().getRepositoryJsonForUser(getActivityContext().getAuthorizationToken().getToken());
 ////      getActivityContext().getActivityPayload();
@@ -72,14 +75,15 @@ public class GitGetRepositoriesActivity extends AbstractRepositoryRetrievalActiv
 //        repositoriesCrate.setLabel("GitHub Repositories");
 //        getActivityPayload().getCrateStorage().add(repositoriesCrate);
 //      }
-    };
+//    };
   }
 
   @Override
   public ActivityFunctionalInterface runChildActivities() {
     Logger.debug("runChildActivities placeholder");
     return () -> {
-      Logger.debug("RunChildActivities placeholder git get");
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
   }
 
@@ -88,7 +92,7 @@ public class GitGetRepositoriesActivity extends AbstractRepositoryRetrievalActiv
     // Upon activation, this activity should create an EventSubscription crate looking for GithubEventReports
     getStorage().add(
         CrateManager.createStandardEventSubscriptionsCrate("Github Event Report", "", new String[]{"GithubEventReport"}));
-//    GitHubService.getInstance().postWebhookToGithubPullRequests()
+//    GitHubService.getInstance().postWebhookToGithub()
     String authToken = getActivityContext().getAuthorizationToken().getToken();
     List<Crate> crates =
         getActivityContext().getActivityPayload().getCrateStorage().getCratesAsList();
@@ -106,7 +110,7 @@ public class GitGetRepositoriesActivity extends AbstractRepositoryRetrievalActiv
                 if (dropDownList != null) {
                   ListItem selectedRepo = dropDownList.findBySelected();
                   Logger.debug("Found selected ListItem: " + selectedRepo);
-                  GitHubService.getInstance().postWebhookToGithubPullRequests(selectedRepo.getValue(), authToken,
+                  GitHubService.getInstance().postWebhookToGithub(selectedRepo.getValue(), authToken,
                       getActivityContext().getAuthorizationToken().getExternalAccountId());
                   Logger.debug("Successfully sent the webhook to github to: ", selectedRepo.getValue(), " repository");
                 }

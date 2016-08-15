@@ -15,7 +15,7 @@ public class CreateGithubIssueActivityUI extends AbstractActivityUI {
   private TextSource body;
 
   public CreateGithubIssueActivityUI() {
-    information = new TextBlock("", "information", "Update which Github Issue");
+    information = new TextBlock("", "information", "Create issue in:");
     repositories = new DropDownList("Repo Name");
     title = new TextSource("Title", " ", "title");
     body = new TextSource("Body", " ", "body");

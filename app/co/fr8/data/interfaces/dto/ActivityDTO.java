@@ -2,6 +2,7 @@ package co.fr8.data.interfaces.dto;
 
 import co.fr8.terminal.base.ActivityPayload;
 import co.fr8.util.CollectionUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -23,6 +24,8 @@ public class ActivityDTO {
   private UUID authTokenId;
   private AuthorizationTokenDTO authToken;
   private String documentation;
+  @JsonIgnore
+  private ContainerExecutionContext containerExecutionContext;
 
   public ActivityDTO() {
   }
@@ -184,5 +187,13 @@ public class ActivityDTO {
         ", authToken=" + authToken + "\'" +
         ", documentation='" + documentation + "\'" +
         '}';
+  }
+
+  public ContainerExecutionContext getContainerExecutionContext() {
+    return containerExecutionContext;
+  }
+
+  public void setContainerExecutionContext(ContainerExecutionContext containerExecutionContext) {
+    this.containerExecutionContext = containerExecutionContext;
   }
 }

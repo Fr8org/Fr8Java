@@ -1,18 +1,23 @@
 package github.service;
 
 import co.fr8.data.controls.ListItem;
+import co.fr8.util.CollectionUtils;
 import co.fr8.util.json.JsonUtils;
 import co.fr8.util.logging.Logger;
 import co.fr8.util.net.HttpUtils;
 import com.fasterxml.jackson.databind.JsonNode;
+import github.activities.request.CreateGithubIssueRequest;
+import github.activities.request.UpdateGithubIssueRequest;
 import github.activities.request.WebhookRequest;
+import github.models.GitHubBranch;
+import github.models.GitHubBranchResponse;
 import github.models.GitHubRepo;
+import github.models.GitHubRepoResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import play.libs.Json;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -50,6 +55,18 @@ public class GitHubService {
     return repoListItems;
   }
 
+  public List<ListItem> getBranchesAsListItems(String authToken, String selectedRepo) {
+    List<GitHubBranch> branchListForRepo = getBranchListForRepo(false, authToken, selectedRepo);
+    List<ListItem> repoListItems = new ArrayList<>();
+    if (branchListForRepo != null && CollectionUtils.isNotEmpty(branchListForRepo)) {
+      branchListForRepo.forEach(branch -> {
+        Logger.debug("Adding " + branch.getName());
+        repoListItems.add(new ListItem(branch.getName(), branch.getName()));
+      });
+    }
+    return repoListItems;
+  }
+
   public List<GitHubRepo> getRepositoriesForUser(String authToken) {
     String response = fetchRepositories(authToken);
     List<GitHubRepo> ret = new ArrayList<>();
@@ -64,32 +81,50 @@ public class GitHubService {
   }
 
 
-  public String createGithubIsse(String authToken, String githubUserId, String repoName, String title, String body) {
-    List<NameValuePair> nameValuePairList = new ArrayList<>(5);
-    nameValuePairList.add(new BasicNameValuePair("title", title));
-    nameValuePairList.add(new BasicNameValuePair("body", body));
-    String patchGithubIssueUrl = REPOS_URL + "/" + githubUserId + "/" + repoName + "/issues" + "/" + "?access_token=\"" + authToken + "\"";
-    Logger.debug("Calling patch for auth token with url: " + patchGithubIssueUrl +
-        " and parameters: title: " + title + ", body: " + body);
-    return HttpUtils.patch(patchGithubIssueUrl, nameValuePairList);
+  public String createGithubIssue(CreateGithubIssueRequest createGithubIssueRequest) {
+    String patchGithubIssueUrl = REPOS_URL + "/" + createGithubIssueRequest.getRepo() + "/issues" + "?access_token=" +
+        createGithubIssueRequest.getAuthToken();
+    Logger.debug("Calling post for auth token with url: " + patchGithubIssueUrl +
+        " and parameters: title: " + createGithubIssueRequest.getTitle() + ", body: " + createGithubIssueRequest.getBody());
+    return HttpUtils.postJson(patchGithubIssueUrl, JsonUtils.writeObjectToJsonNode(createGithubIssueRequest));
   }
 
-  public String updateGithubIssue(String authToken, String githubUserId, String repoName, String issueId, String state, String title, String body) {
-    List<NameValuePair> nameValuePairList = new ArrayList<>(5);
-    nameValuePairList.add(new BasicNameValuePair(STATE_PARAM, state));
-    nameValuePairList.add(new BasicNameValuePair("title", title));
-    nameValuePairList.add(new BasicNameValuePair("body", body));
-    String patchGithubIssueUrl = REPOS_URL + "/" + githubUserId + "/" + repoName + "/issues" + "/" + issueId + "?access_token=\"" + authToken + "\"";
-    Logger.debug("Calling patch for auth token with url: " + patchGithubIssueUrl +
-        " and parameters: state " + state + ", title: " + title + ", body: " + body);
-    return HttpUtils.patch(patchGithubIssueUrl, nameValuePairList);
+  public String updateGithubIssue(UpdateGithubIssueRequest updateGithubIssueRequest) {
+    String patchGithubIssueUrl = REPOS_URL + "/" + updateGithubIssueRequest.getRepo() + "/issues" + "/" +
+        updateGithubIssueRequest.getIssueId() + "?access_token=" + updateGithubIssueRequest.getAuthToken();
+    Logger.debug("Calling patch for issue: " + updateGithubIssueRequest.getIssueId() + ", with url: " + patchGithubIssueUrl +
+        " and parameters: state " + updateGithubIssueRequest.getState() + ", title: " +
+        updateGithubIssueRequest.getTitle() + ", body: " + updateGithubIssueRequest.getBody());
+    return HttpUtils.patchJson(patchGithubIssueUrl, JsonUtils.writeObjectToJsonNode(updateGithubIssueRequest));
   }
 
-  public String postWebhookToGithubPullRequests(String repoName, String authToken, String githubUserId){
-    Logger.debug("Creating webhook to monitor Github pull requests");
+  public String postWebhookToGithub(String repoName, String authToken, String githubUserId, String... webhooks){
+    Logger.debug("Creating webhook to monitor Github changes in repo: " + repoName + "for issues: " + Arrays.toString(webhooks));
     String githubWebhookUrl = REPOS_URL + "/" + githubUserId + "/" + repoName + "/hooks" + "?access_token=\"" + authToken + "\"";
-    WebhookRequest webhookRequest = new WebhookRequest("webhookMonitorRepoPulls", "active", new String[]{"pull_request"}, new WebhookRequest.Config(WEBHOOK_URL, "json"));
+    WebhookRequest webhookRequest = new WebhookRequest("webhookMonitorRepoPulls", "active", webhooks,
+        new WebhookRequest.Config(WEBHOOK_URL, "json"));
     return HttpUtils.postJson(githubWebhookUrl, JsonUtils.writeObjectToJsonNode(webhookRequest));
+  }
+
+  /**
+   *
+   * @param protectedBool this parameter is supported by github, but we have no use for it.
+   * @param authToken
+   * @param selectedRepo
+   * @return
+   */
+  public List<GitHubBranch> getBranchListForRepo(boolean protectedBool, String authToken, String selectedRepo) {
+    Logger.debug("About to get branches of the repo using token " + authToken);
+    String response = HttpUtils.get(REPOS_URL + "/" + selectedRepo + "/branches?access_token=" + authToken);
+    List<GitHubBranch> ret = new ArrayList<>();
+    if (StringUtils.isNotBlank(response)) {
+      GitHubBranchResponse branchResponse=
+          JsonUtils.writeStringToObject(response, GitHubBranchResponse.class);
+      if (branchResponse != null) {
+        ret = branchResponse.getBranches();
+      }
+    }
+    return ret;
   }
 
 //  public GitHubRepo getPullRequestedRepo(String ouathUser, String repoName) {

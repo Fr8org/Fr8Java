@@ -13,10 +13,9 @@ import co.fr8.terminal.infrastructure.states.ConfigurationRequestType;
 import co.fr8.util.json.JsonUtils;
 import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import github.activities.request.UpdateGithubIssueRequest;
 import github.activities.ui.UpdateGithubIssueActivityUI;
 import github.service.GitHubService;
-import play.libs.Json;
 
 import java.util.List;
 
@@ -81,9 +80,6 @@ public class UpdateGithubIssueActivity extends AbstractTerminalActivity<UpdateGi
   @Override
   public ActivityFunctionalInterface run() {
     Logger.debug(getActivityContext().getActivityPayload().toString());
-    //1. get the crates
-    //2. find the entered results.
-    //3. update below code.
     ListItem selectedRepo = null;
     String issueNumber = "";
     String state = "";
@@ -105,26 +101,42 @@ public class UpdateGithubIssueActivity extends AbstractTerminalActivity<UpdateGi
                 if (dropDownList != null) {
                   selectedRepo = dropDownList.findBySelected();
                   Logger.debug("Found selected ListItem: " + selectedRepo);
-                  ObjectNode jsonParams = Json.newObject();
-                  jsonParams.put("subscribed", true);
-                  jsonParams.put("ignored", false);
                 }//end of if
               }//end of if
-              state = getSpecificTextSourceTextValue(control, "issueNumber");
-              title = getSpecificTextSourceTextValue(control, "title");
-              body = getSpecificTextSourceTextValue(control, "body");
-              if (null != selectedRepo) {
-                if (state.equals("Closed") || state.equals("Fixed") || state.equals("Done") || state.equals("Won't Fix"))
-                  state = "closed";
-                else
-                  state = "open";
-                String patchResponse = GitHubService.getInstance().updateGithubIssue(
-                    getActivityContext().getAuthorizationToken().getToken(),
-                    getActivityContext().getAuthorizationToken().getExternalAccountName(), selectedRepo.getKey(),
-                    issueNumber, state, title, body);
-                Logger.debug("got response: " + patchResponse);
+              if (ControlTypeEnum.TEXT_SOURCE.getFriendlyName().equalsIgnoreCase(control.get("type").asText()) &&
+                  control.get("name").textValue().equals("issueNumber")) {
+                TextSource issueNumberTS = JsonUtils.writeNodeAsObject(control, TextSource.class);
+                if (issueNumberTS != null)
+                  issueNumber = issueNumberTS.getTextValue();
+              }
+              if (ControlTypeEnum.TEXT_SOURCE.getFriendlyName().equalsIgnoreCase(control.get("type").asText()) &&
+                  control.get("name").textValue().equals("state")) {
+                TextSource stateTS = JsonUtils.writeNodeAsObject(control, TextSource.class);
+                if (stateTS != null)
+                  state = stateTS.getTextValue();
+              }
+              if (ControlTypeEnum.TEXT_SOURCE.getFriendlyName().equalsIgnoreCase(control.get("type").asText()) &&
+                  control.get("name").textValue().equals("title")) {
+                TextSource titleTS = JsonUtils.writeNodeAsObject(control, TextSource.class);
+                if (titleTS != null)
+                  title = titleTS.getTextValue();
+              }
+              if (ControlTypeEnum.TEXT_SOURCE.getFriendlyName().equalsIgnoreCase(control.get("type").asText()) &&
+                  control.get("name").textValue().equals("body")) {
+                TextSource bodyTS = JsonUtils.writeNodeAsObject(control, TextSource.class);
+                if (bodyTS != null)
+                  body = bodyTS.getTextValue();
               }
             }//end of for
+            if (null != selectedRepo) {
+              if (state != null && (state.equals("Closed") || state.equals("Fixed") || state.equals("Done") || state.equals("Won't Fix")))
+                state = "closed";
+              else
+                state = "open";
+              String response = GitHubService.getInstance().updateGithubIssue(
+                  new UpdateGithubIssueRequest(getActivityContext().getAuthorizationToken().getToken(), selectedRepo.getValue(), issueNumber, state, title, body));
+              Logger.debug("got response: " + response);
+            }
           }//end of if
         } else {
           Logger.warn("No content in the crate: " + crate);
@@ -132,18 +144,21 @@ public class UpdateGithubIssueActivity extends AbstractTerminalActivity<UpdateGi
       }//end of if
     }//end of for
     return () -> {
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
   }
 
-  private String getSpecificTextSourceTextValue(JsonNode control, String name) {
-    String toReturn = "";
-    if (ControlTypeEnum.TEXT_SOURCE.getFriendlyName().equalsIgnoreCase(control.get("type").asText()) &&
-        control.get("name").equals("issueNumber")) {
-      TextSource issueNumberTS = JsonUtils.writeNodeAsObject(control, TextSource.class);
-      toReturn = issueNumberTS.getTextValue();
-    }
-    return toReturn;
-  }
+//  private String getTextValueByName(JsonNode control, String name, String originalValue) {
+//    if (originalValue.equals("")){
+//      if (control.get("name").textValue().equals(name)) {
+//        TextSource textSource = JsonUtils.writeNodeAsObject(control, TextSource.class);
+//        if (textSource != null && textSource.getValue() != null)
+//          return textSource.getTextValue();
+//      }
+//    }
+//    return originalValue;
+//  }
 
   /**
    *
@@ -152,6 +167,8 @@ public class UpdateGithubIssueActivity extends AbstractTerminalActivity<UpdateGi
   @Override
   public ActivityFunctionalInterface runChildActivities() {
     return () -> {
+      Logger.debug("Run placeholder git forward");
+      return getContainerExecutionContext();
     };
   }
 
@@ -220,10 +237,6 @@ public class UpdateGithubIssueActivity extends AbstractTerminalActivity<UpdateGi
    */
   @Override
   protected void initializeActivityState(ActionNameEnum actionName) {
-    if (getOperationalState() != null) {
-      Crate operationalStateCrate = new Crate<>(MT.OperationalStatus, "OperationalStatus", getOperationalState());
-      getStorage().add(operationalStateCrate);
-    }
     Logger.debug("initializeActivityState placeholder");
   }
 

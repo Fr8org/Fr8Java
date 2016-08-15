@@ -14,7 +14,11 @@ public class CheckBox extends ControlDefinitionDTO {
    * Calls the ActivityTemplateSubplanDTO constructor passing the
    * ControlTypeEnum.CHECKBOX enum value to set the type property
    */
-  public CheckBox() {
+  public CheckBox(String name, String label) {
     super(ControlTypeEnum.CHECKBOX);
+    super.setName(name);
+    super.setLabel(label);
   }
+
+
 }

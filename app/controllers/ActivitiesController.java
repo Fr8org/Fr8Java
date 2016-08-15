@@ -58,7 +58,7 @@ public class ActivitiesController extends AbstractTerminalController<GitHubTermi
    */
   public Result runActivities() {
     ActivityDTO resultDTO = getResultActivityDTO(request(), ActionNameEnum.RUN);
-    return ok(JsonUtils.writeObjectAsString(resultDTO));
+    return ok(JsonUtils.writeObjectAsString(resultDTO.getContainerExecutionContext()));
   }
 
   /**
@@ -120,8 +120,13 @@ public class ActivitiesController extends AbstractTerminalController<GitHubTermi
     Logger.debug(actionNameEnum.getPrettyActionName() + " Activities called: " + requestBody);
     ActivityDTO actDTO =
         JsonUtils.writeNodeAsObject(requestBody.get("ActivityDTO"), ActivityDTO.class);
-    ActivityDTO resultDTO = terminal.handleFr8Request(actionNameEnum, getFr8HubSecurity(request().headers()),
-        new Fr8DataDTO(actDTO, requestBody.get("ContainerId").toString()), request().queryString());
+    ActivityDTO resultDTO;
+    if (actionNameEnum != ActionNameEnum.RUN)
+      resultDTO = terminal.handleFr8Request(actionNameEnum, null,
+          new Fr8DataDTO(actDTO, requestBody.get("ContainerId").toString()), request().queryString());
+    else
+      resultDTO = terminal.handleFr8Request(actionNameEnum, getFr8HubSecurity(request().headers()),
+          new Fr8DataDTO(actDTO, requestBody.get("ContainerId").toString()), request().queryString());
     if (resultDTO == null) {
       Logger.warn("handleFr8Request returned null\n returning request body ActivityDTO " +
           actDTO);
@@ -132,10 +137,8 @@ public class ActivitiesController extends AbstractTerminalController<GitHubTermi
   }
 
   private Fr8HubSecurityDTO getFr8HubSecurity(Map<String, String[]> requestHeader) {
-    Logger.debug("WATCH OUT CENK!");
-    Logger.debug("user name: " + requestHeader.get(FR8_USER_ID)[0] + " , password= " + requestHeader.get(FR8HUBCALLBACKSECRET)[0]);
-    return new Fr8HubSecurityDTO(requestHeader.get(FR8_USER_ID)[0], requestHeader.get(FR8_HUB_CALLBACK_URL)[0],
-        requestHeader.get(FR8HUBCALLBACKSECRET)[0]);
+    //TODO Add error checking here.
+    return new Fr8HubSecurityDTO(requestHeader.get(FR8_USER_ID)[0], requestHeader.get(FR8_HUB_CALLBACK_URL)[0], requestHeader.get(FR8HUBCALLBACKSECRET)[0]);
   }
 
 }
