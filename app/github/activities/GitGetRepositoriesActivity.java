@@ -92,7 +92,7 @@ public class GitGetRepositoriesActivity extends AbstractRepositoryRetrievalActiv
     // Upon activation, this activity should create an EventSubscription crate looking for GithubEventReports
     getStorage().add(
         CrateManager.createStandardEventSubscriptionsCrate("Github Event Report", "", new String[]{"GithubEventReport"}));
-//    GitHubService.getInstance().postWebhookToGithubPullRequests()
+//    GitHubService.getInstance().postWebhookToGithub()
     String authToken = getActivityContext().getAuthorizationToken().getToken();
     List<Crate> crates =
         getActivityContext().getActivityPayload().getCrateStorage().getCratesAsList();
@@ -110,7 +110,7 @@ public class GitGetRepositoriesActivity extends AbstractRepositoryRetrievalActiv
                 if (dropDownList != null) {
                   ListItem selectedRepo = dropDownList.findBySelected();
                   Logger.debug("Found selected ListItem: " + selectedRepo);
-                  GitHubService.getInstance().postWebhookToGithubPullRequests(selectedRepo.getValue(), authToken,
+                  GitHubService.getInstance().postWebhookToGithub(selectedRepo.getValue(), authToken,
                       getActivityContext().getAuthorizationToken().getExternalAccountId());
                   Logger.debug("Successfully sent the webhook to github to: ", selectedRepo.getValue(), " repository");
                 }
