@@ -18,11 +18,11 @@ public enum ActivityTypeEnum {
     this.friendlyName = friendlyName;
   }
 
-  @JsonValue
   public int getCode() {
     return code;
   }
 
+  @JsonValue
   public String getFriendlyName() {
     return friendlyName;
   }

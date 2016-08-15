@@ -77,10 +77,10 @@ public class ApplicationConstants {
   public static final String CREATE_GITHUB_ISSUE_ACTIVITY_NAME =
       Play.application().configuration().getString("github.activityNames.createGithubIssue");
 
-  public static final String MONITOR_PULL_REQUEST_ACTIVITY_ID =
+  public static final String TRIGGER_GITHUB_PULL_REQUEST_ACTIVITY_ID =
       Play.application().configuration().getString("github.activityId.monitorPullRequest");
 
-  public static final String MONITOR_GITHUB_REPOSITORY_ACTIVITY_ID  =
+  public static final String TRIGGER_GITHUB_REPOSITORY_ACTIVITY_ID  =
       Play.application().configuration().getString("github.activityId.monitorGithubRepository");
 
   public static final String UPDATE_GITHUB_ISSUE_ACTIVITY_ID =
