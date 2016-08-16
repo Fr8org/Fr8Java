@@ -4,6 +4,7 @@ import co.fr8.data.controls.impl.*;
 import co.fr8.terminal.base.ui.AbstractActivityUI;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * ActivityUI for MonitorGithubRepositoryActivity
@@ -21,11 +22,11 @@ public class TriggerGithubRepositoryActivityUI extends AbstractActivityUI {
   private CheckBox pullRequest;
 
   public TriggerGithubRepositoryActivityUI() {
-    this.repoList = new DropDownList("Select a repository to monitor");
-    this.branchList = new DropDownList();
+    this.repoList = new DropDownList("Select a repository to monitor", "repoList");
     this.radioButtonGroup = new RadioButtonGroup("Specify Branch");
     allBranches = new RadioButtonOption("all", "All");
-    selectBranch = new RadioButtonOption("only", "Only", Arrays.asList(branchList));
+    this.branchList = new DropDownList();
+    selectBranch = new RadioButtonOption("only", "Only", Collections.singletonList(branchList));
     radioButtonGroup.setRadios(Arrays.asList(allBranches, selectBranch));
     detectEvents = new TextBlock("", "detectEvents", "Detect events involving an");
     issue = new CheckBox("issue", "Issue");
@@ -36,8 +37,6 @@ public class TriggerGithubRepositoryActivityUI extends AbstractActivityUI {
   protected void consolidateControls() {
     if (!controls.contains(repoList))
       controls.add(repoList);
-    if (!controls.contains(branchList))
-      controls.add(branchList);
     if (!controls.contains(radioButtonGroup))
       controls.add(radioButtonGroup);
     if (!controls.contains(detectEvents))

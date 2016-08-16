@@ -19,7 +19,7 @@ public class UpdateGithubIssueActivityUI extends AbstractActivityUI {
 
   public UpdateGithubIssueActivityUI() {
     information = new TextBlock("", "information", "Update which Github Issue");
-    repositories = new DropDownList("Repo Name");
+    repositories = new DropDownList("Repo Name", "repositories");
     issueNumber = new TextSource("Issue Number", " ", "issueNumber");
     state = new TextSource("State", " ", "state");
     title = new TextSource("Title", " ", "title");

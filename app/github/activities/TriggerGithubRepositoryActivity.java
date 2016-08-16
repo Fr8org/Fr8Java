@@ -17,7 +17,6 @@ import co.fr8.hub.managers.CrateManager;
 import co.fr8.terminal.base.AbstractTerminalActivity;
 import co.fr8.terminal.base.ActionNameEnum;
 import co.fr8.terminal.infrastructure.states.ConfigurationRequestType;
-import co.fr8.util.CollectionUtils;
 import co.fr8.util.json.JsonUtils;
 import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,6 +25,7 @@ import github.service.GitHubService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static github.util.GitHubTerminalConstants.TRIGGER_GITHUB_REPOSITORY_DTO;
 
@@ -33,6 +33,9 @@ import static github.util.GitHubTerminalConstants.TRIGGER_GITHUB_REPOSITORY_DTO;
  * TODO: Implement
  */
 public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<TriggerGithubRepositoryActivityUI> {
+
+  private final String issueCrateDescriptionLabel = "Issue Properties";
+  private final String pullRequestCrateDescriptionLabel = "Pull Request Properties";
 
   public TriggerGithubRepositoryActivity() {
     super(TRIGGER_GITHUB_REPOSITORY_DTO);
@@ -68,81 +71,90 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
 
   @Override
   public void followUp() {
-    List<Crate> crates =
-        getActivityContext().getActivityPayload().getCrateStorage().getCratesAsList();
-    List<String> controlsToRemove = new ArrayList<>();
-    for (Crate crate : crates) {
-      Logger.debug("Looking for StandardConfigurationControls in " + crate.getCrateManifestType());
-      if (MT.StandardConfigurationControls.equals(crate.getCrateManifestType())) {
-        if (crate.getRawContent() != null) {
-          JsonNode controls = crate.getRawContent();
-          if (controls.has("Controls")) {
-            for (JsonNode control : controls.get("Controls")) {
-              Logger.debug("Checking control of type: " + control.get("type"));
-              if (ControlTypeEnum.DROPDOWN_LIST.getFriendlyName().equalsIgnoreCase(control.get("type").asText())) {
-                DropDownList repoList =
-                    JsonUtils.writeNodeAsObject(control, DropDownList.class);
-                if (repoList != null) {
-                  ListItem selectedRepo = repoList.findBySelected();
-                  Logger.debug("Found selected repo: " + selectedRepo);
-                  getActivityUI().getBranchList().setListItems(GitHubService.getInstance().getBranchesAsListItems(
-                      getActivityContext().getAuthorizationToken().getToken(), selectedRepo.getValue()));
-                }
-              }//end of if
-              if (ControlTypeEnum.CHECKBOX.getFriendlyName().equalsIgnoreCase(control.get("type").asText())) {
-                if (control.get("name").textValue().equals(
-                    getActivityUI().getIssue().getName()) && control.get("selected").asBoolean() == Boolean.TRUE) {
-                  List<FieldDTO> fieldNames = new ArrayList<>();
-                  fieldNames.add(new FieldDTO("IssueName", "IssueName", AvailabilityTypeEnum.Always));
-                  fieldNames.add(new FieldDTO("IssueDescription", "IssueDescription", AvailabilityTypeEnum.Always));
-                  fieldNames.add(new FieldDTO("IssueStatus", "IssueStatus", AvailabilityTypeEnum.Always));
-                  CrateDescriptionDTO crateDescriptionDTO = new CrateDescriptionDTO();
-                  crateDescriptionDTO.setLabel("Issue Properties");
-                  crateDescriptionDTO.setManifestId(MT.StandardPayloadData.getId());
-                  crateDescriptionDTO.setManifestType(MT.StandardPayloadData.getFriendlyName());
-                  crateDescriptionDTO.setProducedBy(TRIGGER_GITHUB_REPOSITORY_DTO.getName());
-                  crateDescriptionDTO.setFields(fieldNames);
-                  CrateDescriptionCM crateDescriptionCM = new CrateDescriptionCM();
-                  crateDescriptionCM.addOrUpdate(crateDescriptionDTO);
-                  Crate crateDescription = new Crate<>(MT.CrateDescription, crateDescriptionCM);
-                  getStorage().add(crateDescription);
-                } else if (control.get("name").textValue().equals(
-                    getActivityUI().getIssue().getName()) && control.get("selected").asBoolean() == Boolean.FALSE) {
-                  controlsToRemove.add(control.get("id").textValue());
-                }
-              }//end of if
-              if (ControlTypeEnum.CHECKBOX.getFriendlyName().equalsIgnoreCase(control.get("type").asText())) {
-                if (control.get("name").textValue().equals(
-                    getActivityUI().getPullRequest().getName()) && control.get("selected").asBoolean() == Boolean.TRUE) {
-                  List<FieldDTO> fieldNames = new ArrayList<>();
-                  fieldNames.add(new FieldDTO("PullRequestNumber", "PullRequestNumber", AvailabilityTypeEnum.Always));
-                  fieldNames.add(new FieldDTO("PullRequestNumber", "PullRequestNumber", AvailabilityTypeEnum.Always));
-                  fieldNames.add(new FieldDTO("PullRequesterGitHubName", "PullRequesterGitHubName", AvailabilityTypeEnum.Always));
-                  fieldNames.add(new FieldDTO("PullRequestStatus", "PullRequestStatus", AvailabilityTypeEnum.Always));
-                  CrateDescriptionDTO crateDescriptionDTO = new CrateDescriptionDTO();
-                  crateDescriptionDTO.setLabel("Pull Request Properties");
-                  crateDescriptionDTO.setManifestId(MT.StandardPayloadData.getId());
-                  crateDescriptionDTO.setManifestType(MT.StandardPayloadData.getFriendlyName());
-                  crateDescriptionDTO.setProducedBy(TRIGGER_GITHUB_REPOSITORY_DTO.getName());
-                  crateDescriptionDTO.setFields(fieldNames);
-                  CrateDescriptionCM crateDescriptionCM = new CrateDescriptionCM();
-                  crateDescriptionCM.addOrUpdate(crateDescriptionDTO);
-                  Crate crateDescription = new Crate<>(MT.CrateDescription, crateDescriptionCM);
-                  getStorage().add(crateDescription);
-                } else if (control.get("name").textValue().equals(
-                    getActivityUI().getPullRequest().getName()) && control.get("selected").asBoolean() == Boolean.FALSE) {
-                  controlsToRemove.add(control.get("id").textValue());
-                }
-              }//end of if
-            }//end of for
+//    List<Crate> crates =
+//        getActivityContext().getActivityPayload().getCrateStorage().getCratesAsList();
+//    for (Crate crate : crates) {
+//    Logger.debug("Looking for StandardConfigurationControls in " + crate.getCrateManifestType());
+    Crate crate = getActivityPayload().getCrateStorage().getCratesOfType(MT.StandardConfigurationControls).get(0);
+//    if (MT.StandardConfigurationControls.equals(crate.getCrateManifestType())) {
+    if (crate.getRawContent() != null) {
+      JsonNode controls = crate.getRawContent();
+      if (controls.has("Controls")) {
+        for (JsonNode control : controls.get("Controls")) {
+          Logger.debug("Checking control of type: " + control.get("type"));
+          if (ControlTypeEnum.DROPDOWN_LIST.getFriendlyName().equalsIgnoreCase(control.get("type").asText())) {
+            DropDownList repoList =
+                JsonUtils.writeNodeAsObject(control, DropDownList.class);
+            if (repoList != null) {
+              ListItem selectedRepo = repoList.findBySelected();
+              Logger.debug("Found selected repo: " + selectedRepo);
+              getActivityUI().getBranchList().setListItems(GitHubService.getInstance().getBranchesAsListItems(
+                  getActivityContext().getAuthorizationToken().getToken(), selectedRepo.getValue()));
+            }
           }//end of if
-        } else {
-          Logger.warn("No content in the crate: " + crate);
-        }
+          if (ControlTypeEnum.CHECKBOX.getFriendlyName().equalsIgnoreCase(control.get("type").asText())) {
+            if (control.get("name").textValue().equals(
+                getActivityUI().getIssue().getName()) && control.get("selected").asBoolean() == Boolean.TRUE) {
+              List<FieldDTO> fieldNames = new ArrayList<>();
+              fieldNames.add(new FieldDTO("IssueName", "IssueName", AvailabilityTypeEnum.Always));
+              fieldNames.add(new FieldDTO("IssueDescription", "IssueDescription", AvailabilityTypeEnum.Always));
+              fieldNames.add(new FieldDTO("IssueStatus", "IssueStatus", AvailabilityTypeEnum.Always));
+              CrateDescriptionDTO crateDescriptionDTO = new CrateDescriptionDTO();
+              crateDescriptionDTO.setLabel(issueCrateDescriptionLabel);
+              crateDescriptionDTO.setManifestId(MT.StandardPayloadData.getId());
+              crateDescriptionDTO.setManifestType(MT.StandardPayloadData.getFriendlyName());
+              crateDescriptionDTO.setProducedBy(TRIGGER_GITHUB_REPOSITORY_DTO.getName());
+              crateDescriptionDTO.setFields(fieldNames);
+              CrateDescriptionCM crateDescriptionCM = new CrateDescriptionCM();
+              crateDescriptionCM.addOrUpdate(crateDescriptionDTO);
+              Crate crateDescription = new Crate<>(MT.CrateDescription, crateDescriptionCM);
+              getStorage().add(crateDescription);
+            } else if (control.get("name").textValue().equals(
+                getActivityUI().getIssue().getName()) && control.get("selected").asBoolean() == Boolean.FALSE) {
+              Optional<Crate> descriptionCrate = getStorage().getCratesAsList().stream().filter(crate1 -> crate1.getCrateManifestType().equals(MT.CrateDescription)).findAny();
+              if (descriptionCrate.isPresent()) {
+                JsonNode node = descriptionCrate.get().getRawContent();
+                if (node.findValue("label").textValue().equals(pullRequestCrateDescriptionLabel)) {
+                  Logger.debug("Removing Description Crate: " + descriptionCrate.get().getLabel());
+                  getStorage().remove(descriptionCrate.get().getId());
+                }
+              }
+            }
+          }//end of if
+          if (ControlTypeEnum.CHECKBOX.getFriendlyName().equalsIgnoreCase(control.get("type").asText())) {
+            if (control.get("name").textValue().equals(
+                getActivityUI().getPullRequest().getName()) && control.get("selected").asBoolean() == Boolean.TRUE) {
+              List<FieldDTO> fieldNames = new ArrayList<>();
+              fieldNames.add(new FieldDTO("PullRequestNumber", "PullRequestNumber", AvailabilityTypeEnum.Always));
+              fieldNames.add(new FieldDTO("PullRequestNumber", "PullRequestNumber", AvailabilityTypeEnum.Always));
+              fieldNames.add(new FieldDTO("PullRequesterGitHubName", "PullRequesterGitHubName", AvailabilityTypeEnum.Always));
+              fieldNames.add(new FieldDTO("PullRequestStatus", "PullRequestStatus", AvailabilityTypeEnum.Always));
+              CrateDescriptionDTO crateDescriptionDTO = new CrateDescriptionDTO();
+              crateDescriptionDTO.setLabel(pullRequestCrateDescriptionLabel);
+              crateDescriptionDTO.setManifestId(MT.StandardPayloadData.getId());
+              crateDescriptionDTO.setManifestType(MT.StandardPayloadData.getFriendlyName());
+              crateDescriptionDTO.setProducedBy(TRIGGER_GITHUB_REPOSITORY_DTO.getName());
+              crateDescriptionDTO.setFields(fieldNames);
+              CrateDescriptionCM crateDescriptionCM = new CrateDescriptionCM();
+              crateDescriptionCM.addOrUpdate(crateDescriptionDTO);
+              Crate crateDescription = new Crate<>(MT.CrateDescription, crateDescriptionCM);
+              getStorage().add(crateDescription);
+            } else if (control.get("name").textValue().equals(
+                getActivityUI().getPullRequest().getName()) && control.get("selected").asBoolean() == Boolean.FALSE) {
+              Optional<Crate> descriptionCrate = getStorage().getCratesAsList().stream().filter(crate1 -> crate1.getCrateManifestType().equals(MT.CrateDescription)).findAny();
+              if (descriptionCrate.isPresent()) {
+                JsonNode node = descriptionCrate.get().getRawContent();
+                if (node.findValue("label").textValue().equals(pullRequestCrateDescriptionLabel)) {
+                  Logger.debug("Removing Description Crate: " + descriptionCrate.get().getLabel());
+                  getStorage().remove(descriptionCrate.get().getId());
+                }
+              }
+            }
+          }//end of if
+        }//end of for
       }//end of if
-    }//end of for
-    if (CollectionUtils.isNotEmpty(controlsToRemove)) {
-      controlsToRemove.forEach(s -> getStorage().remove(s));
+    } else {
+      Logger.warn("No content in the crate: " + crate);
     }
   }
 
@@ -158,6 +170,7 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
   @Override
   public ActivityFunctionalInterface runChildActivities() {
     Logger.debug("runChildActivities placeholder");
+    Logger.debug(getActivityPayload().toString());
     return () -> {
       Logger.debug("Run placeholder git forward");
       return getContainerExecutionContext();
@@ -168,42 +181,45 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
   public void activate() {
     // web hook to github to monitor issue, or pull request
     // this should call our Event Subscription Crate.
-    String repo;
-    String branch;
-    String issue;
-    String pullRequest;
+//    DropDownList repo;
+//    DropDownList branch;
+//    RadioButtonOption issue;
+//    RadioButtonOption pullRequest;
 
     getStorage().add(CrateManager.createStandardEventSubscriptionsCrate("Standard Event Subscriptions", "GitHub", new String[]{"GithubEventReport"}));
-    List<Crate> crates =
-        getActivityContext().getActivityPayload().getCrateStorage().getCratesAsList();
-    for (Crate crate : crates) {
-      Logger.debug("Looking for StandardConfigurationControls in " + crate.getCrateManifestType());
-      if (MT.StandardConfigurationControls.equals(crate.getCrateManifestType())) {
-        if (crate.getRawContent() != null) {
-          JsonNode controls = crate.getRawContent();
-          if (controls.has("Controls")) {
-            for (JsonNode control : controls.get("Controls")) {
-              Logger.debug("Checking control of type: " + control.get("type"));
-              if (ControlTypeEnum.CHECKBOX.getFriendlyName().equalsIgnoreCase(control.get("type").asText())) {
-                if (control.get("name").textValue().equals(
-                    getActivityUI().getIssue().getName()) && control.get("selected").asBoolean() == Boolean.FALSE &&
-                    control.get("name").textValue().equals(
-                        getActivityUI().getPullRequest().getName()) && control.get("selected").asBoolean() == Boolean.FALSE) {
-                  ValidationResultCM validationResultCM = new ValidationResultCM("You must check at least one type of event", "issue", "pullRequest");
-                  Crate validationResultCMCrate = new Crate<>(MT.ValidationResults, validationResultCM);
-                  getStorage().add(validationResultCMCrate);
-                }// end of if
-              }
-            }//end of for
-          }//end of if
-        } else {
-          Logger.warn("No content in the crate: " + crate);
-        }
-      }//end of if
-//      GitHubService.getInstance().postWebhookToGithub(selectedRepo.getValue(), authToken,
-//          getActivityContext().getAuthorizationToken().getExternalAccountId());
-//      Logger.debug("Successfully sent the webhook to github to: ", selectedRepo.getValue(), " repository");
-    }//end of for
+//    List<Crate> crates =
+//        getActivityContext().getActivityPayload().getCrateStorage().getCratesAsList();
+//    for (Crate crate : crates) {
+//      Logger.debug("Looking for StandardConfigurationControls in " + crate.getCrateManifestType());
+    Crate crate = getActivityPayload().getCrateStorage().getCratesOfType(MT.StandardConfigurationControls).get(0);
+//      if (MT.StandardConfigurationControls.equals(crate.getCrateManifestType())) {
+    if (crate.getRawContent() != null) {
+      JsonNode controls = crate.getRawContent();
+      DropDownList repoList = JsonUtils.getControl(controls, getActivityUI().getRepoList(), ControlTypeEnum.DROPDOWN_LIST);
+      String selectedRepo = repoList.getSelectedKey();
+      // These are needed on run, not activate.
+//      DropDownList branchList = JsonUtils.getControl(controls, getActivityUI().getBranchList(), ControlTypeEnum.DROPDOWN_LIST);
+//      String selectedBranch = branchList.getSelectedKey();
+//      RadioButtonGroup radioButtonGroup = JsonUtils.getControl(controls, getActivityUI().getRadioButtonGroup(), ControlTypeEnum.RADIO_BUTTON_GROUP);
+//      Optional<RadioButtonOption> selectedOption = radioButtonGroup.getRadios().stream().findFirst().filter(RadioButtonOption::isSelected);
+      CheckBox issue = JsonUtils.getControl(controls, getActivityUI().getIssue(), ControlTypeEnum.CHECKBOX);
+      CheckBox pullRequest = JsonUtils.getControl(controls, getActivityUI().getPullRequest(), ControlTypeEnum.CHECKBOX);
+      if (!issue.isSelected() && !pullRequest.isSelected()) {
+        ValidationResultCM validationResultCM = new ValidationResultCM("You must check at least one type of event", "issue", "pullRequest");
+        Crate validationResultCMCrate = new Crate<>(MT.ValidationResults, validationResultCM);
+        getStorage().add(validationResultCMCrate);
+      } else {
+        List<String> hooks = new ArrayList<>();
+        if (issue.isSelected()) hooks.add("issues");
+        if (pullRequest.isSelected()) hooks.add("pull_request");
+        GitHubService.getInstance().postWebhookToGithub(selectedRepo, getActivityContext().getAuthorizationToken().getToken(),
+            hooks.toArray(new String[hooks.size()]));
+        Logger.debug("Successfully sent the webhook to github to: ", selectedRepo, " repository");
+      }
+    } else {
+      Logger.warn("No content in the crate: " + crate);
+    }
+//    }//end of for
     Logger.debug("MonitorRepositoriesActivity.activate() called");
   }
 

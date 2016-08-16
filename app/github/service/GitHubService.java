@@ -1,7 +1,6 @@
 package github.service;
 
 import co.fr8.data.controls.ListItem;
-import co.fr8.util.CollectionUtils;
 import co.fr8.util.json.JsonUtils;
 import co.fr8.util.logging.Logger;
 import co.fr8.util.net.HttpUtils;
@@ -10,9 +9,6 @@ import github.activities.request.CreateGithubIssueRequest;
 import github.activities.request.UpdateGithubIssueRequest;
 import github.activities.request.WebhookRequest;
 import github.models.GitHubBranch;
-import github.models.GitHubBranchResponse;
-import github.models.GitHubRepo;
-import github.models.GitHubRepoResponse;
 import org.apache.commons.lang3.StringUtils;
 import play.libs.Json;
 
@@ -56,29 +52,28 @@ public class GitHubService {
   }
 
   public List<ListItem> getBranchesAsListItems(String authToken, String selectedRepo) {
-    List<GitHubBranch> branchListForRepo = getBranchListForRepo(false, authToken, selectedRepo);
+    GitHubBranch[] branchesForRepo = getBranchesForRepo(false, authToken, selectedRepo);
     List<ListItem> repoListItems = new ArrayList<>();
-    if (branchListForRepo != null && CollectionUtils.isNotEmpty(branchListForRepo)) {
-      branchListForRepo.forEach(branch -> {
-        Logger.debug("Adding " + branch.getName());
+    if (branchesForRepo != null && branchesForRepo.length > 0) {
+      for (GitHubBranch branch : branchesForRepo) {
         repoListItems.add(new ListItem(branch.getName(), branch.getName()));
-      });
+      }
     }
     return repoListItems;
   }
 
-  public List<GitHubRepo> getRepositoriesForUser(String authToken) {
-    String response = fetchRepositories(authToken);
-    List<GitHubRepo> ret = new ArrayList<>();
-    if (StringUtils.isNotBlank(response)) {
-      GitHubRepoResponse repoResponse =
-          JsonUtils.writeStringToObject(response, GitHubRepoResponse.class);
-      if (repoResponse != null) {
-        ret = repoResponse.getRepositories();
-      }
-    }
-    return ret;
-  }
+//  public List<GitHubRepo> getRepositoriesForUser(String authToken) {
+//    String response = fetchRepositories(authToken);
+//    List<GitHubRepo> ret = new ArrayList<>();
+//    if (StringUtils.isNotBlank(response)) {
+//      GitHubRepoResponse repoResponse =
+//          JsonUtils.writeStringToObject(response, GitHubRepoResponse.class);
+//      if (repoResponse != null) {
+//        ret = repoResponse.getRepositories();
+//      }
+//    }
+//    return ret;
+//  }
 
 
   public String createGithubIssue(CreateGithubIssueRequest createGithubIssueRequest) {
@@ -98,10 +93,10 @@ public class GitHubService {
     return HttpUtils.patchJson(patchGithubIssueUrl, JsonUtils.writeObjectToJsonNode(updateGithubIssueRequest));
   }
 
-  public String postWebhookToGithub(String repoName, String authToken, String githubUserId, String... webhooks){
+  public String postWebhookToGithub(String repoName, String authToken, String... webhooks){
     Logger.debug("Creating webhook to monitor Github changes in repo: " + repoName + "for issues: " + Arrays.toString(webhooks));
-    String githubWebhookUrl = REPOS_URL + "/" + githubUserId + "/" + repoName + "/hooks" + "?access_token=\"" + authToken + "\"";
-    WebhookRequest webhookRequest = new WebhookRequest("webhookMonitorRepoPulls", "active", webhooks,
+    String githubWebhookUrl = REPOS_URL + "/" + repoName + "/hooks" + "?access_token=\"" + authToken + "\"";
+    WebhookRequest webhookRequest = new WebhookRequest("GithubEventReport", "active", webhooks,
         new WebhookRequest.Config(WEBHOOK_URL, "json"));
     return HttpUtils.postJson(githubWebhookUrl, JsonUtils.writeObjectToJsonNode(webhookRequest));
   }
@@ -113,18 +108,18 @@ public class GitHubService {
    * @param selectedRepo
    * @return
    */
-  public List<GitHubBranch> getBranchListForRepo(boolean protectedBool, String authToken, String selectedRepo) {
+  public GitHubBranch[] getBranchesForRepo(boolean protectedBool, String authToken, String selectedRepo) {
     Logger.debug("About to get branches of the repo using token " + authToken);
     String response = HttpUtils.get(REPOS_URL + "/" + selectedRepo + "/branches?access_token=" + authToken);
-    List<GitHubBranch> ret = new ArrayList<>();
+//    GitHubBranch> ret = new ArrayList<>();
+    GitHubBranch[] branchResponse = null;
     if (StringUtils.isNotBlank(response)) {
-      GitHubBranchResponse branchResponse=
-          JsonUtils.writeStringToObject(response, GitHubBranchResponse.class);
-      if (branchResponse != null) {
-        ret = branchResponse.getBranches();
-      }
+      branchResponse = JsonUtils.writeStringToObject(response, GitHubBranch[].class);
+//      if (branchResponse != null) {
+//        ret = branchResponse[0].getBranches();
+//      }
     }
-    return ret;
+    return branchResponse;
   }
 
 //  public GitHubRepo getPullRequestedRepo(String ouathUser, String repoName) {

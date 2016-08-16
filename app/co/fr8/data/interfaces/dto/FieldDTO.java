@@ -119,4 +119,13 @@ public class FieldDTO {
   public void setData(Map<String, JsonNode> data) {
     this.data = data;
   }
+
+  @Override
+  public String toString() {
+    return "FieldDTO{" +
+        "key='" + key + '\'' +
+        ", value='" + value + '\'' +
+        ", label='" + label + '\'' +
+        '}';
+  }
 }

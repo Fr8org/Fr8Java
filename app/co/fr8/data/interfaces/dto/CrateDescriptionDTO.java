@@ -76,4 +76,17 @@ public class CrateDescriptionDTO {
   public void setFields(List<FieldDTO> fields) {
     this.fields = fields;
   }
+
+  @Override
+  public String toString() {
+    return "CrateDescriptionDTO{" +
+        "manifestId=" + manifestId +
+        ", manifestType='" + manifestType + '\'' +
+        ", label='" + label + '\'' +
+        ", producedBy='" + producedBy + '\'' +
+        ", selected=" + selected +
+        ", availabilityType=" + availabilityType +
+        ", fields=" + fields +
+        '}';
+  }
 }

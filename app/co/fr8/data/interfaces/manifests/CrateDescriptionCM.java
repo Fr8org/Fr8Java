@@ -47,4 +47,11 @@ public class CrateDescriptionCM extends Manifest {
   public void setCrateDescriptions(List<CrateDescriptionDTO> crateDescriptions) {
     this.crateDescriptions = crateDescriptions;
   }
+
+  @Override
+  public String toString() {
+    return "CrateDescriptionCM{" +
+        "crateDescriptions=" + crateDescriptions +
+        '}';
+  }
 }

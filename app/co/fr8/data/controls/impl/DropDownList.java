@@ -5,7 +5,6 @@ import co.fr8.data.controls.ListItem;
 import co.fr8.data.interfaces.dto.ControlDefinitionDTO;
 import co.fr8.data.interfaces.dto.FieldDTO;
 import co.fr8.util.logging.Logger;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -32,9 +31,10 @@ public class DropDownList extends ControlDefinitionDTO {
     super(ControlTypeEnum.DROPDOWN_LIST);
   }
 
-  public DropDownList(String label) {
+  public DropDownList(String label, String name) {
     super(ControlTypeEnum.DROPDOWN_LIST);
     this.setLabel(label);
+    this.setName(name);
   }
 
   public DropDownList(ControlTypeEnum type) {

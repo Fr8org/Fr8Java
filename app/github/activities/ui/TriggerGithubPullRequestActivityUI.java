@@ -11,7 +11,7 @@ public class TriggerGithubPullRequestActivityUI extends AbstractActivityUI {
   private DropDownList repoList;
 
   public TriggerGithubPullRequestActivityUI() {
-    this.repoList = new DropDownList("Select a repository to monitor");
+    this.repoList = new DropDownList("Select a repository to monitor", "repoList");
   }
 
   public TriggerGithubPullRequestActivityUI(DropDownList repolist) {

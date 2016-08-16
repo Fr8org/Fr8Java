@@ -11,6 +11,14 @@ public class GitHubBranch {
   private boolean protectedBool;
   private String protectionUrl;
 
+  public GitHubBranch() {
+  }
+
+  public GitHubBranch(String name, Commit commit) {
+    this.name = name;
+    this.commit = commit;
+  }
+
   public GitHubBranch(String name, Commit commit, boolean protectedBoolean, String protectionUrl) {
     this.name = name;
     this.commit = commit;
@@ -53,6 +61,14 @@ public class GitHubBranch {
   private class Commit {
     private String sha;
     private String url;
+
+    public Commit() {
+    }
+
+    public Commit(String sha, String url) {
+      this.sha = sha;
+      this.url = url;
+    }
 
     public String getSha() {
       return sha;

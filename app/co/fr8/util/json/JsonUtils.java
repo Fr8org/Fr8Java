@@ -1,5 +1,7 @@
 package co.fr8.util.json;
 
+import co.fr8.data.controls.AbstractControlDefinition;
+import co.fr8.data.controls.ControlTypeEnum;
 import co.fr8.data.interfaces.dto.ActivityDTO;
 import co.fr8.data.interfaces.dto.CrateStorageDTO;
 import co.fr8.data.interfaces.manifests.Manifest;
@@ -100,5 +102,29 @@ public class JsonUtils {
 
   public static CrateStorageDTO writeStringToCrateStorageDTO(String dtoString) {
     return writeStringToObject(dtoString, CrateStorageDTO.class);
+  }
+
+  /*
+   Since we are getting controls in Json, we need heavy json processing.
+    Methods like this will increase in time.
+   */
+  public static <T extends AbstractControlDefinition> T getControl(JsonNode controls, T control, ControlTypeEnum controlType) {
+    if (controls.has("Controls")) {
+      for (JsonNode controlNode : controls.get("Controls")) {
+        Logger.debug("Checking control of type: " + controlNode.get("type"));
+        if (controlNode.get("type").textValue().equals(controlType.getFriendlyName())) {
+          if (control != null && control.getName() != null) {
+            if (controlNode.get("name").textValue().equals(control.getName())) {
+              control = JsonUtils.writeNodeAsObject(controlNode, (Class<T>) control.getClass());
+            }
+          } else {
+            Logger.error("Error. Check the initialization of control: " + control + ", name is required");
+          }
+        }
+      }//end of for
+    } else {
+      Logger.error("No Controls in the crate");
+    }
+    return control;
   }
 }

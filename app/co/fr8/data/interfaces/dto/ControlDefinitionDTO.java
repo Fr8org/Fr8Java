@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * This class defines the abstract definition of a control in order to make it
  * easily extensible and serializable to JSON
- *
  */
 abstract public class ControlDefinitionDTO extends AbstractControlDefinition {
 
@@ -31,12 +30,28 @@ abstract public class ControlDefinitionDTO extends AbstractControlDefinition {
   private boolean hidden = false;
 
   @JsonProperty("isCollapsed")
-  private boolean collapsed= false;
+  private boolean collapsed = false;
   private ControlTypeEnum type;
   private String errorMessage;
 
   public ControlDefinitionDTO(ControlTypeEnum type) {
     this.type = type;
+  }
+
+  public ControlDefinitionDTO(List<ControlEvent> events, boolean required, String value, String label,
+                              boolean selected, FieldSourceDTO source, ActivityResponseDTO showDocumentation,
+                              boolean hidden, boolean collapsed, ControlTypeEnum type, String errorMessage) {
+    this.events = events;
+    this.required = required;
+    this.value = value;
+    this.label = label;
+    this.selected = selected;
+    this.source = source;
+    this.showDocumentation = showDocumentation;
+    this.hidden = hidden;
+    this.collapsed = collapsed;
+    this.type = type;
+    this.errorMessage = errorMessage;
   }
 
   public void reset(List<String> fieldNames) {
@@ -54,6 +69,10 @@ abstract public class ControlDefinitionDTO extends AbstractControlDefinition {
 
   public List<ControlEvent> getEvents() {
     return events;
+  }
+
+  public void setEvents(List<ControlEvent> events) {
+    this.events = events;
   }
 
   public boolean isRequired() {

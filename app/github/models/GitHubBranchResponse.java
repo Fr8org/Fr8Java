@@ -1,5 +1,6 @@
 package github.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,6 +13,7 @@ public class GitHubBranchResponse {
   private List<GitHubBranch> branches;
 
   public GitHubBranchResponse() {
+    branches = new ArrayList<>();
   }
 
   public List<GitHubBranch> getBranches() {
