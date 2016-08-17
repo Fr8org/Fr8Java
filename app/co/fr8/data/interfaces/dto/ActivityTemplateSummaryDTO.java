@@ -51,10 +51,10 @@ public class ActivityTemplateSummaryDTO {
   @Override
   public String toString() {
     return "ActivityTemplateSummaryDTO{" +
-        "name='" + name + "\'" +
-        ", version=" + version + "\'" +
-        ", terminalName=" + terminalName + "\'" +
-        ", terminalVersion=" + terminalVersion + "\'" +
+        "name='" + name + '\'' +
+        ", version='" + version + '\'' +
+        ", terminalName='" + terminalName + '\'' +
+        ", terminalVersion='" + terminalVersion + '\'' +
         '}';
   }
 }
