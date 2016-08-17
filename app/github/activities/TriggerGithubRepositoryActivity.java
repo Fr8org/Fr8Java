@@ -117,13 +117,14 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
                 for (Crate descriptionCrate : descriptionCrates) {
                   if (descriptionCrate.getContent() != null) {
                     CrateDescriptionDTO descriptionDTO = ((CrateDescriptionCM) descriptionCrate.getContent()).getCrateDescriptions().get(0);
-                    if (descriptionDTO.getLabel().equals(pullRequestCrateDescriptionLabel)) {
+                    if (descriptionDTO.getLabel().equals(issueCrateDescriptionLabel)) {
                       Logger.debug("Will remove Description Crate: " + descriptionCrate.getLabel());
                       getActivityPayload().getCrateStorage().remove(descriptionCrate.getId());
                     }
                   } else if (descriptionCrate.getRawContent() != null) {
                     JsonNode node = descriptionCrate.getRawContent();
-                    if (node.findValue("label") != null && node.findValue("label").textValue().equals(pullRequestCrateDescriptionLabel)) {
+                    if (node.findValue("label") != null && node.findValue("label").textValue().equals(issueCrateDescriptionLabel)) {
+                      Logger.debug("Will remove Description Crate: " + descriptionCrate.getLabel());
                       getActivityPayload().getCrateStorage().remove(descriptionCrate.getId());
                     }
                   }
@@ -163,6 +164,7 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
                   } else if (descriptionCrate.getRawContent() != null) {
                     JsonNode node = descriptionCrate.getRawContent();
                     if (node.findValue("label") != null && node.findValue("label").textValue().equals(pullRequestCrateDescriptionLabel)) {
+                      Logger.debug("Will remove Description Crate: " + descriptionCrate.getLabel());
                       getActivityPayload().getCrateStorage().remove(descriptionCrate.getId());
                     }
                   }
@@ -171,10 +173,6 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
             }//end of else if
           }//end of if
         }//end of for
-        if (issueCrateId != "") {
-        }
-        if (pullRequestCrateId != "") {
-        }
       }//end of if
     } else {
       Logger.warn("No content in the crate: " + crate);
