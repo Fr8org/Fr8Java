@@ -6,8 +6,6 @@ import co.fr8.data.interfaces.dto.ExternalAuthUrlDTO;
 import co.fr8.data.interfaces.manifests.StandardFr8TerminalCM;
 import co.fr8.terminal.base.AbstractTerminalService;
 import github.activities.CreateGithubIssueActivity;
-import github.activities.TriggerGithubRepositoryActivity;
-import github.activities.TriggerGithubPullRequestActivity;
 import github.activities.UpdateGithubIssueActivity;
 import play.Logger;
 
@@ -51,8 +49,6 @@ public class GitHubTerminal extends AbstractTerminalService {
 
   @Override
   public void registerActivities() {
-    registerActivity(new TriggerGithubPullRequestActivity());
-    registerActivity(new TriggerGithubRepositoryActivity());
     registerActivity(new UpdateGithubIssueActivity());
     registerActivity(new CreateGithubIssueActivity());
   }

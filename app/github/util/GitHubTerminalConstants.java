@@ -48,8 +48,7 @@ public class GitHubTerminalConstants {
           "", getCategories(githubCategory, processCategory), true, minWidth);
 
   public static final List<ActivityTemplateDTO> ALL_ACTIVITIES = new ArrayList<>(
-      Arrays.asList(TRIGGER_GITHUB_PULL_REQUEST_DTO, TRIGGER_GITHUB_REPOSITORY_DTO, UPDATE_GITHUB_ISSUE_DTO,
-          CREATE_GITHUB_ISSUE_DTO));
+      Arrays.asList(UPDATE_GITHUB_ISSUE_DTO, CREATE_GITHUB_ISSUE_DTO));
 
   // Category must be under github so that all activities are organized under Github in the Hub's Plan Builder.
   private static List<CategoriesDTO> getCategories(CategoriesDTO category, CategoriesDTO mainCategory) {
