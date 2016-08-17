@@ -9,8 +9,11 @@ package co.fr8.data.controls;
  */
 public class ControlEvent {
   
-  public final String name;
-  public final String handler;
+  public String name;
+  public String handler;
+
+  public ControlEvent() {
+  }
 
   public ControlEvent(String name, String handler) {
     this.name = name;

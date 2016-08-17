@@ -25,7 +25,6 @@ import github.service.GitHubService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static github.util.GitHubTerminalConstants.TRIGGER_GITHUB_REPOSITORY_DTO;
 
@@ -76,6 +75,8 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
 //    for (Crate crate : crates) {
 //    Logger.debug("Looking for StandardConfigurationControls in " + crate.getCrateManifestType());
     Crate crate = getActivityPayload().getCrateStorage().getCratesOfType(MT.StandardConfigurationControls).get(0);
+    String issueCrateId = "";
+    String pullRequestCrateId = "";
 //    if (MT.StandardConfigurationControls.equals(crate.getCrateManifestType())) {
     if (crate.getRawContent() != null) {
       JsonNode controls = crate.getRawContent();
@@ -111,15 +112,17 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
               getStorage().add(crateDescription);
             } else if (control.get("name").textValue().equals(
                 getActivityUI().getIssue().getName()) && control.get("selected").asBoolean() == Boolean.FALSE) {
-              Optional<Crate> descriptionCrate = getStorage().getCratesAsList().stream().filter(crate1 -> crate1.getCrateManifestType().equals(MT.CrateDescription)).findAny();
-              if (descriptionCrate.isPresent()) {
-                JsonNode node = descriptionCrate.get().getRawContent();
-                if (node.findValue("label").textValue().equals(pullRequestCrateDescriptionLabel)) {
-                  Logger.debug("Removing Description Crate: " + descriptionCrate.get().getLabel());
-                  getStorage().remove(descriptionCrate.get().getId());
-                }
-              }
-            }
+              List<Crate> descriptionCrates = getActivityPayload().getCrateStorage().getCratesOfType(MT.CrateDescription);
+              if (descriptionCrates != null) {
+                for (Crate descriptionCrate : descriptionCrates) {
+                  CrateDescriptionDTO descriptionDTO = ((CrateDescriptionCM) descriptionCrate.getContent()).getCrateDescriptions().get(0);
+                  if (descriptionDTO.getLabel().equals(issueCrateDescriptionLabel)) {
+                    Logger.debug("Will remove Description Crate: " + descriptionCrate.getLabel());
+                    pullRequestCrateId = descriptionCrate.getId();
+                  }
+                }//end of for
+              }//end of if
+            }//end of else if
           }//end of if
           if (ControlTypeEnum.CHECKBOX.getFriendlyName().equalsIgnoreCase(control.get("type").asText())) {
             if (control.get("name").textValue().equals(
@@ -141,17 +144,25 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
               getStorage().add(crateDescription);
             } else if (control.get("name").textValue().equals(
                 getActivityUI().getPullRequest().getName()) && control.get("selected").asBoolean() == Boolean.FALSE) {
-              Optional<Crate> descriptionCrate = getStorage().getCratesAsList().stream().filter(crate1 -> crate1.getCrateManifestType().equals(MT.CrateDescription)).findAny();
-              if (descriptionCrate.isPresent()) {
-                JsonNode node = descriptionCrate.get().getRawContent();
-                if (node.findValue("label").textValue().equals(pullRequestCrateDescriptionLabel)) {
-                  Logger.debug("Removing Description Crate: " + descriptionCrate.get().getLabel());
-                  getStorage().remove(descriptionCrate.get().getId());
-                }
-              }
-            }
+              List<Crate> descriptionCrates = getActivityPayload().getCrateStorage().getCratesOfType(MT.CrateDescription);
+              if (descriptionCrates != null) {
+                for (Crate descriptionCrate : descriptionCrates) {
+                  CrateDescriptionDTO descriptionDTO = ((CrateDescriptionCM) descriptionCrate.getContent()).getCrateDescriptions().get(0);
+                  if (descriptionDTO.getLabel().equals(pullRequestCrateDescriptionLabel)) {
+                    Logger.debug("Will remove Description Crate: " + descriptionCrate.getLabel());
+                    pullRequestCrateId = descriptionCrate.getId();
+                  }
+                }//end of for
+              }//end of if
+            }//end of else if
           }//end of if
         }//end of for
+        if (issueCrateId != "") {
+          getActivityPayload().getCrateStorage().remove(issueCrateId);
+        }
+        if (pullRequestCrateId != "") {
+          getActivityPayload().getCrateStorage().remove(pullRequestCrateId);
+        }
       }//end of if
     } else {
       Logger.warn("No content in the crate: " + crate);

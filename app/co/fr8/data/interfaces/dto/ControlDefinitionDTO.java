@@ -1,8 +1,8 @@
 package co.fr8.data.interfaces.dto;
 
+import co.fr8.data.controls.AbstractControlDefinition;
 import co.fr8.data.controls.ControlEvent;
 import co.fr8.data.controls.ControlTypeEnum;
-import co.fr8.data.controls.AbstractControlDefinition;
 import co.fr8.util.CollectionUtils;
 import co.fr8.util.logging.Logger;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -34,24 +34,12 @@ abstract public class ControlDefinitionDTO extends AbstractControlDefinition {
   private ControlTypeEnum type;
   private String errorMessage;
 
-  public ControlDefinitionDTO(ControlTypeEnum type) {
-    this.type = type;
+  public ControlDefinitionDTO(){
+    super();
   }
 
-  public ControlDefinitionDTO(List<ControlEvent> events, boolean required, String value, String label,
-                              boolean selected, FieldSourceDTO source, ActivityResponseDTO showDocumentation,
-                              boolean hidden, boolean collapsed, ControlTypeEnum type, String errorMessage) {
-    this.events = events;
-    this.required = required;
-    this.value = value;
-    this.label = label;
-    this.selected = selected;
-    this.source = source;
-    this.showDocumentation = showDocumentation;
-    this.hidden = hidden;
-    this.collapsed = collapsed;
+  public ControlDefinitionDTO(ControlTypeEnum type) {
     this.type = type;
-    this.errorMessage = errorMessage;
   }
 
   public void reset(List<String> fieldNames) {

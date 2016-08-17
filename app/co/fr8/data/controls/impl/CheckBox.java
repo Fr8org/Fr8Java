@@ -1,12 +1,7 @@
 package co.fr8.data.controls.impl;
 
-import co.fr8.data.controls.ControlEvent;
 import co.fr8.data.controls.ControlTypeEnum;
-import co.fr8.data.interfaces.dto.ActivityResponseDTO;
 import co.fr8.data.interfaces.dto.ControlDefinitionDTO;
-import co.fr8.data.interfaces.dto.FieldSourceDTO;
-
-import java.util.List;
 
 /**
  * Object implementation of the CheckBox control which provides serialization
@@ -25,13 +20,12 @@ public class CheckBox extends ControlDefinitionDTO {
     super.setLabel(label);
   }
 
+  public CheckBox() {
+    super();
+  }
+
   public CheckBox(ControlTypeEnum type) {
     super(type);
   }
 
-  public CheckBox(List<ControlEvent> events, boolean required, String value, String label, boolean selected,
-                  FieldSourceDTO source, ActivityResponseDTO showDocumentation, boolean hidden, boolean collapsed,
-                  ControlTypeEnum type, String errorMessage) {
-    super(events, required, value, label, selected, source, showDocumentation, hidden, collapsed, type, errorMessage);
-  }
 }

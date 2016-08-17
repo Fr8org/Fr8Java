@@ -8,6 +8,8 @@ abstract public class AbstractControlDefinition {
 
   private String name;
 
+  public AbstractControlDefinition() {}
+
   public String getName() {
     return name;
   }

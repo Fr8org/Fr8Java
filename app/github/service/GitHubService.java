@@ -95,7 +95,7 @@ public class GitHubService {
 
   public String postWebhookToGithub(String repoName, String authToken, String... webhooks){
     Logger.debug("Creating webhook to monitor Github changes in repo: " + repoName + "for issues: " + Arrays.toString(webhooks));
-    String githubWebhookUrl = REPOS_URL + "/" + repoName + "/hooks" + "?access_token=\"" + authToken + "\"";
+    String githubWebhookUrl = REPOS_URL + "/" + repoName + "/hooks" + "?access_token=" + authToken;
     WebhookRequest webhookRequest = new WebhookRequest("GithubEventReport", "active", webhooks,
         new WebhookRequest.Config(WEBHOOK_URL, "json"));
     return HttpUtils.postJson(githubWebhookUrl, JsonUtils.writeObjectToJsonNode(webhookRequest));
