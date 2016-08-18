@@ -169,6 +169,12 @@ public class HttpUtils {
     return sendEntityRequest(url, HttpPost.METHOD_NAME, entity);
   }
 
+  public static String postJsonSecure(String url, JsonNode json, String authToken) {
+    StringEntity entity = new StringEntity(json.toString(), StandardCharsets.UTF_8);
+    entity.setContentType(MediaType.APPLICATION_JSON);
+    return sendEntityRequestSecure(url, HttpPost.METHOD_NAME, entity, authToken);
+  }
+
   public static String patchJson(String url, JsonNode json) {
     StringEntity entity = new StringEntity(json.toString(), StandardCharsets.UTF_8);
     entity.setContentType(MediaType.APPLICATION_JSON);
@@ -181,6 +187,64 @@ public class HttpUtils {
     return sendEntityRequest(url, HttpPut.METHOD_NAME, entity);
   }
 
+  private static String sendEntityRequestSecure(String url, String method, AbstractHttpEntity entity, String authToken) {
+    Logger.debug("Sending entity request of type " + method + " to " + url);
+
+    try {
+      HttpEntityEnclosingRequestBase request;
+      switch (method) {
+        case HttpPost.METHOD_NAME:
+          request = new HttpPost(url);
+          break;
+        case HttpPut.METHOD_NAME:
+          request = new HttpPut(url);
+          break;
+        case HttpPatch.METHOD_NAME:
+          request = new HttpPatch(url);
+          break;
+        default: {
+          return "INVALID REQUEST: PLACEHOLDER";
+        }
+      }
+
+      request.setEntity(entity);
+      String headerAuthorization = "token " + authToken;
+      Logger.debug("authCode: " + headerAuthorization);
+      request.setHeader("Authorization", headerAuthorization);
+      CloseableHttpResponse response = client.execute(request);
+
+      try {
+
+
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+
+        } else {
+
+        }
+
+        HttpEntity responseEntity = response.getEntity();
+
+        OutputStream ostream = new ByteArrayOutputStream();
+        responseEntity.writeTo(ostream);
+        ostream.close();
+
+        Logger.debug("Received response " + ostream);
+
+        EntityUtils.consume(responseEntity);
+        return ostream.toString();
+
+      } finally {
+        Logger.debug("Closing response");
+        response.close();
+      }
+
+    } catch (IOException e) {
+      Logger.error("Exception while processing post request to: " + url
+          + " with params " + entity, e);
+      return null;
+    }
+
+  }
   private static String sendEntityRequest(String url, String method, AbstractHttpEntity entity) {
     Logger.debug("Sending entity request of type " + method + " to " + url);
 

@@ -38,6 +38,21 @@ public class GitHubService {
     return instance;
   }
 
+  public List<ListItem> getOwnedRepositoriesAsListItems(String authToken, String githubAccountName) {
+    JsonNode repoJson = getOwnedRepositoryJsonForUser(authToken);
+    List<ListItem> repoListItems = new ArrayList<>();
+    if (repoJson != null && repoJson.isArray()) {
+      Iterator<JsonNode> repositories = repoJson.elements();
+      repositories.forEachRemaining(repo -> {
+        if (repo.findValue("login").textValue().equals(githubAccountName)) {
+          Logger.debug("Adding " + repo.get("name").asText());
+          repoListItems.add(new ListItem(repo.get("name").asText(), repo.get("full_name").asText()));
+        }
+      });
+    }
+    return repoListItems;
+  }
+
   public List<ListItem> getRepositoriesAsListItems(String authToken) {
     JsonNode repoJson = getRepositoryJsonForUser(authToken);
     List<ListItem> repoListItems = new ArrayList<>();
@@ -94,11 +109,12 @@ public class GitHubService {
   }
 
   public String postWebhookToGithub(String repoName, String authToken, String... webhooks){
-    Logger.debug("Creating webhook to monitor Github changes in repo: " + repoName + "for issues: " + Arrays.toString(webhooks));
-    String githubWebhookUrl = REPOS_URL + "/" + repoName + "/hooks" + "?access_token=" + authToken;
-    WebhookRequest webhookRequest = new WebhookRequest("GithubEventReport", "active", webhooks,
+    Logger.debug("Creating webhook to monitor Github changes in repo: " + repoName + " for issues: " + Arrays.toString(webhooks));
+    String githubWebhookUrl = REPOS_URL + "/" + repoName + "/hooks";
+    WebhookRequest webhookRequest = new WebhookRequest("GithubEventReport", Boolean.TRUE, webhooks,
         new WebhookRequest.Config(WEBHOOK_URL, "json"));
-    return HttpUtils.postJson(githubWebhookUrl, JsonUtils.writeObjectToJsonNode(webhookRequest));
+    Logger.debug("This is the json for webhook: " + JsonUtils.writeObjectToJsonNode(webhookRequest));
+    return HttpUtils.postJsonSecure(githubWebhookUrl, JsonUtils.writeObjectToJsonNode(webhookRequest), authToken);
   }
 
   /**
@@ -126,6 +142,12 @@ public class GitHubService {
 //    Logger.debug("Getting pull requested repo");
 ////    HttpUtils.post()
 //  }
+
+  public JsonNode getOwnedRepositoryJsonForUser(String authToken) {
+    String response = fetchRepositories(authToken);
+    return (StringUtils.isBlank(response)) ? Json.newObject() :
+        JsonUtils.writeStringToObject(response);
+  }
 
   public JsonNode getRepositoryJsonForUser(String authToken) {
     String response = fetchRepositories(authToken);

@@ -108,6 +108,15 @@ public class CrateManager implements ICrateManager {
   public Crate createStandardEventReportCrate(String label, EventReportCM eventReport) {
     return null;
   }
+//
+//  public static Crate createDescriptionCrate(String label, String manufacturer, String[] subscriptions) {
+//    EventSubscriptionCM eventSub = new EventSubscriptionCM(Arrays.asList(subscriptions), manufacturer);
+//    Crate<EventSubscriptionCM> ret =
+//        new Crate<>(MT.StandardEventSubscription, eventSub);
+//    ret.setLabel(label);
+//    ret.setAvailability(AvailabilityTypeEnum.NotSet);
+//    return ret;
+//  }
 
   public static Crate createStandardEventSubscriptionsCrate(String label, String manufacturer, String[] subscriptions) {
     EventSubscriptionCM eventSub = new EventSubscriptionCM(Arrays.asList(subscriptions), manufacturer);

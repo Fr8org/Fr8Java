@@ -4,11 +4,11 @@ import java.util.Arrays;
 
 public class WebhookRequest {
   public String name;
-  public String active;
+  public boolean active;
   public String[] events;
   public Config config;
 
-  public WebhookRequest(String name, String active, String[] events, Config config) {
+  public WebhookRequest(String name, boolean active, String[] events, Config config) {
     this.name = name;
     this.active = active;
     this.events = events;
