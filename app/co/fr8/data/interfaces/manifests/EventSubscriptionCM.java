@@ -42,4 +42,12 @@ public class EventSubscriptionCM extends Manifest {
   public void setManufacturer(String manufacturer) {
     this.manufacturer = manufacturer;
   }
+
+  @Override
+  public String toString() {
+    return "EventSubscriptionCM{" +
+        "subscriptions=" + subscriptions +
+        ", manufacturer='" + manufacturer + '\'' +
+        '}';
+  }
 }

@@ -212,7 +212,7 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
     if (crate.getRawContent() != null) {
       JsonNode controls = crate.getRawContent();
       DropDownList repoList = JsonUtils.getControl(controls, getActivityUI().getRepoList(), ControlTypeEnum.DROPDOWN_LIST);
-      String selectedRepo = repoList.getSelectedItem().getValue();
+      String selectedRepo = repoList.getValue();
       // These are needed on run, not activate.
 //      DropDownList branchList = JsonUtils.getControl(controls, getActivityUI().getBranchList(), ControlTypeEnum.DROPDOWN_LIST);
 //      String selectedBranch = branchList.getSelectedKey();
@@ -243,6 +243,7 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
   public void deactivate() {
     Logger.debug("Deactivation called. Removing Standard Event Subscription Crate.");
     getStorage().remove(MT.StandardEventReport.getFriendlyName());
+    //TODO remove the webhook here.
   }
 
   @Override
