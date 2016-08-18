@@ -70,14 +70,9 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
 
   @Override
   public void followUp() {
-//    List<Crate> crates =
-//        getActivityContext().getActivityPayload().getCrateStorage().getCratesAsList();
-//    for (Crate crate : crates) {
-//    Logger.debug("Looking for StandardConfigurationControls in " + crate.getCrateManifestType());
     Crate crate = getActivityPayload().getCrateStorage().getCratesOfType(MT.StandardConfigurationControls).get(0);
-    String issueCrateId = "";
-    String pullRequestCrateId = "";
-//    if (MT.StandardConfigurationControls.equals(crate.getCrateManifestType())) {
+    //clear any ValidationResultsCM if there is.
+    getActivityPayload().getCrateStorage().remove(MT.ValidationResults);
     if (crate.getRawContent() != null) {
       JsonNode controls = crate.getRawContent();
       if (controls.has("Controls")) {
@@ -217,7 +212,7 @@ public class TriggerGithubRepositoryActivity extends AbstractTerminalActivity<Tr
     if (crate.getRawContent() != null) {
       JsonNode controls = crate.getRawContent();
       DropDownList repoList = JsonUtils.getControl(controls, getActivityUI().getRepoList(), ControlTypeEnum.DROPDOWN_LIST);
-      String selectedRepo = repoList.getSelectedKey();
+      String selectedRepo = repoList.getSelectedItem().getValue();
       // These are needed on run, not activate.
 //      DropDownList branchList = JsonUtils.getControl(controls, getActivityUI().getBranchList(), ControlTypeEnum.DROPDOWN_LIST);
 //      String selectedBranch = branchList.getSelectedKey();
